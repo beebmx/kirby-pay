@@ -1,0 +1,44 @@
+{
+    "name": "beebmx/kirby-pay",
+    "description": "Kirby Pay",
+    "keywords": [
+        "kirby", "kirby-3", "kirby3", "kirby-cms", "kirby-plugin", "pay", "payments", "stripe", "conekta"
+    ],
+    "type": "kirby-plugin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Fernando Gutierrez",
+            "email": "fernando@beeb.mx"
+        }
+    ],
+    "require": {
+        "php": "^7.3",
+        "getkirby/composer-installer": "^1.1",
+        "conekta/conekta-php": "^4.2",
+        "stripe/stripe-php": "^7.28",
+        "illuminate/support": "^7.7",
+        "ramsey/uuid": "^4.0",
+        "fzaninotto/faker": "^1.9"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.5",
+        "getkirby/cms": "^3.3"
+    },
+    "autoload": {
+        "files": [
+            "helpers.php"
+        ],
+        "psr-4": {
+            "Beebmx\\KirbyPay\\": "lib/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Beebmx\\KirbyPay\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "installer-name": "kirby-pay"
+    }
+}
