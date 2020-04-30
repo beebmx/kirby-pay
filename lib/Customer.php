@@ -3,10 +3,10 @@
 namespace Beebmx\KirbyPay;
 
 use Beebmx\KirbyPay\Concerns\ManagesResources;
-use Beebmx\KirbyPay\Contracts\Resource;
+use Beebmx\KirbyPay\Contracts\Resourceable;
 use Illuminate\Support\Collection;
 
-class Customer implements Resource
+class Customer implements Resourceable
 {
     use ManagesResources;
 
@@ -14,29 +14,24 @@ class Customer implements Resource
 
     protected static $type = '.json';
 
-    public function create(Collection $customer, $token, $method = null)
+    public static function create(Collection $customer, $token, $method = null)
     {
-        return $this->write(
-            $this->getDriver()->createCustomer($customer, $token, $method)
+        return static::write(
+            static::getDriver()->createCustomer($customer, $token, $method)
         );
     }
 
     public static function firstOrCreate(Collection $promise, $token, $method = null)
     {
-        $customer = (new self);
-
-        if ($found = $customer->email($promise['email'])) {
+        if ($found = static::email($promise['email'])) {
             return $found;
         }
 
-        return $customer->create($promise, $token, $method);
+        return static::create($promise, $token, $method);
     }
 
-    public function email(string $email)
+    public static function email(string $email)
     {
-        $customer = $this->search($email, 'email')->collection()->first();
-        return $customer
-            ? $customer->toArray()
-            : false;
+        return static::search($email, 'email')->first();
     }
 }

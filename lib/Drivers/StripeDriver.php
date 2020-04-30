@@ -5,7 +5,6 @@ namespace Beebmx\KirbyPay\Drivers;
 use Beebmx\KirbyPay\KirbyPay;
 use Illuminate\Support\Collection;
 use Stripe\Customer;
-use Stripe\Order;
 use Stripe\PaymentIntent;
 use Stripe\PaymentMethod;
 use Stripe\Stripe;

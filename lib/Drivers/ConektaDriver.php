@@ -2,6 +2,7 @@
 
 namespace Beebmx\KirbyPay\Drivers;
 
+use Beebmx\KirbyPay\KirbyPay;
 use Conekta\Conekta;
 use Conekta\Customer;
 use Conekta\Order;
@@ -23,7 +24,7 @@ class ConektaDriver extends Driver
     {
         Conekta::setApiKey($this->getSecret());
         Conekta::setApiVersion($this->version);
-        Conekta::setLocale($this->getLocale());
+        Conekta::setLocale(KirbyPay::getLocaleCode());
     }
 
     public function createCustomer(Collection $customer, string $token, string $payment_method = null)

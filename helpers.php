@@ -1,6 +1,6 @@
 <?php
 
-use Beebmx\KirbyPay\Routes;
+use Beebmx\KirbyPay\Routes\Routes;
 
 if (!function_exists('pay')) {
     function pay($key, $default = null)

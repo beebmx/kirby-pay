@@ -1,19 +1,34 @@
 <?php
 
-use Beebmx\KirbyPay\Routes;
+use Beebmx\KirbyPay\Routes\ApiRoutes;
+use Beebmx\KirbyPay\Routes\Routes;
+
+\Illuminate\Support\Collection::macro('recursive', function () {
+    return $this->map(function ($value) {
+        if (is_array($value) || is_object($value)) {
+            return collect($value)->recursive();
+        }
+
+        return $value;
+    });
+});
 
 Kirby::plugin('beebmx/kirby-pay', [
     'options' => [
-        'service' => null,
+        'service' => 'sandbox',
         'service_key' => null,
         'service_secret' => null,
-        'locale' => 'en',
+        'locale' => 'en_US',
+        'locale_code' => 'en',
         'currency' => 'usd',
+        'money_precision' => 2,
+        'date_format' => 'Y-m-d H:m:s',
         'shipping' => false,
         'default_item_name' => 'Item to sell',
         'default_country' => null,
         'default_payment_type' => 'card',
         'default_payment_process' => 'charge',
+        'pagination' => 10,
         'redirect' => 'thanks',
         'storage' => function () {
             return kirby()->roots()->index() . '/pay';
@@ -50,7 +65,10 @@ Kirby::plugin('beebmx/kirby-pay', [
             ]
         ],
     ],
-    'routes' => (new Routes)->all(),
+    'routes' => (new Routes())->all(),
+    'api' => [
+        'routes' => (new ApiRoutes)->all()
+    ],
     'translations' => [
         'en' => require(__DIR__ . '/languages/en.php'),
         'es' => require(__DIR__ . '/languages/es.php'),

@@ -53,11 +53,6 @@ abstract class Driver implements Driverable
         return strtolower(substr($class, 0, -6));
     }
 
-    protected function getLocale()
-    {
-        return option("beebmx.kirby-pay.locale", 'en');
-    }
-
     public function preparePrice($amount): int
     {
         return $amount * $this->unit;

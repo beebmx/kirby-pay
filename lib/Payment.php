@@ -3,10 +3,10 @@
 namespace Beebmx\KirbyPay;
 
 use Beebmx\KirbyPay\Concerns\ManagesResources;
-use Beebmx\KirbyPay\Contracts\Resource;
+use Beebmx\KirbyPay\Contracts\Resourceable;
 use Illuminate\Support\Collection;
 
-class Payment implements Resource
+class Payment implements Resourceable
 {
     use ManagesResources;
 
@@ -14,19 +14,19 @@ class Payment implements Resource
 
     protected static $type = '.json';
 
-    public function order(Collection $customer, Collection $items, string $token, string $type = 'card', Collection $shipping = null)
+    public static function order(Collection $customer, Collection $items, string $token, string $type = 'card', Collection $shipping = null)
     {
         $customer = Customer::firstOrCreate($customer, $token, $type);
 
-        return $this->write(
-            $this->getDriver()->createOrder(new Collection($customer), $items, $token, $type, $shipping)
+        return static::write(
+            static::getDriver()->createOrder(new Collection($customer), $items, $token, $type, $shipping)
         );
     }
 
-    public function charge(Collection $customer, Collection $items, string $token, string $type = 'card', Collection $shipping = null)
+    public static function charge(Collection $customer, Collection $items, string $token, string $type = 'card', Collection $shipping = null)
     {
-        return $this->write(
-            $this->getDriver()->createCharge(new Collection($customer), $items, $token, $type, $shipping)
+        return static::write(
+            static::getDriver()->createCharge(new Collection($customer), $items, $token, $type, $shipping)
         );
     }
 }

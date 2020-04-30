@@ -4,7 +4,7 @@
 namespace Beebmx\KirbyPay\Contracts;
 
 
-interface Resource
+interface Resourceable
 {
     public function boot();
 }

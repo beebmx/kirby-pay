@@ -27,9 +27,14 @@ class Storage
         return static::getBase() . '/' . $dir;
     }
     
-    public static function index(string $dir = '')
+    public static function files(string $dir = '')
     {
-        return Dir::index(static::getBase() . '/' . $dir);
+        return Dir::files(static::getBase() . '/' . $dir);
+    }
+
+    public static function isEmpty(string $dir = ''): bool
+    {
+        return Dir::isEmpty(static::getBase() . '/' . $dir);
     }
 
     /**
@@ -45,6 +50,6 @@ class Storage
 
     public static function count(string $dir = '')
     {
-        return count(static::index($dir));
+        return count(static::files($dir));
     }
 }

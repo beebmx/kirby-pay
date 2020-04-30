@@ -1,6 +1,7 @@
 {
   "scripts": {
     "dev": "parcel watch src/index.js --no-source-maps -d ./",
+    "watch": "npm run dev",
     "build": "parcel build src/index.js --no-source-maps --experimental-scope-hoisting -d ./",
     "production": "npm run build",
     "prod": "npm run production"

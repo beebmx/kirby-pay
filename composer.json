@@ -19,7 +19,8 @@
         "stripe/stripe-php": "^7.28",
         "illuminate/support": "^7.7",
         "ramsey/uuid": "^4.0",
-        "fzaninotto/faker": "^1.9"
+        "fzaninotto/faker": "^1.9",
+        "brick/money": "^0.4.4"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5",

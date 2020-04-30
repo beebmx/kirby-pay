@@ -70,17 +70,6 @@ class SandboxDriver extends Driver
                     'last4' => '4242',
                     'brand' => 'visa',
                     'parent_id' => 'cus_zzmjKsnM9oacyCwV3'
-                ], [
-                    'id' => 'src_2fw8YeLSqoaGEYTn3',
-                    'name' => $name,
-                    'exp_month' => 12,
-                    'exp_year' => 19,
-                    'object' => 'payment_source',
-                    'type' => 'card',
-                    'created_at' => 1587597057,
-                    'last4' => '4242',
-                    'brand' => 'visa',
-                    'parent_id' => 'cus_zzmjKsnM9oacyCwV3'
                 ]]
             ],
         ]));
