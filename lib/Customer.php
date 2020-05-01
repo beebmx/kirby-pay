@@ -34,4 +34,9 @@ class Customer implements Resourceable
     {
         return static::search($email, 'email')->first();
     }
+
+    public static function serviceUrl()
+    {
+        return static::getDriver()->getUrls()['customers'];
+    }
 }

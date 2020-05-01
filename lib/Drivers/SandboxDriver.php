@@ -22,6 +22,14 @@ class SandboxDriver extends Driver
         'card',
     ];
 
+    public function getUrls(): array
+    {
+        return [
+            'customers' => null,
+            'payments' => null,
+        ];
+    }
+
     public function createCustomer(Collection $customer, string $token, string $payment_method = null)
     {
         if ($customer->isNotEmpty()) {

@@ -31,8 +31,6 @@ export default {
   methods: {
     set(resource, exists, service) {
       this.$store.dispatch('kpResources/set', resource)
-      this.$store.dispatch('kpResources/setExists', exists)
-      this.$store.dispatch('kpResources/setService', service)
     },
   }
 }

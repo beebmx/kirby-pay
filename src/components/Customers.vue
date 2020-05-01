@@ -3,12 +3,10 @@
     <k-header>
       {{ $t('beebmx.kirby-pay.view.customers') }}
       <k-button-group slot="left">
-        <k-button icon="open">as</k-button>
         <k-button icon="money" link="/plugins/payments">{{ $t('beebmx.kirby-pay.view.payments') }}</k-button>
       </k-button-group>
-
       <k-button-group slot="right">
-        <kp-tag-text :text="service"></kp-tag-text>
+        <k-button icon="open" :link="serviceUrl" target="_blank" :disabled="serviceUrlUnavailable">{{ service }}</k-button>
       </k-button-group>
     </k-header>
     <k-list>
@@ -18,9 +16,7 @@
               :icon="{type: 'money', back: 'black'}"
               :text="title(customer)"
               :info="customer.updated_at"
-              :flag="{icon: 'preview',click: someClickHandler}"
               :link="`/plugins/customer/${customer.uuid}`"
-              :options="[{icon: 'edit', text: 'Edit'},{icon: 'trash', text: 'Delete'}]"
       />
     </k-list>
     <k-pagination
@@ -35,17 +31,20 @@
 </template>
 
 <script>
-import TagText from "./TagText.vue"
+import config from "../mixins/config";
 import resource from "../mixins/resource";
 export default {
-  mixins: [resource],
-  components: {
-    'kp-tag-text': TagText,
-  },
+  mixins: [config, resource],
+  components: {},
   data() {
     return {
       customers: []
     }
+  },
+  computed: {
+    serviceUrl() {
+      return this.$store.getters['kpResources/getServiceUrl']('customers');
+    },
   },
   created() {
     this.fetch()
@@ -71,5 +70,5 @@ export default {
 </script>
 
 <style lang="scss">
-/** put your css here **/
+
 </style>

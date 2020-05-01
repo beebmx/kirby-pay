@@ -50,6 +50,9 @@ return [
     'beebmx.kirby-pay.view.shipping' => 'Shipping',
     'beebmx.kirby-pay.view.summary' => 'Summary',
     'beebmx.kirby-pay.view.status' => 'Status',
+    'beebmx.kirby-pay.view.next' => 'Next',
+    'beebmx.kirby-pay.view.prev' => 'Previous',
+    'beebmx.kirby-pay.view.payment_methods' => 'Payment Methods',
 
     //Panel table
     'beebmx.kirby-pay.table.id' => 'ID',
@@ -63,14 +66,16 @@ return [
     'beebmx.kirby-pay.table.quantity' => 'Quantity',
     'beebmx.kirby-pay.table.address' => 'Address',
     'beebmx.kirby-pay.table.state' => 'State',
-    'beebmx.kirby-pay.table.postal-code' => 'Postal code',
+    'beebmx.kirby-pay.table.city' => 'City',
+    'beebmx.kirby-pay.table.postal_code' => 'Código postal',
     'beebmx.kirby-pay.table.country' => 'Country',
     'beebmx.kirby-pay.table.created_at' => 'Date',
     'beebmx.kirby-pay.table.updated_at' => 'Date',
     'beebmx.kirby-pay.table.currency' => 'Currency',
     'beebmx.kirby-pay.table.status' => 'Status',
-    'beebmx.kirby-pay.view.next' => 'Next',
-    'beebmx.kirby-pay.view.prev' => 'Previous',
+    'beebmx.kirby-pay.table.type' => 'Methodo de pago',
+    'beebmx.kirby-pay.table.last4' => 'Last 4 digits',
+    'beebmx.kirby-pay.table.brand' => 'Brand',
 
     //Panel status
     'beebmx.kirby-pay.status.pending_payment' => 'Pending payment',

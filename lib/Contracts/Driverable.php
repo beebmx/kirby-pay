@@ -22,4 +22,6 @@ interface Driverable
 
     public function parsePrice($amount): float;
 
+    public function getUrls(): array;
+
 }

@@ -17,9 +17,33 @@ class ApiRoutes
     public function all(): array
     {
         return [
+            $this->config(),
             $this->getPayments(),
             $this->getPayment(),
             $this->getCustomers(),
+            $this->getCustomer(),
+        ];
+    }
+
+    public function config()
+    {
+        return [
+            'pattern' => 'beebmx/kirby-pay/config',
+            'method' => 'GET',
+            'action' => function () {
+                return [
+                    'success' => true,
+                    'service' => [
+                        'name' => ucfirst(pay('service', 'sandbox')),
+                        'customers' => Customer::serviceUrl(),
+                        'payments' => Payment::serviceUrl(),
+                    ],
+                    'resources' => [
+                        'payments' => !Payment::isEmpty(),
+                        'customers' => !Customer::isEmpty(),
+                    ],
+                ];
+            }
         ];
     }
 
@@ -84,6 +108,26 @@ class ApiRoutes
                     'exists' => [
                         'payments' => !Payment::isEmpty()
                     ],
+                ];
+            }
+        ];
+    }
+
+    public function getCustomer()
+    {
+        return [
+            'pattern' => 'beebmx/kirby-pay/customer/(:any)',
+            'method' => 'GET',
+            'action' => function ($id) {
+                $customer = Customer::find((string) $id);
+                $next = Customer::find((int) $customer['id'] + 1);
+                $prev = Customer::find((int) $customer['id'] - 1);
+                return [
+                    'success' => true,
+                    'id' => (int) $id,
+                    'customer' => $customer,
+                    'next' => $next['uuid'] ?? false,
+                    'prev' => $prev['uuid'] ?? false,
                 ];
             }
         ];

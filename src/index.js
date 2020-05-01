@@ -1,6 +1,7 @@
 import Payments from "./components/Payments.vue";
 import Payment from "./components/Payment.vue";
 import Customers from "./components/Customers.vue";
+import Customer from "./components/Customer.vue";
 import Resources from "./store/resources"
 
 panel.plugin("beebmx/kirby-pay", {
@@ -13,6 +14,14 @@ panel.plugin("beebmx/kirby-pay", {
           view: "payments"
         },
         component: Payment
+      },
+      {
+        path: "/plugins/customer/:id",
+        name: "Customer",
+        meta: {
+          view: "customers"
+        },
+        component: Customer
       },
     ])
     Vue.$store.registerModule("kpResources", Resources);

@@ -27,6 +27,14 @@ class ConektaDriver extends Driver
         Conekta::setLocale(KirbyPay::getLocaleCode());
     }
 
+    public function getUrls(): array
+    {
+        return [
+            'customers' => 'https://admin.conekta.com/customers',
+            'payments' => 'https://admin.conekta.com/orders',
+        ];
+    }
+
     public function createCustomer(Collection $customer, string $token, string $payment_method = null)
     {
         if ($token) {

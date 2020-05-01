@@ -29,4 +29,9 @@ class Payment implements Resourceable
             static::getDriver()->createCharge(new Collection($customer), $items, $token, $type, $shipping)
         );
     }
+
+    public static function serviceUrl()
+    {
+        return static::getDriver()->getUrls()['payments'];
+    }
 }

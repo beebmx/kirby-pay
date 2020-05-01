@@ -2,7 +2,7 @@ import Vue from "vue";
 
 const state = {
   resources: {},
-  service: '',
+  service: {},
   exists: {},
   current: null,
 }
@@ -20,7 +20,10 @@ const getters = {
       : false
   },
   getService(state) {
-    return state.service
+    return state.service.name
+  },
+  getServiceUrl: (state) => resource => {
+    return state.service[resource]
   },
 }
 
@@ -28,14 +31,13 @@ const actions = {
   init({commit}, resource) {
     commit('INIT', resource)
   },
+  config({commit}, {service, resources}) {
+    commit('SERVICE', service)
+    commit('EXISTS', resources)
+    // commit('SET', resource)
+  },
   set({commit}, resource) {
     commit('SET', resource)
-  },
-  setExists({commit}, resource) {
-    commit('SETEXISTS', resource)
-  },
-  setService({commit}, resource) {
-    commit('SETSERVICE', resource)
   },
 }
 
@@ -49,14 +51,10 @@ const mutations = {
 
     state.resources = resources
   },
-  SETEXISTS(state, exists) {
-    const all = {...state.exists},
-          key = Object.keys(exists)[0];
-    all[key] = exists[key]
-
-    state.exists = all
+  EXISTS(state, resources) {
+    state.exists = resources
   },
-  SETSERVICE(state, service) {
+  SERVICE(state, service) {
     state.service = service
   },
 }

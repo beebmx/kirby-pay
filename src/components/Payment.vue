@@ -4,15 +4,15 @@
             {{ $t('beebmx.kirby-pay.view.purchase') }}
             <k-button-group slot="left">
                 <k-button icon="money" link="/plugins/payments">{{ $t('beebmx.kirby-pay.view.payments') }}</k-button>
-                <<div class="k-button kp-cursor-default">
-                    <k-icon class="k-button-icon" :class="statusColor" type="circle" />
+                <div class="k-button kp-cursor-default">
+                    <k-icon class="k-button-icon" :class="payment.status" type="circle" />
                     <span class="k-button-text" v-text="status"></span>
-                </div>>
+                </div>
             </k-button-group>
             <k-button-group slot="right">
                 <k-button :disabled="!next" icon="angle-left" :link="`/plugins/payment/${next}`"></k-button>
                 <k-button :disabled="!prev" icon="angle-right" :link="`/plugins/payment/${prev}`"></k-button>
-                <kp-tag-text :text="service"></kp-tag-text>
+                <k-button icon="open" :link="serviceUrl" target="_blank" :disabled="serviceUrlUnavailable">{{ service }}</k-button>
             </k-button-group>
         </k-header>
 
@@ -51,15 +51,14 @@
 </template>
 
 <script>
+  import config from "../mixins/config";
   import TableKeyPair from "./TableKeyPair.vue";
   import TableData from "./TableData.vue"
-  import TagText from "./TagText.vue"
-
   export default {
+    mixins: [config],
     components: {
       'kp-table-key-pair': TableKeyPair,
       'kp-table-data': TableData,
-      'kp-tag-text': TagText,
     },
     data: () => ({
       payment: {},
@@ -67,21 +66,6 @@
       shipping: {},
       next: false,
       prev: false,
-      status: '',
-      statusColor: 'kp-wait',
-      statusColors: {
-        'pending_payment': 'kp-info',
-        'declined': 'kp-danger',
-        'expired': 'kp-danger',
-        'paid': 'kp-success',
-        'refunded': 'kp-success',
-        'partially_refunded': 'kp-success',
-        'charged_back': 'kp-warning',
-        'pre_authorized': 'kp-warning',
-        'voided': 'kp-warning',
-        'created': 'kp-info',
-        'fulfilled': 'kp-success',
-      }
     }),
     computed: {
       id() {
@@ -92,8 +76,8 @@
             ? !!this.payment.shipping.length
             : false
       },
-      service() {
-        return this.$store.getters['kpResources/getService'];
+      serviceUrl() {
+        return this.$store.getters['kpResources/getServiceUrl']('payments');
       },
     },
     created() {
@@ -116,7 +100,6 @@
               currency: payment.currency,
             };
             this.status = this.$t(`beebmx.kirby-pay.status.${payment.status}`);
-            this.statusColor = this.statusColors[payment.status];
             if (payment.shipping) {
               this.shipping = payment.shipping[0]
             }
@@ -137,20 +120,5 @@
 <style scoped>
     .kp-cursor-default {
         cursor: default;
-    }
-    .kp-wait {
-        color: var(--color-text);
-    }
-    .kp-success {
-        color: var(--color-positive-light);
-    }
-    .kp-danger {
-        color: var(--color-negative-light);
-    }
-    .kp-warning {
-        color: var(--color-notice-light);
-    }
-    .kp-info {
-        color: var(--color-focus-light);
     }
 </style>

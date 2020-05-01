@@ -30,6 +30,21 @@ class StripeDriver extends Driver
         Stripe::setApiVersion($this->version);
     }
 
+    public function getUrls(): array
+    {
+        if (pay('env', 'test') === 'test') {
+            return [
+                'customers' => 'https://dashboard.stripe.com/test/customers',
+                'payments' => 'https://dashboard.stripe.com/test/payments',
+            ];
+        }
+
+        return [
+            'customers' => 'https://dashboard.stripe.com/customers',
+            'payments' => 'https://dashboard.stripe.com/payments',
+        ];
+    }
+
     public function createCustomer(Collection $customer, string $token, string $payment_method = null)
     {
         if ($token) {
