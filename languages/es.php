@@ -7,6 +7,12 @@ return [
     'beebmx.kirby-pay.email' => 'Email',
     'beebmx.kirby-pay.phone' => 'Teléfono',
 
+    'beebmx.kirby-pay.payment-methods-title' => 'Selecciona un metodo de pago',
+    'beebmx.kirby-pay.payment.card' => 'Tarjetas',
+    'beebmx.kirby-pay.payment.card.description' => 'Crédito y Débito',
+    'beebmx.kirby-pay.payment.oxxo_cash' => 'Oxxo Pay',
+    'beebmx.kirby-pay.payment.oxxo_cash.description' => 'Paga déspues en Oxxo',
+
     'beebmx.kirby-pay.address-send' => 'Dirección de envío',
     'beebmx.kirby-pay.address' => 'Dirección',
     'beebmx.kirby-pay.state' => 'Estado',
@@ -53,16 +59,18 @@ return [
     'beebmx.kirby-pay.view.next' => 'Siguiente',
     'beebmx.kirby-pay.view.prev' => 'Anterior',
     'beebmx.kirby-pay.view.payment_methods' => 'Formas de pago',
+    'beebmx.kirby-pay.view.charges' => 'Cargos',
 
     //Panel table
     'beebmx.kirby-pay.table.id' => 'ID',
+    'beebmx.kirby-pay.table.payment_id' => 'ID de servicio',
     'beebmx.kirby-pay.table.name' => 'Nombre',
     'beebmx.kirby-pay.table.email' => 'Email',
     'beebmx.kirby-pay.table.phone' => 'Teléfono',
     'beebmx.kirby-pay.table.purchase' => 'Compras',
     'beebmx.kirby-pay.table.items' => 'Items',
     'beebmx.kirby-pay.table.item' => 'Item',
-    'beebmx.kirby-pay.table.amount' => 'P. Unitario',
+    'beebmx.kirby-pay.table.amount' => 'Monto',
     'beebmx.kirby-pay.table.quantity' => 'Cantidad',
     'beebmx.kirby-pay.table.address' => 'Dirección',
     'beebmx.kirby-pay.table.state' => 'Estado',
@@ -76,6 +84,11 @@ return [
     'beebmx.kirby-pay.table.type' => 'Méthodo de pago',
     'beebmx.kirby-pay.table.last4' => 'Últimos 4 dígitos',
     'beebmx.kirby-pay.table.brand' => 'Marca',
+    'beebmx.kirby-pay.table.expires_at' => 'Fecha de expiración',
+    'beebmx.kirby-pay.table.barcode_url' => 'Código de barras',
+    'beebmx.kirby-pay.table.reference' => 'Referencia',
+    'beebmx.kirby-pay.table.fee' => 'Comisión',
+    'beebmx.kirby-pay.table.payment_method' => 'Método de pago',
 
     //Panel status
     'beebmx.kirby-pay.status.pending_payment' => 'Pago pendiente',

@@ -1,5 +1,6 @@
 <div class="kirby-pay">
     <form class="<?= kpStyle('form', 'kp-form') ?>" x-data="kirbyPay()" x-init="mount" @submit.prevent="send">
+        <input type="hidden" x-model="type">
         <fieldset class="<?= kpStyle('fieldset', 'kp-fieldset') ?> <?= kpStyle('background', 'kp-bg-transparent') ?>">
             <legend class="kp-legend"><?= kpT('general') ?>:</legend>
             <div class="<?= kpStyle('field', 'kp-field') ?>" :class="{'<?= kpStyle('error', 'kp-text-red') ?>':error('name')}">
@@ -130,6 +131,7 @@
         card_year: '23',
         card_cvc: '123',
       },
+      type: '<?= kpPaymentMethods()[0] ?>',
       countries: [],
       process: false,
       errors: {},
@@ -162,8 +164,8 @@
           })
           .then(function(result) {
             axios({
-              url: '<?= kpUrl("payment.{$type}.create") ?>',
-              method: '<?= kpMethod("payment.{$type}.create") ?>',
+              url: '<?= kpUrl("payment.create") ?>',
+              method: '<?= kpMethod("payment.create") ?>',
               data: {
                 name: this.data.name,
                 email: this.data.email,
@@ -177,7 +179,7 @@
 <?php endif ?>
                 items: <?= json_encode($items) ?>,
                 token: result.token.id,
-                type: '<?= $type ?>',
+                type: this.type,
                 trash: 'trash-value',
               }
             }).then(response)
@@ -185,10 +187,10 @@
 
       },
       handleSuccess: function(data) {
-        this.process = false;
         if (!data.errors) {
           window.location = data.redirect;
         } else {
+          this.process = false;
           this.setErrors(data.errors)
         }
       },

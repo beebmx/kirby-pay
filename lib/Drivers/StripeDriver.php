@@ -159,6 +159,8 @@ class StripeDriver extends Driver
             'customer' => $this->parseOrderCustomer($customer, $toParse['customer']),
             'amount' => $this->parsePrice($toParse['amount']),
             'id' => $toParse['id'],
+            'payment_id' => $toParse['id'],
+            'charges' => $toParse['charges'],
             'items' =>  $this->parseItems($items),
         ], $shipping ?? []);
     }

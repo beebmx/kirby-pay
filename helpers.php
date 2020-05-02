@@ -1,6 +1,8 @@
 <?php
 
+use Beebmx\KirbyPay\Payment;
 use Beebmx\KirbyPay\Routes\Routes;
+use Illuminate\Support\Collection;
 
 if (!function_exists('pay')) {
     function pay($key, $default = null)
@@ -39,16 +41,28 @@ if (!function_exists('kpT')) {
     }
 }
 
-if (!function_exists('payroute')) {
+if (!function_exists('kpUrl')) {
     function kpUrl($key)
     {
         return (new Routes)->getRoutePathByName($key);
     }
 }
 
-if (!function_exists('payroute')) {
+if (!function_exists('kpMethod')) {
     function kpMethod($key)
     {
         return (new Routes)->getRouteMethodByName($key);
+    }
+}
+
+if (!function_exists('kpPaymentMethods')) {
+    function kpPaymentMethods()
+    {
+        $methods = Payment::getPaymentMethods();
+
+        return (new Collection(pay('payment_types')))
+            ->filter(function($method) use ($methods) {
+                return (in_array($method, $methods));
+        })->values()->toArray();
     }
 }

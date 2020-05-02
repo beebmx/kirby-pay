@@ -33,6 +33,11 @@ abstract class Driver implements Driverable
         $this->boot();
     }
 
+    public function getPaymentMethods(): array
+    {
+        return $this->payment_methods;
+    }
+
     /**
      * Returns the current secret of the defined service
      * @return string

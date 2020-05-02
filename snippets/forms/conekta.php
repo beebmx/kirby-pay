@@ -1,5 +1,6 @@
 <div class="kirby-pay">
-    <form class="<?= kpStyle('form', 'kp-form') ?>" x-data="kirbyPay()" x-init="mount" @submit.prevent="send">
+    <form class="<?= kpStyle('form', 'kp-form') ?>" x-data="kirbyPay()" x-init="mount" @submit.prevent="setConekta">
+        <input type="hidden" x-model="type">
         <fieldset class="<?= kpStyle('fieldset', 'kp-fieldset') ?> <?= kpStyle('background', 'kp-bg-transparent') ?>">
             <legend class="kp-legend"><?= kpT('general') ?>:</legend>
             <div class="<?= kpStyle('field', 'kp-field') ?>" :class="{'<?= kpStyle('error', 'kp-text-red') ?>':error('name')}">
@@ -47,7 +48,29 @@
         </fieldset>
         <?php endif ?>
 
-        <fieldset class="<?= kpStyle('fieldset', 'kp-fieldset') ?> <?= kpStyle('background', 'kp-bg-transparent') ?>">
+        <?php if (count(kpPaymentMethods()) > 1): ?>
+        <div class="<?= kpStyle('payment-selector', 'kp-payment-selector') ?>">
+        <h3 class="<?= kpStyle('title', 'kp-title') ?>"><?= kpT('payment-methods-title') ?></h3>
+        <div class="<?= kpStyle('methods', 'kp-payment-methods') ?>">
+        <?php foreach(kpPaymentMethods() as $method): ?>
+            <div class="<?= kpStyle('method-column', 'kp-method-column') ?>">
+            <input class="<?= kpStyle('radio', 'kp-radio') ?>" type="radio" id="<?= $method ?>" name="<?= $method ?>" value="<?= $method ?>" x-model="type">
+            <label class="<?= kpStyle('radio-label', 'kp-radio-label') ?> <?= kpStyle('background', 'kp-bg-transparent') ?>" for="<?= $method ?>">
+                <div class="kp-radio-label-header">
+                    <?= kpT('payment.' . $method) ?>
+                </div>
+                <div class="kp-radio-label-body">
+                    <?= kpT('payment.' . $method . '.description') ?>
+                </div>
+            </label>
+            </div>
+        <?php endforeach ?>
+        </div>
+        </div>
+        <?php endif ?>
+
+        <?php if(in_array('card', kpPaymentMethods())): ?>
+        <fieldset x-show="type === 'card'" class="<?= kpStyle('fieldset', 'kp-fieldset') ?> <?= kpStyle('background', 'kp-bg-transparent') ?>">
             <legend class="kp-legend"><?= kpT('payment-information') ?>:</legend>
             <div class="<?= kpStyle('field', 'kp-field') ?>">
                 <label for="kp-card-name" class="<?= kpStyle('label', 'kp-label') ?>"><?= kpT('card-name') ?></label>
@@ -68,6 +91,7 @@
                 </div>
             </div>
         </fieldset>
+        <?php endif ?>
 
         <div class="kp--mt-10 mb-10 <?= kpStyle('alert', 'kp-alert') ?> <?= kpStyle('errors', 'kp-errors') ?>" x-show="showErrors.length" style="display: none">
             <div class="kp-alert-content">
@@ -117,6 +141,7 @@
         card_year: '23',
         card_cvc: '123',
       },
+      type: '<?= kpPaymentMethods()[0] ?>',
       countries: [],
       process: false,
       errors: {},
@@ -134,12 +159,19 @@
           }.bind(this))
 <?php endif ?>
       },
-      send: function() {
+      setConekta: function() {
         this.process = true;
         this.showErrors = [];
-        Conekta.Token.create(this.$el, this.conektaSuccessResponseHandler.bind(this), this.conektaErrorResponseHandler.bind(this));
+        if (this.type === 'card') {
+          this.requestToken()
+        } else {
+          this.send()
+        }
       },
-      conektaSuccessResponseHandler: function(token) {
+      requestToken: function() {
+        Conekta.Token.create(this.$el, this.send.bind(this), this.conektaErrorResponseHandler.bind(this));
+      },
+      send: function(token) {
         var response = function(response) {
           !response.data.errors
             ? this.handleSuccess(response.data)
@@ -147,8 +179,8 @@
         }.bind(this)
 
         axios({
-          url: '<?= kpUrl("payment.{$type}.create") ?>',
-          method: '<?= kpMethod("payment.{$type}.create") ?>',
+          url: '<?= kpUrl("payment.create") ?>',
+          method: '<?= kpMethod("payment.create") ?>',
           data: {
             name: this.data.name,
             email: this.data.email,
@@ -161,8 +193,8 @@
             country: this.data.country,
 <?php endif ?>
             items: <?= json_encode($items) ?>,
-            token: token.id,
-            type: '<?= $type ?>',
+            token: token ? token.id : null,
+            type: this.type,
           }
         }).then(response)
       },
@@ -173,10 +205,10 @@
         ]
       },
       handleSuccess: function(data) {
-        this.process = false;
         if (!data.errors) {
           window.location = data.redirect;
         } else {
+          this.process = false;
           this.setErrors(data.errors)
         }
       },

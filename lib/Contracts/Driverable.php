@@ -24,4 +24,6 @@ interface Driverable
 
     public function getUrls(): array;
 
+    public function getPaymentMethods(): array;
+
 }

@@ -3,9 +3,10 @@
         <h3 class="kp-table-key-pair-headline" v-text="title"></h3>
         <table class="kp-table-key-pair-element">
             <tbody>
-                <tr v-if="value" v-for="(value, id) in data" :key="id">
+                <tr v-if="canDisplay(id, value)" v-for="(value, id) in data" :key="id">
                     <td class="kp-table-key-pair-td kp-table-key-pair-id" v-text="$t(`beebmx.kirby-pay.table.${id}`)"></td>
-                    <td class="kp-table-key-pair-td" v-text="value"></td>
+                    <td v-if="isNotImage(id)" class="kp-table-key-pair-td" v-text="value"></td>
+                    <td v-else class="kp-table-key-pair-td"><img :src="value" /></td>
                 </tr>
             </tbody>
         </table>
@@ -17,6 +18,24 @@
     props: {
       title: String,
       data: Object,
+      exclude: Array,
+      images: Array,
+    },
+    methods: {
+      canDisplay(key, value) {
+        if (this.exclude) {
+          return !this.exclude.includes(key) && !!value
+        }
+
+        return !!value;
+      },
+      isNotImage(key) {
+        if (this.images) {
+          return !this.images.includes(key)
+        }
+
+        return true;
+      },
     }
   }
 </script>

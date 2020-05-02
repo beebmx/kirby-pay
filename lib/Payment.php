@@ -14,7 +14,7 @@ class Payment implements Resourceable
 
     protected static $type = '.json';
 
-    public static function order(Collection $customer, Collection $items, string $token, string $type = 'card', Collection $shipping = null)
+    public static function order(Collection $customer, Collection $items, string $token = null, string $type = 'card', Collection $shipping = null)
     {
         $customer = Customer::firstOrCreate($customer, $token, $type);
 
@@ -23,7 +23,7 @@ class Payment implements Resourceable
         );
     }
 
-    public static function charge(Collection $customer, Collection $items, string $token, string $type = 'card', Collection $shipping = null)
+    public static function charge(Collection $customer, Collection $items, string $token = null, string $type = 'card', Collection $shipping = null)
     {
         return static::write(
             static::getDriver()->createCharge(new Collection($customer), $items, $token, $type, $shipping)
@@ -33,5 +33,10 @@ class Payment implements Resourceable
     public static function serviceUrl()
     {
         return static::getDriver()->getUrls()['payments'];
+    }
+
+    public static function getPaymentMethods()
+    {
+        return static::getDriver()->getPaymentMethods();
     }
 }

@@ -7,6 +7,12 @@ return [
     'beebmx.kirby-pay.email' => 'Email',
     'beebmx.kirby-pay.phone' => 'Phone',
 
+    'beebmx.kirby-pay.payment-methods-title' => 'Select a payment method',
+    'beebmx.kirby-pay.payment-method.card' => 'Credit card',
+    'beebmx.kirby-pay.payment.card.description' => 'Credit and debit cards',
+    'beebmx.kirby-pay.payment-method.oxxo_cash' => 'Oxxo pay',
+    'beebmx.kirby-pay.payment.oxxo_cash.description' => 'Pay later in Oxxo',
+
     'beebmx.kirby-pay.address-send' => 'Shipping Address',
     'beebmx.kirby-pay.address' => 'Address',
     'beebmx.kirby-pay.state' => 'State',
@@ -53,9 +59,16 @@ return [
     'beebmx.kirby-pay.view.next' => 'Next',
     'beebmx.kirby-pay.view.prev' => 'Previous',
     'beebmx.kirby-pay.view.payment_methods' => 'Payment Methods',
+    'beebmx.kirby-pay.view.charges' => 'Charges',
+    'beebmx.kirby-pay.table.expires_at' => 'Expires at',
+    'beebmx.kirby-pay.table.barcode_url' => 'Barcode',
+    'beebmx.kirby-pay.table.reference' => 'Reference',
+    'beebmx.kirby-pay.table.fee' => 'Fee',
+    'beebmx.kirby-pay.table.payment_method' => 'Método de pago',
 
     //Panel table
     'beebmx.kirby-pay.table.id' => 'ID',
+    'beebmx.kirby-pay.table.payment_id' => 'Service ID',
     'beebmx.kirby-pay.table.name' => 'Name',
     'beebmx.kirby-pay.table.email' => 'Email',
     'beebmx.kirby-pay.table.phone' => 'Phone',

@@ -24,11 +24,11 @@ class Routes implements Routable
     {
         $self = $this;
         return [
-            'pattern' => static::getBaseApiPath() . 'payment/card/create',
-            'name' => 'payment.card.create',
+            'pattern' => static::getBaseApiPath() . 'payment/create',
+            'name' => 'payment.create',
             'method' => 'POST',
             'action' => function () use ($self) {
-                $process = pay('default_payment_process', 'charge');
+                $process = pay('payment_process', 'charge');
                 $inputs = $self->getInputs(['name', 'email', 'phone', 'token', 'type', 'process', 'items', 'address', 'state', 'city', 'postal_code', 'country']);
 
                 $customer = $self->only($inputs, ['name', 'email', 'phone']);

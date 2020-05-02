@@ -6,6 +6,7 @@ use Beebmx\KirbyPay\KirbyPay;
 use Conekta\Conekta;
 use Conekta\Customer;
 use Conekta\Order;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 
 class ConektaDriver extends Driver
@@ -14,8 +15,7 @@ class ConektaDriver extends Driver
 
     protected $payment_methods = [
         'card',
-        'oxxo_cash',
-        'spei',
+        'oxxo_cash'
     ];
 
     protected $unit = 100;
@@ -109,13 +109,20 @@ class ConektaDriver extends Driver
                 'type' => $type
             ];
         } else {
-            $payment = [
-                'type' => $type,
-                'payment_source_id' => (new Collection($customer->get('payments')))
-                    ->filter(function ($payment) use ($type) {
-                        return $payment['type'] === $type;
-                    })->first()['id']
-            ];
+            if ($type === 'oxxo_cash') {
+                $payment = [
+                    'type' => $type,
+                    "expires_at" => Carbon::now()->addDays((int) pay('payment_expiration_days', 30))->timestamp
+                ];
+            } else {
+                $payment = [
+                    'type' => $type,
+                    'payment_source_id' => (new Collection($customer->get('payments')))
+                        ->filter(function ($payment) use ($type) {
+                            return $payment['type'] === $type;
+                        })->first()['id']
+                ];
+            }
         }
 
         return Order::create(
@@ -155,6 +162,8 @@ class ConektaDriver extends Driver
             'amount' => $this->parsePrice($toParse['amount']),
             'id' => $toParse['id'],
             'order_id' => $toParse['id'],
+            'payment_id' => $toParse['id'],
+            'charges' => $this->parseCharges(new Collection($toParse['charges'])),
             'items' => $this->parseItems(new Collection($toParse['line_items'])),
         ], $shipping ?? []);
     }
@@ -192,6 +201,26 @@ class ConektaDriver extends Driver
                     'quantity' => $item['quantity'],
                     'id' => $item['id'],
                     'line_id' => $item['id'],
+                ];
+            });
+        })->toArray()['data'];
+    }
+
+    protected function parseCharges(Collection $items)
+    {
+        return $items->only('data')->map(function ($lines) {
+            return (new Collection($lines))->map(function ($item) {
+                return [
+                    'amount' => $this->parsePrice($item['amount']),
+                    'created_at' => $item['created_at'],
+                    'description' => $item['description'],
+                    'fee' => $this->parsePrice($item['fee']),
+                    'payment_method' => $item['payment_method']['store_name'] ?? null,
+                    'barcode_url' => $item['payment_method']['barcode_url'] ?? null,
+                    'reference' => $item['payment_method']['reference'] ?? null,
+                    'service_name' => $item['payment_method']['service_name'] ?? null,
+                    'type' => $item['payment_method']['type'] ?? null,
+                    'expires_at' => $item['payment_method']['expires_at'] ?? null,
                 ];
             });
         })->toArray()['data'];

@@ -136,6 +136,74 @@
     padding-left: 1rem;
     list-style-type: disc;
 }
+.kirby-pay .kp-payment-selector {
+    margin-top: -2rem;
+    margin-bottom: 3.75rem;
+}
+.kirby-pay .kp-payment-methods {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    margin-left: -0.75rem;
+    margin-right: -0.75rem;
+}
+.kirby-pay .kp-method-column {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    flex: 1 1 0;
+}
+.kirby-pay input[type=radio].kp-radio  {
+    display: none;
+}
+.kirby-pay label.kp-radio-label {
+    margin: 1px;
+    position: relative;
+    width: 100%;
+    display: block;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+.kirby-pay input[type=radio].kp-radio + label.kp-radio-label:before {
+    content: '';
+    position: absolute;
+    background-color: transparent;
+    top: -1px;
+    left: -1px;
+    right: -1px;
+    bottom: -1px;
+    z-index: -1;
+    border-radius: 0.25rem;
+    opacity: 0.15;
+}
+.kirby-pay .kp-radio-label-header {
+    position: relative;
+    padding: 11px 15px;
+    font-weight: 600;
+}
+.kirby-pay .kp-radio-label-header:before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: currentColor;
+    opacity: 0.15;
+}
+.kirby-pay .kp-radio-label-body {
+    padding: 11px 15px;
+    font-size: 0.8rem;
+}
+.kirby-pay input[type=radio].kp-radio:checked + label.kp-radio-label:before {
+    background-color: currentColor;
+    opacity: 1;
+}
+.kirby-pay .kp-title {
+    font-weight: 700;
+    width: 100%;
+    margin-bottom: 0.5rem;
+}
 .kirby-pay .kp-flex {
     display: flex;
 }

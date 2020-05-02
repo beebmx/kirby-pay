@@ -1,13 +1,9 @@
 <?php
 
-
 namespace Beebmx\KirbyPay;
 
-
-use Beebmx\KirbyPay\Drivers\Factory;
 use Brick\Money\Context\CustomContext;
 use Brick\Money\Money;
-use Closure;
 use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
@@ -35,6 +31,7 @@ class Resource
 
     protected $money = [
         'amount',
+        'fee'
     ];
 
     protected $sort = 'desc';
@@ -51,11 +48,11 @@ class Resource
         $this->files = new Collection;
     }
 
-
     public function find($value = null)
     {
-
-        if (empty($value)) return false;
+        if (empty($value)) {
+            return false;
+        }
 
         if (Str::isUuid($value)) {
             $filename = $this->findFilenameByUuid($value);
@@ -180,11 +177,10 @@ class Resource
         $this->data = $this->data->filter(function ($record, $key) use ($query, $params) {
             return $record->filter(function ($value, $key) use ($query, $params) {
                 if (in_array($key, $params->pluck('field')->toArray())) {
-                    return $params->filter(function($param) use ($value, $query, $key){
+                    return $params->filter(function ($param) use ($value, $query, $key) {
                         if ($param['field'] === $key && $param['type'] === 'string') {
                             return Str::contains($value, $query);
-                        }
-                        else if ($param['field'] === $key && $param['type'] === 'int') {
+                        } elseif ($param['field'] === $key && $param['type'] === 'int') {
                             return (int) $value === (int) $query;
                         }
                         return false;
@@ -206,15 +202,15 @@ class Resource
             $this->files = $this->files->forPage($page, $perPage);
         }
 
-       return $this;
+        return $this;
     }
 
     public function diffForHumans()
     {
         $this->populate();
 
-        $this->data = $this->data->map(function($item) {
-            return $item->transform(function($value, $key) {
+        $this->data = $this->data->map(function ($item) {
+            return $item->transform(function ($value, $key) {
                 if (in_array($key, $this->dates)) {
                     return $value->diffForHumans();
                 }
@@ -224,7 +220,6 @@ class Resource
         });
 
         return $this;
-
     }
 
     public function setSort(string $sort = 'desc')

@@ -28,6 +28,7 @@
                 <kp-table-key-pair
                     :title="$t('beebmx.kirby-pay.view.customer')"
                     :data="payment.customer"
+                    :exclude="['object']"
                 />
             </k-column>
 
@@ -43,6 +44,14 @@
                 <kp-table-key-pair
                         :title="$t('beebmx.kirby-pay.view.shipping')"
                         :data="shipping"
+                />
+            </k-column>
+
+            <k-column width="1/1">
+                <kp-table-key-pair
+                        :title="$t('beebmx.kirby-pay.view.charges')"
+                        :data="charges"
+                        :images="['barcode_url']"
                 />
             </k-column>
 
@@ -63,6 +72,7 @@
     data: () => ({
       payment: {},
       summary: {},
+      charges: {},
       shipping: {},
       next: false,
       prev: false,
@@ -77,7 +87,7 @@
             : false
       },
       serviceUrl() {
-        return this.$store.getters['kpResources/getServiceUrl']('payments');
+        return `${this.$store.getters['kpResources/getServiceUrl']('payments')}/${this.payment.payment_id}`;
       },
     },
     created() {
@@ -94,11 +104,20 @@
             this.prev = prev
             this.summary = {
               id: payment.id,
+              payment_id: payment.payment_id,
               status: this.$t(`beebmx.kirby-pay.status.${payment.status}`),
               amount: payment.amount,
-              updated_at: this.$library.dayjs(payment.updated_at).format("YYYY-MM-DD H:m:s"),
+              updated_at: this.$library.dayjs(payment.updated_at).format("YYYY-MM-DD H:mm:ss"),
               currency: payment.currency,
             };
+            this.charges = {
+              amount: payment.charges[0].amount,
+              fee: payment.charges[0].fee,
+              reference: payment.charges[0].reference,
+              barcode_url: payment.charges[0].barcode_url,
+              expires_at: payment.charges[0].expires_at ? this.$library.dayjs.unix(payment.charges[0].expires_at).format("YYYY-MM-DD H:mm:ss") : null,
+              payment_method: payment.charges[0].payment_method,
+            }
             this.status = this.$t(`beebmx.kirby-pay.status.${payment.status}`);
             if (payment.shipping) {
               this.shipping = payment.shipping[0]

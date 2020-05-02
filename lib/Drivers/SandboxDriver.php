@@ -209,6 +209,7 @@ class SandboxDriver extends Driver
             'customer' => $toParse['customer_info'],
             'amount' => $toParse['amount'],
             'id' => $toParse['id'],
+            'payment_id' => $toParse['id'],
             'items' => $this->parseItems(new Collection($toParse['line_items']['data'])),
         ], $shipping ?? []);
     }
