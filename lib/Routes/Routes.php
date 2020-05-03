@@ -56,7 +56,7 @@ class Routes implements Routable
                             $shipping ?? null,
                         );
                         return [
-                            'redirect' => url(pay('redirect', 'thanks'), ['params' => ['id' => $payment['uuid']]]),
+                            'redirect' => url(pay('redirect', 'thanks'), ['params' => ['id' => $payment->uuid]]),
                             'success' => true,
                             'error' => false,
                         ];

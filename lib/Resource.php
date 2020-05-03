@@ -14,8 +14,6 @@ class Resource
 {
     protected $data;
 
-    protected $files;
-
     protected $isPopulated = false;
 
     protected $isLoaded = false;
@@ -23,6 +21,8 @@ class Resource
     protected $type;
 
     protected $path;
+
+    protected $model;
 
     protected $dates = [
         'created_at',
@@ -36,16 +36,16 @@ class Resource
 
     protected $sort = 'desc';
 
-    public function __construct(string $type, string $path)
+    public function __construct(string $type, string $path, Model $model)
     {
         $this->path = $path;
         $this->type = $type;
+        $this->model = $model;
 
         Storage::create($this->path);
         Carbon::setLocale(pay('locale', 'en_US'));
 
         $this->data = new Collection;
-        $this->files = new Collection;
     }
 
     public function find($value = null)
@@ -63,7 +63,7 @@ class Resource
         }
 
         try {
-            return $this->read($filename)->toArray();
+            return $this->model->fill($this->read($filename)->toArray());
         } catch (Exception $e) {
             return false;
         }
@@ -75,13 +75,21 @@ class Resource
 
         if ($this->isPopulated) {
             return $this->data->first()
-                ? $this->data->first()->toArray()
+                ? $this->model->fill(
+                    $this->data->first()->toArray()
+                )
                 : false;
         }
 
-        return $this->read(
-            $this->files->first()
-        )->toArray();
+        if ($this->data->isNotEmpty()) {
+            return $this->model->fill(
+                $this->read(
+                    $this->data->first()
+                )->toArray()
+            );
+        } else {
+            return false;
+        }
     }
 
     public function last()
@@ -90,13 +98,21 @@ class Resource
 
         if ($this->isPopulated) {
             return $this->data->last()
-                ? $this->data->last()->toArray()
+                ? $this->model->fill(
+                    $this->data->last()->toArray()
+                )
                 : false;
         }
 
-        return $this->read(
-            $this->files->last()
-        )->toArray();
+        if ($this->data->isNotEmpty()) {
+            return $this->model->fill(
+                $this->read(
+                    $this->data->last()
+                )->toArray()
+            );
+        } else {
+            return false;
+        }
     }
 
     public function write(array $data)
@@ -115,7 +131,7 @@ class Resource
             $record
         );
 
-        return $record;
+        return $this->model->fill($record);
     }
 
     public function read(string $file = null)
@@ -128,18 +144,19 @@ class Resource
     public function get()
     {
         $this->populate();
-        return $this->data->toArray();
+//        return $this->data->toArray();
+
+        return $this->data->map(function($resource) {
+//           dump($resource);
+           return $this->model->newInstance($resource->toArray());
+        })->toArray();
     }
 
     public function take(int $take = 10)
     {
         $this->loadFiles();
 
-        if ($this->isPopulated) {
-            $this->data = $this->data->take($take);
-        } else {
-            $this->files = $this->files->take($take);
-        }
+        $this->data = $this->data->take($take);
 
         return $this;
     }
@@ -150,7 +167,7 @@ class Resource
         if ($this->isPopulated) {
             $this->data = $this->data->skip($count);
         } else {
-            $this->files = $this->files->skip($count);
+            $this->data = $this->data->skip($count);
         }
 
         return $this;
@@ -196,11 +213,8 @@ class Resource
     public function page(int $page = 1, int $perPage = 10)
     {
         $this->loadFiles();
-        if ($this->isPopulated) {
-            $this->data = $this->data->forPage($page, $perPage);
-        } else {
-            $this->files = $this->files->forPage($page, $perPage);
-        }
+
+        $this->data = $this->data->forPage($page, $perPage);
 
         return $this;
     }
@@ -225,7 +239,7 @@ class Resource
     public function setSort(string $sort = 'desc')
     {
         $this->loadFiles();
-        $this->files = $this->sort($this->files, $sort);
+        $this->data = $this->sort($this->data, $sort);
 
         return $this;
     }
@@ -248,7 +262,7 @@ class Resource
     protected function loadFiles()
     {
         if (!$this->isLoaded) {
-            $this->files = $this->sort(
+            $this->data = $this->sort(
                 new Collection($this->getAllFiles()),
                 $this->sort
             );
@@ -274,13 +288,15 @@ class Resource
     protected function populate()
     {
         $this->loadFiles();
-        if (!$this->isPopulated && $this->data->isEmpty()) {
-            foreach ($this->files as $file) {
-                $this->data->put(
+        if (!$this->isPopulated) {
+            $data = new Collection;
+            foreach ($this->data as $file) {
+                $data->put(
                     $this->getUuidByFilename($file),
                     $this->read($file)
                 );
             }
+            $this->data = $data;
             $this->isPopulated = true;
         }
     }

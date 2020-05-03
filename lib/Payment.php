@@ -2,14 +2,10 @@
 
 namespace Beebmx\KirbyPay;
 
-use Beebmx\KirbyPay\Concerns\ManagesResources;
-use Beebmx\KirbyPay\Contracts\Resourceable;
 use Illuminate\Support\Collection;
 
-class Payment implements Resourceable
+class Payment extends Model
 {
-    use ManagesResources;
-
     protected static $path = 'payment';
 
     protected static $type = '.json';

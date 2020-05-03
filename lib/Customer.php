@@ -2,14 +2,10 @@
 
 namespace Beebmx\KirbyPay;
 
-use Beebmx\KirbyPay\Concerns\ManagesResources;
-use Beebmx\KirbyPay\Contracts\Resourceable;
 use Illuminate\Support\Collection;
 
-class Customer implements Resourceable
+class Customer extends Model
 {
-    use ManagesResources;
-
     protected static $path = 'customer';
 
     protected static $type = '.json';
@@ -24,10 +20,10 @@ class Customer implements Resourceable
     public static function firstOrCreate(Collection $promise, $token, $method = null)
     {
         if ($found = static::email($promise['email'])) {
-            return $found;
+            return $found->toArray();
         }
 
-        return static::create($promise, $token, $method);
+        return static::create($promise, $token, $method)->toArray();
     }
 
     public static function email(string $email)
