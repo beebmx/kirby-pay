@@ -17,20 +17,12 @@ abstract class Model implements Resourceable, JsonSerializable, ArrayAccess
 
     protected static $type;
 
-    protected $driver;
-
     public $attributes;
 
     public function __construct(array $attributes = [])
     {
         $this->fill($attributes);
-        $this->bootDriver();
         $this->boot();
-    }
-
-    protected function bootDriver()
-    {
-        $this->driver = (new Factory)->find();
     }
 
     public function boot()
@@ -47,6 +39,11 @@ abstract class Model implements Resourceable, JsonSerializable, ArrayAccess
         $this->attributes = $attributes;
 
         return $this;
+    }
+
+    public function save()
+    {
+        return static::write($this->getAttributes(), $this->id, $this->uuid);
     }
 
     public function newInstance($attributes = [])

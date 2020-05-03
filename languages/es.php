@@ -39,6 +39,7 @@ return [
     'beebmx.kirby-pay.validation.state' => 'Favor de ingresar un estado válido',
     'beebmx.kirby-pay.validation.postal-code' => 'Favor de ingresar un código postal válido',
     'beebmx.kirby-pay.validation.country' => 'Favor de seleccionar un país',
+    'beebmx.kirby-pay.validation.token' => 'El token no existe o es incorrecto',
     'beebmx.kirby-pay.error' => 'Ha ocurrido un error',
 
     //Panel view

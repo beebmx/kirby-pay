@@ -8,6 +8,7 @@ use Beebmx\KirbyPay\Contracts\Routable;
 use Beebmx\KirbyPay\Payment;
 use Exception;
 use Illuminate\Support\Collection;
+use Kirby\Http\Request;
 
 class Routes implements Routable
 {
@@ -28,6 +29,17 @@ class Routes implements Routable
             'name' => 'payment.create',
             'method' => 'POST',
             'action' => function () use ($self) {
+                $request = new Request();
+
+                if(csrf($request->csrf()) !== true) {
+                    return [
+                        'success' => false,
+                        'error' => true,
+                        'errors' => kpT('validation.token'),
+                        'request' => $request->csrf()
+                    ];
+                }
+
                 $process = pay('payment_process', 'charge');
                 $inputs = $self->getInputs(['name', 'email', 'phone', 'token', 'type', 'process', 'items', 'address', 'state', 'city', 'postal_code', 'country']);
 

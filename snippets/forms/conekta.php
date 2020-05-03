@@ -158,6 +158,12 @@
             })
           }.bind(this))
 <?php endif ?>
+        var token = document.head.querySelector('meta[name="csrf-token"]');
+        if (token) {
+          window.axios.defaults.headers.common['x-csrf'] = token.content;
+        } else {
+          console.error('CSRF token not found');
+        }
       },
       setConekta: function() {
         this.process = true;

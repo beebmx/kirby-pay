@@ -115,20 +115,33 @@ class Resource
         }
     }
 
-    public function write(array $data)
+    public function write(array $data, int $id = null, string $uuid = null)
     {
-        $uuid = (string) Str::uuid();
+        $dates = [];
+        if (!$id && !$uuid) {
+            $dates = [
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ];
+        } else {
+            $dates = ['updated_at' => Carbon::now()];
+        }
+
+        $id = $id ?? (int) $this->getNextId();
+        $uuid = $uuid ?? (string) Str::uuid();
+
         $record = array_merge($data, [
-            'pay_id' => $this->getNextId(),
-            'id' => $this->getNextId(),
+            'pay_id' => $id,
+            'id' => $id,
             'uuid' => $uuid,
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
-        ]);
+        ], $dates);
+
 
         Data::write(
-            Storage::path($this->path) . '/' . $this->getNextId() . '-' . $uuid . $this->type,
-            $record
+            Storage::path($this->path) . '/' . $id . '-' . $uuid . $this->type,
+            $this->uncast(
+                (new Collection($record))
+            )
         );
 
         return $this->model->fill($record);
@@ -144,10 +157,8 @@ class Resource
     public function get()
     {
         $this->populate();
-//        return $this->data->toArray();
 
         return $this->data->map(function($resource) {
-//           dump($resource);
            return $this->model->newInstance($resource->toArray());
         })->toArray();
     }
@@ -363,6 +374,16 @@ class Resource
         );
     }
 
+    protected function unparseDate($value)
+    {
+        return $value;
+    }
+
+    protected function unparseMoney($value)
+    {
+        return (float) preg_replace("/[^0-9.]/", '', $value);
+    }
+
     protected function cast(Collection $collection)
     {
         return $collection->map(function ($value, $key) {
@@ -378,5 +399,19 @@ class Resource
             }
             return $value;
         });
+    }
+
+    protected function uncast(Collection $collection): array
+    {
+        return $collection->map(function ($value, $key) {
+            if (is_array($value)) {
+                return $this->uncast(new Collection($value));
+            }
+
+            if (in_array($key, $this->money)) {
+                return $this->unparseMoney($value);
+            }
+            return $value;
+        })->toArray();
     }
 }
