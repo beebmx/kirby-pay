@@ -19,35 +19,56 @@ class Webhook
 
     public function handle()
     {
+        $payment = null;
         if (method_exists($this, $method = $this->eventToMethod($this->payload['type']))) {
-            $this->$method();
+            $payment = $this->$method();
         }
 
+        kirby()->trigger('kirby-pay.' . $this->payload['type'], $payment);
         return ['message' => 'Webhook Received'];
     }
 
     public function handleChargePaid()
     {
         $id = $this->getPaymentId();
-        $payment = Payment::search($id, 'order_id')->first();
-        if ($payment) {
-            $payment->status = $this->getStatus($payment);
-            $payment->save();
-        }
+        $payment = $this->updatePayment($id);
 
         $this->saveLog(['order_id' => $id]);
+        return $payment;
     }
 
     public function handleOrderPaid()
     {
         $id = $this->getPaymentId();
+        $payment = $this->updatePayment($id);
+
+        $this->saveLog(['order_id' => $id]);
+        return $payment;
+    }
+    
+    public function handleTestWebhook()
+    {
+        $payment = new Payment;
+        $payment->status = 'created';
+
+        $this->saveLog([
+            'test' => 'webhook',
+            'type' => 'test.webhook',
+            'status' => 'created',
+        ]);
+
+        return $payment;
+    }
+
+    protected function updatePayment($id)
+    {
         $payment = Payment::search($id, 'order_id')->first();
         if ($payment) {
             $payment->status = $this->getStatus($payment);
             $payment->save();
         }
 
-        $this->saveLog(['order_id' => $id]);
+        return $payment;
     }
 
     protected function getPaymentId()

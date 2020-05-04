@@ -89,20 +89,19 @@ export default {
           })
     },
     status(log) {
-      if (typeof log.data.object.payment_status !== 'undefined') {
-        return log.data.object.payment_status;
+      try {
+        return log.data.object.payment_status || log.data.object.status
+      } catch(e) {
+        try {
+          return log.data.status;
+        } catch (e) {
+          try {
+            return log.status;
+          } catch (e) {
+            return '';
+          }
+        }
       }
-      else if (typeof log.data.object.status !== 'undefined') {
-        return log.data.object.status;
-      }
-      else if (typeof log.data.status !== 'undefined') {
-        return log.data.status;
-      }
-      else if (typeof log.status !== 'undefined') {
-        return log.status;
-      }
-
-      return ''
     }
   }
 };
