@@ -3,6 +3,7 @@
     <k-header>
       {{ $t('beebmx.kirby-pay.view.customers') }}
       <k-button-group slot="left">
+        <k-button v-if="inDevelopment" icon="code" link="/plugins/development">{{ $t('beebmx.kirby-pay.view.development') }}</k-button>
         <k-button icon="money" link="/plugins/payments">{{ $t('beebmx.kirby-pay.view.payments') }}</k-button>
       </k-button-group>
       <k-button-group slot="right">
@@ -13,7 +14,7 @@
       <k-list-item
               v-for="customer in customers"
               :key="customer.id"
-              :icon="{type: 'money', back: 'black'}"
+              :icon="{type: 'user', back: 'black'}"
               :text="title(customer)"
               :info="customer.updated_at"
               :link="`/plugins/customer/${customer.uuid}`"
@@ -57,9 +58,9 @@ export default {
 
       this.$api
           .get(`beebmx/kirby-pay/customers/${page}`)
-          .then(({customers, resource, exists, service}) => {
-            this.customers = customers
-            this.set(resource, exists, service)
+          .then(({customers, resource}) => {
+            this.customers = customers;
+            this.set(resource);
           })
     },
     title(customer) {

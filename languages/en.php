@@ -47,6 +47,7 @@ return [
     'view.payment' => 'Payment',
     'view.customers' => 'Customers',
     'view.customer' => 'Customer',
+    'view.development' => 'Development',
     'beebmx.kirby-pay.view.payments' => 'Payments',
     'beebmx.kirby-pay.view.payment' => 'Payment',
     'beebmx.kirby-pay.view.customer' => 'Customer',
@@ -61,11 +62,8 @@ return [
     'beebmx.kirby-pay.view.prev' => 'Previous',
     'beebmx.kirby-pay.view.payment_methods' => 'Payment Methods',
     'beebmx.kirby-pay.view.charges' => 'Charges',
-    'beebmx.kirby-pay.table.expires_at' => 'Expires at',
-    'beebmx.kirby-pay.table.barcode_url' => 'Barcode',
-    'beebmx.kirby-pay.table.reference' => 'Reference',
-    'beebmx.kirby-pay.table.fee' => 'Fee',
-    'beebmx.kirby-pay.table.payment_method' => 'Método de pago',
+    'beebmx.kirby-pay.view.development' => 'Development',
+    'beebmx.kirby-pay.view.webhook' => 'Webhook',
 
     //Panel table
     'beebmx.kirby-pay.table.id' => 'ID',
@@ -90,6 +88,13 @@ return [
     'beebmx.kirby-pay.table.type' => 'Methodo de pago',
     'beebmx.kirby-pay.table.last4' => 'Last 4 digits',
     'beebmx.kirby-pay.table.brand' => 'Brand',
+    'beebmx.kirby-pay.table.expires_at' => 'Expires at',
+    'beebmx.kirby-pay.table.barcode_url' => 'Barcode',
+    'beebmx.kirby-pay.table.reference' => 'Reference',
+    'beebmx.kirby-pay.table.fee' => 'Fee',
+    'beebmx.kirby-pay.table.payment_method' => 'Método de pago',
+    'beebmx.kirby-pay.table.customer_id' => 'Client ID',
+    'beebmx.kirby-pay.table.url' => 'URL',
 
     //Panel status
     'beebmx.kirby-pay.status.pending_payment' => 'Pending payment',

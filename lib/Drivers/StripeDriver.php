@@ -32,16 +32,18 @@ class StripeDriver extends Driver
 
     public function getUrls(): array
     {
-        if (pay('env', 'test') === 'test') {
+        if (kpInDevelopment()) {
             return [
                 'customers' => 'https://dashboard.stripe.com/test/customers',
                 'payments' => 'https://dashboard.stripe.com/test/payments',
+                'logs' => null,
             ];
         }
 
         return [
             'customers' => 'https://dashboard.stripe.com/customers',
             'payments' => 'https://dashboard.stripe.com/payments',
+            'logs' => null,
         ];
     }
 

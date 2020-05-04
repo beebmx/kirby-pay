@@ -29,7 +29,7 @@ export default {
     this.$store.dispatch('kpResources/init', this.current)
   },
   methods: {
-    set(resource, exists, service) {
+    set(resource) {
       this.$store.dispatch('kpResources/set', resource)
     },
   }

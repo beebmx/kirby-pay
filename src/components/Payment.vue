@@ -110,13 +110,15 @@
               updated_at: this.$library.dayjs(payment.updated_at).format("YYYY-MM-DD H:mm:ss"),
               currency: payment.currency,
             };
-            this.charges = {
-              amount: payment.charges[0].amount,
-              fee: payment.charges[0].fee,
-              reference: payment.charges[0].reference,
-              barcode_url: payment.charges[0].barcode_url,
-              expires_at: payment.charges[0].expires_at ? this.$library.dayjs.unix(payment.charges[0].expires_at).format("YYYY-MM-DD H:mm:ss") : null,
-              payment_method: payment.charges[0].payment_method,
+            if (payment.charges) {
+                this.charges = {
+                  amount: payment.charges[0].amount,
+                  fee: payment.charges[0].fee,
+                  reference: payment.charges[0].reference,
+                  barcode_url: payment.charges[0].barcode_url,
+                  expires_at: payment.charges[0].expires_at ? this.$library.dayjs.unix(payment.charges[0].expires_at).format("YYYY-MM-DD H:mm:ss") : null,
+                  payment_method: payment.charges[0].payment_method,
+                }
             }
             this.status = this.$t(`beebmx.kirby-pay.status.${payment.status}`);
             if (payment.shipping) {

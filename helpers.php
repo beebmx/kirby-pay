@@ -66,3 +66,10 @@ if (!function_exists('kpPaymentMethods')) {
         })->values()->toArray();
     }
 }
+
+if (!function_exists('kpInDevelopment')) {
+    function kpInDevelopment()
+    {
+        return in_array(pay('env', 'production'), ['test', 'local']);
+    }
+}

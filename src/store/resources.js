@@ -5,6 +5,7 @@ const state = {
   service: {},
   exists: {},
   current: null,
+  development: false,
 }
 
 const getters = {
@@ -25,16 +26,19 @@ const getters = {
   getServiceUrl: (state) => resource => {
     return state.service[resource]
   },
+  inDevelopment(state) {
+    return state.development
+  },
 }
 
 const actions = {
   init({commit}, resource) {
     commit('INIT', resource)
   },
-  config({commit}, {service, resources}) {
+  config({commit}, {service, resources, development}) {
     commit('SERVICE', service)
     commit('EXISTS', resources)
-    // commit('SET', resource)
+    commit('DEVELOPMENT', development)
   },
   set({commit}, resource) {
     commit('SET', resource)
@@ -56,6 +60,9 @@ const mutations = {
   },
   SERVICE(state, service) {
     state.service = service
+  },
+  DEVELOPMENT(state, development) {
+    state.development = development
   },
 }
 

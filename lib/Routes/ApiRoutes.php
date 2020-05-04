@@ -2,11 +2,16 @@
 
 namespace Beebmx\KirbyPay\Routes;
 
+use Beebmx\KirbyPay\Concerns\ManagesRoutes;
+use Beebmx\KirbyPay\Contracts\Routable;
 use Beebmx\KirbyPay\Customer;
+use Beebmx\KirbyPay\Log;
 use Beebmx\KirbyPay\Payment;
 
-class ApiRoutes
+class ApiRoutes implements Routable
 {
+    use ManagesRoutes;
+
     protected $instance;
 
     public function __construct()
@@ -22,6 +27,7 @@ class ApiRoutes
             $this->getPayment(),
             $this->getCustomers(),
             $this->getCustomer(),
+            $this->getDevelopment(),
         ];
     }
 
@@ -37,11 +43,13 @@ class ApiRoutes
                         'name' => ucfirst(pay('service', 'sandbox')),
                         'customers' => Customer::serviceUrl(),
                         'payments' => Payment::serviceUrl(),
+                        'logs' => Log::serviceUrl(),
                     ],
                     'resources' => [
                         'payments' => !Payment::isEmpty(),
                         'customers' => !Customer::isEmpty(),
                     ],
+                    'development' => kpInDevelopment(),
                 ];
             }
         ];
@@ -60,10 +68,6 @@ class ApiRoutes
                         'total' => Payment::count(),
                         'page' => $page,
                         'pagination' => pay('pagination', 10),
-                    ],
-                    'service' => ucfirst(pay('service', 'sandbox')),
-                    'exists' => [
-                        'customers' => !Customer::isEmpty()
                     ],
                 ];
             }
@@ -104,10 +108,6 @@ class ApiRoutes
                         'page' => $page,
                         'pagination' => pay('pagination', 10),
                     ],
-                    'service' => ucfirst(pay('service', 'sandbox')),
-                    'exists' => [
-                        'payments' => !Payment::isEmpty()
-                    ],
                 ];
             }
         ];
@@ -128,6 +128,26 @@ class ApiRoutes
                     'customer' => $customer,
                     'next' => $next['uuid'] ?? false,
                     'prev' => $prev['uuid'] ?? false,
+                ];
+            }
+        ];
+    }
+
+    public function getDevelopment()
+    {
+        return [
+            'pattern' => 'beebmx/kirby-pay/development/(:num)',
+            'method' => 'GET',
+            'action' => function (int $page) {
+                return [
+                    'success' => true,
+                    'webhook' => url(ApiRoutes::getBaseApiPath() . 'webhook'),
+                    'logs' => Log::page($page, pay('pagination', 10))->diffForHumans()->get(),
+                    'resource' => [
+                        'total' => Log::count(),
+                        'page' => $page,
+                        'pagination' => pay('pagination', 10),
+                    ],
                 ];
             }
         ];

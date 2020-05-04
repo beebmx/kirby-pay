@@ -6,6 +6,7 @@ use Beebmx\KirbyPay\Concerns\ManagesRoutes;
 use Beebmx\KirbyPay\Concerns\ValidateRoutes;
 use Beebmx\KirbyPay\Contracts\Routable;
 use Beebmx\KirbyPay\Payment;
+use Beebmx\KirbyPay\Webhook;
 use Exception;
 use Illuminate\Support\Collection;
 use Kirby\Http\Request;
@@ -18,6 +19,7 @@ class Routes implements Routable
     {
         return [
             $this->createPaymentCard(),
+            $this->handleWebhooks(),
         ];
     }
 
@@ -81,6 +83,19 @@ class Routes implements Routable
                     }
                 }
             },
+        ];
+    }
+
+    public function handleWebhooks()
+    {
+        return [
+            'pattern' => static::getBaseApiPath() . 'webhook',
+            'name' => 'webhook.handle',
+            'method' => 'POST',
+            'action' => function () {
+                $request = new Request;
+                return (new Webhook($request))->handle();
+            }
         ];
     }
 }

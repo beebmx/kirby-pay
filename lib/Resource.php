@@ -360,7 +360,11 @@ class Resource
 
     protected function parseDate($date)
     {
-        return Carbon::create($date);
+        try {
+            return Carbon::create($date);
+        } catch (Exception $e) {
+            return $date;
+        }
     }
 
     protected function parseMoney($value)

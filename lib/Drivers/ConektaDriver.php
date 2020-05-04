@@ -32,6 +32,7 @@ class ConektaDriver extends Driver
         return [
             'customers' => 'https://admin.conekta.com/customers',
             'payments' => 'https://admin.conekta.com/orders',
+            'logs' => 'https://admin.conekta.com/logs',
         ];
     }
 

@@ -2,8 +2,6 @@
 
 namespace Beebmx\KirbyPay\Concerns;
 
-use Illuminate\Support\Collection;
-
 trait ManagesRoutes
 {
     public static function getBaseApiPath()

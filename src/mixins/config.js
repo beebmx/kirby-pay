@@ -5,7 +5,10 @@ export default {
     },
     serviceUrlUnavailable() {
       return !this.serviceUrl
-    }
+    },
+    inDevelopment() {
+      return this.$store.getters['kpResources/inDevelopment'];
+    },
   },
   created() {
     this.config()
@@ -14,8 +17,8 @@ export default {
     config() {
       this.$api
         .get(`beebmx/kirby-pay/config`)
-        .then(({service, resources}) => {
-          this.$store.dispatch('kpResources/config', {service, resources})
+        .then(({service, resources, development}) => {
+          this.$store.dispatch('kpResources/config', {service, resources, development})
         })
     },
     set(resource, exists, service) {

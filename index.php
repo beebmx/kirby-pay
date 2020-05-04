@@ -15,7 +15,7 @@ use Beebmx\KirbyPay\Routes\Routes;
 
 Kirby::plugin('beebmx/kirby-pay', [
     'options' => [
-        'env' => 'test',
+        'env' => 'production',
         'service' => 'sandbox',
         'service_key' => null,
         'service_secret' => null,
@@ -32,6 +32,7 @@ Kirby::plugin('beebmx/kirby-pay', [
         'payment_expiration_days' => 30,
         'pagination' => 10,
         'redirect' => 'thanks',
+        'logs' => false,
         'storage' => function () {
             return kirby()->roots()->index() . '/pay';
         },

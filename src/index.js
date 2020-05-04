@@ -2,6 +2,7 @@ import Payments from "./components/Payments.vue";
 import Payment from "./components/Payment.vue";
 import Customers from "./components/Customers.vue";
 import Customer from "./components/Customer.vue";
+import Development from "./components/Development.vue";
 import Resources from "./store/resources"
 
 panel.plugin("beebmx/kirby-pay", {
@@ -32,14 +33,14 @@ panel.plugin("beebmx/kirby-pay", {
       icon: "money",
       menu: true,
     },
-    payment: {
-      component: Payment,
-      icon: "money",
-      menu: false,
-    },
     customers: {
       component: Customers,
       icon: "users",
+      menu: false,
+    },
+    development: {
+      component: Development,
+      icon: "code",
       menu: false,
     },
   },

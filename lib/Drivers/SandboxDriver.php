@@ -27,6 +27,7 @@ class SandboxDriver extends Driver
         return [
             'customers' => null,
             'payments' => null,
+            'logs' => null,
         ];
     }
 

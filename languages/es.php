@@ -47,6 +47,7 @@ return [
     'view.payment' => 'Pago',
     'view.customers' => 'Clientes',
     'view.customer' => 'cliente',
+    'view.development' => 'Desarrollo',
     'beebmx.kirby-pay.view.payments' => 'Pagos',
     'beebmx.kirby-pay.view.payment' => 'Pago',
     'beebmx.kirby-pay.view.customers' => 'Clientes',
@@ -61,6 +62,8 @@ return [
     'beebmx.kirby-pay.view.prev' => 'Anterior',
     'beebmx.kirby-pay.view.payment_methods' => 'Formas de pago',
     'beebmx.kirby-pay.view.charges' => 'Cargos',
+    'beebmx.kirby-pay.view.development' => 'Desarrollo',
+    'beebmx.kirby-pay.view.webhook' => 'Webhook',
 
     //Panel table
     'beebmx.kirby-pay.table.id' => 'ID',
@@ -90,6 +93,8 @@ return [
     'beebmx.kirby-pay.table.reference' => 'Referencia',
     'beebmx.kirby-pay.table.fee' => 'Comisión',
     'beebmx.kirby-pay.table.payment_method' => 'Método de pago',
+    'beebmx.kirby-pay.table.customer_id' => 'ID Cliente',
+    'beebmx.kirby-pay.table.url' => 'URL',
 
     //Panel status
     'beebmx.kirby-pay.status.pending_payment' => 'Pago pendiente',
