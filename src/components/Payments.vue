@@ -102,6 +102,10 @@ export default {
   .k-icon.paid {
     color: var(--color-positive-light);
   }
+  .k-list-item.succeeded .k-list-item-options .k-icon,
+  .k-icon.succeeded {
+    color: var(--color-positive-light);
+  }
   .k-list-item.refunded .k-list-item-options .k-icon,
   .k-icon.refunded {
     color: var(--color-positive-light);

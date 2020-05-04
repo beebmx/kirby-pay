@@ -28,24 +28,111 @@ class Webhook
         return ['message' => 'Webhook Received'];
     }
 
+    public function handleChargeCreated()
+    {
+        return $this->notifyPayment();
+    }
+
+    public function handleChargeCaptured()
+    {
+        return $this->notifyPayment();
+    }
+
     public function handleChargePaid()
     {
-        $id = $this->getPaymentId();
-        $payment = $this->updatePayment($id);
+        return $this->processPayment();
+    }
 
-        $this->saveLog(['order_id' => $id]);
+    public function handleChargeSucceeded()
+    {
+        return $this->processPayment();
+    }
+
+    public function handleChargeExpired()
+    {
+        return $this->processPayment();
+    }
+
+    public function handleChargeFailed()
+    {
+        return $this->processPayment();
+    }
+
+    public function handleChargeUpdated()
+    {
+        return $this->processPayment();
+    }
+
+    public function handleChargeRefunded()
+    {
+        $payment = $this->getPayment();
+        if ($payment) {
+            $amount = $payment->amount;
+            $refunded = 0;
+
+            if (isset($this->payload['data']['object']['amount']) && isset($this->payload['data']['object']['amount_refunded'])) {
+                $amount = abs(Payment::parseAmount($this->payload['data']['object']['amount']));
+                $refunded = abs(Payment::parseAmount($this->payload['data']['object']['amount_refunded']));
+            } elseif (isset($this->payload['data']['object']['amount']) && isset($this->payload['data']['object']['refunds']['data']['amount'])) {
+                $amount = abs(Payment::parseAmount($this->payload['data']['object']['amount']));
+                $refunded = abs(Payment::parseAmount($this->payload['data']['object']['refunds']['data']['amount']));
+            }
+
+            $payment->amount = (int) $amount - (int) $refunded;
+            $payment->status = 'refunded';
+            $payment->save();
+        }
+
+        $this->saveLog();
         return $payment;
+    }
+
+    public function handleChargePartiallyRefunded()
+    {
+        $payment = $this->getPayment();
+
+        if ($payment) {
+            $amount = $payment->amount;
+            $refunded = 0;
+
+            if (isset($this->payload['data']['object']['amount']) && isset($this->payload['data']['object']['refunds']['data']['amount'])) {
+                $amount = abs(Payment::parseAmount($this->payload['data']['object']['amount']));
+                $refunded = abs(Payment::parseAmount($this->payload['data']['object']['refunds']['data']['amount']));
+            }
+
+            $payment->amount = (int) $amount - (int) $refunded;
+            $payment->status = 'refunded';
+            $payment->save();
+        }
+
+        $this->saveLog();
+        return $payment;
+    }
+
+    public function handlePaymentIntentCreated()
+    {
+        return $this->processPayment();
+    }
+
+    public function handlePaymentIntentSucceeded()
+    {
+        return $this->processPayment();
     }
 
     public function handleOrderPaid()
     {
+        return $this->processPayment();
+    }
+
+    public function handleChargeChargebackCreated()
+    {
         $id = $this->getPaymentId();
         $payment = $this->updatePayment($id);
 
-        $this->saveLog(['order_id' => $id]);
+        $this->saveLog();
         return $payment;
     }
-    
+
     public function handleTestWebhook()
     {
         $payment = new Payment;
@@ -60,9 +147,26 @@ class Webhook
         return $payment;
     }
 
+    protected function notifyPayment()
+    {
+        $this->saveLog();
+
+        return $this->getPayment();
+    }
+
+    protected function processPayment()
+    {
+        $id = $this->getPaymentId();
+        $payment = $this->updatePayment($id);
+
+        $this->saveLog(['payment_id' => $id]);
+
+        return $payment;
+    }
+
     protected function updatePayment($id)
     {
-        $payment = Payment::search($id, 'order_id')->first();
+        $payment = Payment::search($id, 'payment_id')->first();
         if ($payment) {
             $payment->status = $this->getStatus($payment);
             $payment->save();
@@ -73,7 +177,13 @@ class Webhook
 
     protected function getPaymentId()
     {
-        if (isset($this->payload['data']['object']['order_id'])) {
+        if (isset($this->payload['data']['object']['payment_intent'])) {
+            return $this->payload['data']['object']['payment_intent'];
+        } elseif (isset($this->payload['data']['payment_intent'])) {
+            return $this->payload['data']['payment_intent'];
+        } elseif (isset($this->payload['payment_intent'])) {
+            return $this->payload['payment_intent'];
+        } elseif (isset($this->payload['data']['object']['order_id'])) {
             return $this->payload['data']['object']['order_id'];
         } elseif (isset($this->payload['data']['order_id'])) {
             return $this->payload['data']['order_id'];
@@ -88,6 +198,12 @@ class Webhook
         }
 
         return null;
+    }
+
+    protected function getPayment()
+    {
+        $id = $this->getPaymentId();
+        return Payment::search($id, 'payment_id')->first();
     }
 
     protected function getStatus(Payment $payment)

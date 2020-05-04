@@ -108,5 +108,6 @@ return [
     'beebmx.kirby-pay.status.voided' => 'Voided',
     'beebmx.kirby-pay.status.created' => 'Created',
     'beebmx.kirby-pay.status.fulfilled' => 'Fulfilled',
+    'beebmx.kirby-pay.status.succeeded' => 'Succeeded',
 
 ];

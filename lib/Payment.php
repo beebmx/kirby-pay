@@ -35,4 +35,9 @@ class Payment extends Model
     {
         return static::getDriver()->getPaymentMethods();
     }
+
+    public static function parseAmount($amount)
+    {
+        return static::getDriver()->parsePrice($amount);
+    }
 }
