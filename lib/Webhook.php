@@ -24,7 +24,7 @@ class Webhook
             $payment = $this->$method();
         }
 
-        kirby()->trigger('kirby-pay.' . $this->payload['type'], $payment);
+        kirby()->trigger('beebmx.kirby-pay.' . $this->payload['type'], $payment);
         return ['message' => 'Webhook Received'];
     }
 
