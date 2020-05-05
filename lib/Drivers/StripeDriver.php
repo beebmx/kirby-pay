@@ -125,7 +125,7 @@ class StripeDriver extends Driver
         }
         else {
             $options = [
-                'customer' => $customer->get('id'),
+                'customer' => $customer->get('customer_id'),
             ];
         }
 

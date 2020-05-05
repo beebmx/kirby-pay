@@ -2,7 +2,7 @@
     <form class="<?= kpStyle('form', 'kp-form') ?>" x-data="kirbyPay()" x-init="mount" @submit.prevent="send">
         <input type="hidden" x-model="type">
         <fieldset class="<?= kpStyle('fieldset', 'kp-fieldset') ?> <?= kpStyle('background', 'kp-bg-transparent') ?>">
-            <legend class="kp-legend"><?= kpT('general') ?>:</legend>
+            <legend class="<?= kpStyle('legend', 'kp-legend') ?>"><?= kpT('general') ?>:</legend>
             <div class="<?= kpStyle('field', 'kp-field') ?>" :class="{'<?= kpStyle('error', 'kp-text-red') ?>':error('name')}">
                 <label for="kp-name" class="<?= kpStyle('label', 'kp-label') ?>"><?= kpT('name') ?></label>
                 <input id="kp-name" name="kp-name"  type="text" class="<?= kpStyle('input', 'kp-input') ?> <?= kpStyle('background', 'kp-bg-transparent') ?>" required placeholder="<?= kpT('name') ?>" aria-label="Name" x-model="data.name">
@@ -19,7 +19,7 @@
 
         <?php if((bool) pay('shipping')): ?>
         <fieldset class="<?= kpStyle('fieldset', 'kp-fieldset') ?> <?= kpStyle('background', 'kp-bg-transparent') ?>">
-            <legend class="kp-legend"><?= kpT('address-send') ?>:</legend>
+            <legend class="<?= kpStyle('legend', 'kp-legend') ?>"><?= kpT('address-send') ?>:</legend>
             <div class="<?= kpStyle('field', 'kp-field') ?>" :class="{'<?= kpStyle('error', 'kp-text-red') ?>':error('address')}">
                 <label for="kp-address" class="<?= kpStyle('label', 'kp-label') ?>"><?= kpT('address') ?></label>
                 <input id="kp-address" name="kp-address"  type="text" class="<?= kpStyle('input', 'kp-input') ?> <?= kpStyle('background', 'kp-bg-transparent') ?>" required placeholder="<?= kpT('address') ?>" aria-label="Name" x-model="data.address">
@@ -49,7 +49,7 @@
         <?php endif ?>
 
         <fieldset class="<?= kpStyle('fieldset', 'kp-fieldset') ?> <?= kpStyle('background', 'kp-bg-transparent') ?>">
-            <legend class="kp-legend"><?= kpT('payment-information') ?>:</legend>
+            <legend class="<?= kpStyle('legend', 'kp-legend') ?>"><?= kpT('payment-information') ?>:</legend>
             <div class="<?= kpStyle('field', 'kp-field') ?>">
                 <label for="kp-card-name" class="<?= kpStyle('label', 'kp-label') ?>"><?= kpT('card-name') ?></label>
                 <input id="kp-card-name" name="kp-card-name" type="text" class="<?= kpStyle('input', 'kp-input') ?> <?= kpStyle('background', 'kp-bg-transparent') ?>" aria-label="Card name" required placeholder="<?= kpT('card-name') ?>" x-model="data.card_name">
