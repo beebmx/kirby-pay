@@ -2,8 +2,7 @@
 
 namespace Beebmx\KirbyPay\Drivers;
 
-use Exception;
-use ReflectionClass;
+use Illuminate\Support\Str;
 
 class Factory
 {
@@ -16,35 +15,16 @@ class Factory
     {
         $class = $this->getClass();
 
-        if ($this->isInstantiable($class) && class_exists($class)) {
-            return new $class;
+        if (!class_exists($class)) {
+            throw new DriverException('The driver requested does not exists');
         }
 
-        throw new Exception('The driver requested does not exists');
-    }
-
-    protected function isInstantiable(string $service)
-    {
-        return $this->getCurrentClass()->isInstantiable();
-    }
-
-    protected function getCurrentNamespace()
-    {
-        return $this->getCurrentClass()->getNamespaceName();
-    }
-
-    protected function getCurrentClass()
-    {
-        try {
-            return new ReflectionClass($this);
-        } catch (Exception $e) {
-            return null;
-        }
+        return new $class;
     }
 
     protected function getClass()
     {
-        return $this->getCurrentNamespace() . '\\' . ucfirst($this->getService() . 'Driver');
+        return 'Beebmx\\KirbyPay\\Drivers\\' . Str::studly($this->getService() . 'Driver');
     }
 
     protected function getService()

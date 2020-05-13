@@ -13,7 +13,7 @@
     <k-list>
       <k-list-item
               v-for="payment in payments"
-              :key="payment.id"
+              :key="payment.pay_id"
               :class="payment.status"
               :icon="{type: 'money', back: 'black'}"
               :text="title(payment)"
@@ -21,16 +21,6 @@
               :flag="{icon: 'circle'}"
               :link="`/plugins/payment/${payment.uuid}`"
       />
-<!--      <k-list-item-->
-<!--              v-for="payment in payments"-->
-<!--              :key="payment.id"-->
-<!--              :class="payment.status"-->
-<!--              :icon="{type: 'money', back: 'black'}"-->
-<!--              :text="title(payment)"-->
-<!--              :info="payment.updated_at"-->
-<!--              :flag="{icon: 'circle'}"-->
-<!--              :link="`/plugins/payment/${payment.uuid}`"-->
-<!--      />-->
     </k-list>
     <k-pagination
             align="center"

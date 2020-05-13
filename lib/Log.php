@@ -16,6 +16,6 @@ class Log extends Model
     }
     public static function serviceUrl()
     {
-        return static::getDriver()->getUrls()['logs'];
+        return static::driver()->getUrls()['logs'];
     }
 }

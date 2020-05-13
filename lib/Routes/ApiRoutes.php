@@ -81,8 +81,8 @@ class ApiRoutes implements Routable
             'method' => 'GET',
             'action' => function ($id) {
                 $payment = Payment::find((string) $id);
-                $next = Payment::find((int) $payment->id + 1);
-                $prev = Payment::find((int) $payment->id - 1);
+                $next = Payment::find((int) $payment->pay_id + 1);
+                $prev = Payment::find((int) $payment->pay_id - 1);
                 return [
                     'success' => true,
                     'id' => (int) $id,
@@ -120,8 +120,8 @@ class ApiRoutes implements Routable
             'method' => 'GET',
             'action' => function ($id) {
                 $customer = Customer::find((string) $id);
-                $next = Customer::find((int) $customer->id + 1);
-                $prev = Customer::find((int) $customer->id - 1);
+                $next = Customer::find((int) $customer->pay_id + 1);
+                $prev = Customer::find((int) $customer->pay_id - 1);
                 return [
                     'success' => true,
                     'id' => (int) $id,

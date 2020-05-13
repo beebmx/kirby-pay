@@ -16,6 +16,7 @@ class DriverTest extends TestCase
     {
         Kirby::destroy();
     }
+
     /** @test */
     public function it_throw_an_error_if_the_driver_does_not_exists()
     {

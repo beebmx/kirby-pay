@@ -2,6 +2,10 @@
 
 namespace Beebmx\KirbyPay\Contracts;
 
+use Beebmx\KirbyPay\Elements\Buyer;
+use Beebmx\KirbyPay\Elements\Charge;
+use Beebmx\KirbyPay\Elements\Items;
+use Beebmx\KirbyPay\Elements\Shipping;
 use Illuminate\Support\Collection;
 
 interface Driverable
@@ -14,9 +18,9 @@ interface Driverable
 
     public function createOrder(Collection $customer, Collection $items, string $token = null, string $type = null, Collection $shipping = null);
 
-    public function createCharge(Collection $customer, Collection $items, string $token = null, string $type = null, Collection $shipping = null);
+    public function createCharge(Buyer $customer, Items $items, string $token = null, string $type = null, Shipping $shipping = null): Charge;
 
-    public function parseOrder(Collection $order, Collection $customer = null, Collection $items = null): array;
+    //public function parseOrder(Collection $order, Collection $customer = null, Collection $items = null): array;
 
     public function preparePrice($amount): int;
 
@@ -25,5 +29,4 @@ interface Driverable
     public function getUrls(): array;
 
     public function getPaymentMethods(): array;
-
 }

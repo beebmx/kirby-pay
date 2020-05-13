@@ -26,6 +26,11 @@
         "phpunit/phpunit": "^8.5",
         "getkirby/cms": "^3.3"
     },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
     "autoload": {
         "files": [
             "helpers.php"

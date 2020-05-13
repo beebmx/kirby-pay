@@ -1,6 +1,6 @@
 <?php if(($items ?? null)): ?>
 <?php
-    snippet('kirby-pay.form.' . pay('service'), [
+    snippet('kirby-pay.driver.' . pay('service'), [
         'items' => $items,
         'process' => $process ?? pay('default_payment_process', 'charge'),
     ])

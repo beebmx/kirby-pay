@@ -13,7 +13,7 @@ class Customer extends Model
     public static function create(Collection $customer, $token, $method = null)
     {
         return static::write(
-            static::getDriver()->createCustomer($customer, $token, $method)
+            static::driver()->createCustomer($customer, $token, $method)
         );
     }
 
@@ -33,6 +33,6 @@ class Customer extends Model
 
     public static function serviceUrl()
     {
-        return static::getDriver()->getUrls()['customers'];
+        return static::driver()->getUrls()['customers'];
     }
 }

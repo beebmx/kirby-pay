@@ -2,6 +2,10 @@
 
 namespace Beebmx\KirbyPay\Drivers;
 
+use Beebmx\KirbyPay\Elements\Buyer;
+use Beebmx\KirbyPay\Elements\Charge;
+use Beebmx\KirbyPay\Elements\Items;
+use Beebmx\KirbyPay\Elements\Shipping;
 use Beebmx\KirbyPay\KirbyPay;
 use Conekta\Conekta;
 use Conekta\Customer;
@@ -94,10 +98,49 @@ class ConektaDriver extends Driver
         );
     }
 
-    public function createCharge(Collection $customer, Collection $items, string $token = null, string $type = null, Collection $shipping = null)
+    public function createCharge(Buyer $customer, Items $items, string $token = null, string $type = null, Shipping $shipping = null): Charge
     {
-        return $this->parseOrder(
-            new Collection($this->orderWithItems($customer, $items, $token, $type, $shipping))
+        $payment = [];
+        if ($token) {
+            $payment = [
+                'token_id' => $token,
+                'type' => $type
+            ];
+        } elseif ($type === 'oxxo_cash') {
+            $payment = [
+                'type' => $type,
+                'expires_at' => Carbon::now()->addDays((int) pay('payment_expiration_days', 30))->timestamp
+            ];
+        }
+
+        $order = Order::create(
+            array_merge([
+                'currency' => strtoupper(pay('currency')),
+                'customer_info' => (new Collection($customer))->filter(function ($value) {
+                    return !empty($value);
+                })->toArray(),
+                'line_items' => $items->all()->map(function ($item) {
+                    return [
+                        'name' => $item->name,
+                        'unit_price' => $this->preparePrice($item->amount),
+                        'quantity' => $item->quantity,
+                    ];
+                })->toArray(),
+                'charges' => [[
+                    'payment_method' => $payment,
+                ]],
+            ], $shipping ? $this->prepareShipping($shipping) : [])
+        );
+
+        $charge = (new Collection($order))->only(['id', 'payment_status', 'charges']);
+
+        return new Charge(
+            $charge['id'],
+            $charge['payment_status'],
+            $customer,
+            $items,
+            $shipping,
+            $this->parseCharges(new Collection($charge['charges']))
         );
     }
 
@@ -113,7 +156,7 @@ class ConektaDriver extends Driver
             if ($type === 'oxxo_cash') {
                 $payment = [
                     'type' => $type,
-                    "expires_at" => Carbon::now()->addDays((int) pay('payment_expiration_days', 30))->timestamp
+                    'expires_at' => Carbon::now()->addDays((int) pay('payment_expiration_days', 30))->timestamp
                 ];
             } else {
                 $payment = [
@@ -169,15 +212,15 @@ class ConektaDriver extends Driver
         ], $shipping ?? []);
     }
 
-    protected function prepareShipping(Collection $shipping)
+    protected function prepareShipping(Shipping $shipping)
     {
         if ($shipping->isNotEmpty()) {
             $address = (new Collection([
-                'street1' => $shipping->get('address'),
-                'city' => $shipping->get('city'),
-                'state' => $shipping->get('state'),
-                'postal_code' => $shipping->get('postal_code'),
-                'country' => $shipping->get('country'),
+                'street1' => $shipping->address,
+                'city' => $shipping->city,
+                'state' => $shipping->state,
+                'postal_code' => $shipping->postal_code,
+                'country' => $shipping->country,
             ]))->filter(function ($value) {
                 return !empty($value);
             })->toArray();

@@ -3,16 +3,6 @@
 use Beebmx\KirbyPay\Routes\ApiRoutes;
 use Beebmx\KirbyPay\Routes\Routes;
 
-\Illuminate\Support\Collection::macro('recursive', function () {
-    return $this->map(function ($value) {
-        if (is_array($value) || is_object($value)) {
-            return collect($value)->recursive();
-        }
-
-        return $value;
-    });
-});
-
 Kirby::plugin('beebmx/kirby-pay', [
     'options' => [
         'env' => 'production',
@@ -90,8 +80,14 @@ Kirby::plugin('beebmx/kirby-pay', [
         'kirby-pay.styles' => __DIR__ . '/snippets/styles.php',
         'kirby-pay.scripts' => __DIR__ . '/snippets/scripts.php',
         'kirby-pay.form' => __DIR__ . '/snippets/form.php',
-        'kirby-pay.form.sandbox' => __DIR__ . '/snippets/forms/sandbox.php',
-        'kirby-pay.form.conekta' => __DIR__ . '/snippets/forms/conekta.php',
-        'kirby-pay.form.stripe' => __DIR__ . '/snippets/forms/stripe.php',
+        'kirby-pay.driver.sandbox' => __DIR__ . '/snippets/driver/sandbox.php',
+        'kirby-pay.driver.conekta' => __DIR__ . '/snippets/driver/conekta.php',
+        'kirby-pay.driver.stripe' => __DIR__ . '/snippets/driver/stripe.php',
+        'kirby-pay.form.customer' => __DIR__ . '/snippets/form/customer.php',
+        'kirby-pay.form.shipping' => __DIR__ . '/snippets/form/shipping.php',
+        'kirby-pay.form.payment-methods' => __DIR__ . '/snippets/form/payment-methods.php',
+        'kirby-pay.form.errors' => __DIR__ . '/snippets/form/errors.php',
+        'kirby-pay.form.button' => __DIR__ . '/snippets/form/button.php',
+        'kirby-pay.js.data' => __DIR__ . '/snippets/js/data.php',
     ],
 ]);

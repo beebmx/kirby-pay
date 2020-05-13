@@ -4,7 +4,6 @@ namespace Beebmx\KirbyPay\Drivers;
 
 use Beebmx\KirbyPay\Contracts\Driverable;
 use Exception;
-use Kirby\Cms\App as Kirby;
 
 abstract class Driver implements Driverable
 {
@@ -22,12 +21,12 @@ abstract class Driver implements Driverable
     {
         $this->service = $this->getServiceName();
 
-        if (empty($this->secret) && empty(option("beebmx.kirby-pay.service_secret", null))) {
+        if (empty($this->secret) && empty(option('beebmx.kirby-pay.service_secret', null))) {
             throw new Exception("You must provide a secret key for the service {$this->service}");
         }
 
         if (!$this->secret) {
-            $this->secret = option("beebmx.kirby-pay.service_secret", null);
+            $this->secret = option('beebmx.kirby-pay.service_secret', null);
         }
 
         $this->boot();
@@ -60,11 +59,11 @@ abstract class Driver implements Driverable
 
     public function preparePrice($amount): int
     {
-        return $amount * $this->unit;
+        return (float) $amount * $this->unit;
     }
 
     public function parsePrice($amount): float
     {
-        return $amount / $this->unit;
+        return (int) $amount / $this->unit;
     }
 }

@@ -64,6 +64,7 @@ return [
     'beebmx.kirby-pay.view.charges' => 'Charges',
     'beebmx.kirby-pay.view.development' => 'Development',
     'beebmx.kirby-pay.view.webhook' => 'Webhook',
+    'beebmx.kirby-pay.view.extra' => 'Extra',
 
     //Panel table
     'beebmx.kirby-pay.table.id' => 'ID',

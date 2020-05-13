@@ -132,10 +132,8 @@ class Resource
 
         $record = array_merge($data, [
             'pay_id' => $id,
-            'id' => $id,
             'uuid' => $uuid,
         ], $dates);
-
 
         Data::write(
             Storage::path($this->path) . '/' . $id . '-' . $uuid . $this->type,

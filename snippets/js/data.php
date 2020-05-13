@@ -1,0 +1,22 @@
+data: {
+name: 'John Doe',
+email: 'john@doe.com',
+phone: '3311223399',
+<?php if((bool) pay('shipping')): ?>
+    address: 'Dirección conocida 123',
+    state: 'Jalisco',
+    city: 'Guadalajara',
+    postal_code: '44500',
+    country: '<?= pay('default_country') ?>',
+<?php endif ?>
+card_name: 'John Doe',
+card_number: '4242424242424242',
+card_month: '12',
+card_year: '23',
+card_cvc: '123',
+},
+type: '<?= kpGetFirstPaymentMethod() ?>',
+countries: [],
+process: false,
+errors: {},
+showErrors: [],

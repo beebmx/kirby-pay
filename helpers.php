@@ -73,3 +73,10 @@ if (!function_exists('kpInDevelopment')) {
         return in_array(pay('env', 'production'), ['test', 'local']);
     }
 }
+
+if (!function_exists('kpGetFirstPaymentMethod')) {
+    function kpGetFirstPaymentMethod()
+    {
+        return kpPaymentMethods()[0] ?? 'card';
+    }
+}

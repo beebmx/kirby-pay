@@ -2,6 +2,10 @@
 
 namespace Beebmx\KirbyPay\Drivers;
 
+use Beebmx\KirbyPay\Elements\Buyer;
+use Beebmx\KirbyPay\Elements\Charge;
+use Beebmx\KirbyPay\Elements\Items;
+use Beebmx\KirbyPay\Elements\Shipping;
 use Beebmx\KirbyPay\KirbyPay;
 use Illuminate\Support\Collection;
 use Stripe\Customer;
@@ -104,12 +108,41 @@ class StripeDriver extends Driver
         );
     }
 
-    public function createCharge(Collection $customer, Collection $items, string $token = null, string $type = null, Collection $shipping = null)
+    public function createCharge(Buyer $customer, Items $items, string $token = null, string $type = null, Shipping $shipping = null): Charge
     {
-        return $this->parseOrder(
-            new Collection($this->orderWithItems($customer, $items, $token, $type, $shipping)),
+        $options = [];
+        if (strtolower($type) === 'card') {
+            $options = [
+                'payment_method' => $this->getPaymentMethod($token),
+            ];
+        }
+
+        $payment =  PaymentIntent::create(
+            array_merge([
+                'amount' => $this->preparePrice($items->amount()),
+                'currency' => strtoupper(pay('currency')),
+                'confirm' => true,
+                'confirmation_method' => 'automatic',
+                'description' => pay('default_item_name'),
+                'metadata' => array_merge([
+                    'Total amount' => '$' . $items->amount(),
+                    'Items' => $items->count(),
+                    'Total items' => $items->totalQuantity(),
+                ],
+                $items->all()->mapWithKeys(function($item) {
+                    return ['Item: ' . $item->name => $item->quantity . ' x $' . $item->amount];
+                })->toArray()),
+            ], $options, $shipping ? $this->prepareShipping($shipping, $customer) : [])
+        );
+
+        $charge = (new Collection($payment))->only(['id', 'status', 'charges']);
+
+        return new Charge(
+            $charge['id'],
+            $charge['status'],
             $customer,
-            $items
+            $items,
+            $shipping,
         );
     }
 
@@ -223,7 +256,7 @@ class StripeDriver extends Driver
         })->toArray();
     }
 
-    protected function prepareShipping(Collection $shipping, Collection $customer)
+    protected function prepareShipping(Shipping $shipping, Buyer $customer)
     {
         if ($shipping->isNotEmpty()) {
             $address = (new Collection([

@@ -29,7 +29,7 @@ abstract class Model implements Resourceable, JsonSerializable, ArrayAccess
     {
     }
 
-    protected static function getDriver()
+    protected static function driver()
     {
         return (new Factory)->find();
     }

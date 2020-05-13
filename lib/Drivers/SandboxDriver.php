@@ -2,8 +2,13 @@
 
 namespace Beebmx\KirbyPay\Drivers;
 
+use Beebmx\KirbyPay\Elements\Buyer;
+use Beebmx\KirbyPay\Elements\Charge;
+use Beebmx\KirbyPay\Elements\Items;
+use Beebmx\KirbyPay\Elements\Shipping;
 use Faker\Factory as Faker;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 class SandboxDriver extends Driver
 {
@@ -118,10 +123,19 @@ class SandboxDriver extends Driver
         );
     }
 
-    public function createCharge(Collection $customer, Collection $items, string $token = null, string $type = null, Collection $shipping = null)
+    public function createCharge(Buyer $customer, Items $items, string $token = null, string $type = null, Shipping $shipping = null): Charge
     {
-        return $this->parseOrder(
-            $this->orderWithItems($customer, $items, $token, $type, $shipping)
+
+        $charge = $this->simulateCharge($customer, $items, $token, $type, $shipping)
+                        ->only(['id', 'payment_status'])
+                        ->toArray();
+
+        return new Charge(
+            $charge['id'],
+            $charge['payment_status'],
+            $customer,
+            $items,
+            $shipping
         );
     }
 
@@ -194,6 +208,33 @@ class SandboxDriver extends Driver
         );
     }
 
+    protected function simulateCharge(Buyer $customer, Items $items, string $token = null, string $type = null, Shipping $shipping = null)
+    {
+        return new Collection(
+            array_merge([
+                'id' => 'ord_' . Str::random(20),
+                'amount' => $this->preparePrice($items->amount()),
+                'payment_status' => 'paid',
+                'currency' => 'MXN',
+                'customer_info' => [
+                    'name' => $customer->name,
+                    'email' => $customer->email,
+                ],
+                'line_items' => [
+                    'total' => $items->count(),
+                    'data' => $items->all()->map(function ($item) {
+                        return [
+                            'id' => $item->id,
+                            'name' => $item->name,
+                            'unit_price' => $this->preparePrice($item->amount),
+                            'quantity' => $item->quantity,
+                        ];
+                    })->toArray(),
+                ],
+            ], $shipping ? ['shipping' => $shipping->toArray()] : [])
+        );
+    }
+
     public function parseOrder(Collection $order, Collection $customer = null, Collection $items = null): array
     {
         $toParse = $order->only([
@@ -215,7 +256,7 @@ class SandboxDriver extends Driver
         ], $shipping ?? []);
     }
 
-    protected function prepareShipping(Collection $shipping)
+    protected function prepareShipping(Shipping $shipping)
     {
         if ($shipping->isNotEmpty()) {
             return [
@@ -228,11 +269,10 @@ class SandboxDriver extends Driver
                         'object' => "shipping_contact",
                         'created_at' => 1587988905,
                         'address' => [
-                            'object' => "shipping_address",
-                            'street1' => $shipping->get('address'),
-                            'city' => $shipping->get('city'),
-                            'state' => $shipping->get('state'),
-                            'postal_code' => $shipping->get('postal_code'),
+                            'street1' => $shipping->address,
+                            'city' => $shipping->city,
+                            'state' => $shipping->state,
+                            'postal_code' => $shipping->postal_code,
                         ],
                     ]]
                 ],
