@@ -91,7 +91,7 @@
     text-align: center;
     margin-top: -1px;
     padding: 6px 0 7px;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.05);
     border-radius: 0.25rem;
     background: #f8f9fa;
 }
@@ -99,7 +99,7 @@
 .kirby-pay-oxxo .oxxopay-instructions {
     margin: 1.5rem -2rem 0;
     padding: 1.5rem 2rem 1.75rem;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
     background: #f8f9fa;
 }
 
@@ -129,7 +129,7 @@
     padding: 1rem 0.75rem 1rem;
     color: #000000;
     text-align: center;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.05);
     border-radius: 4px;
     background: #ffffff;
 }
