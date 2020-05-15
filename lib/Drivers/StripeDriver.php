@@ -2,10 +2,14 @@
 
 namespace Beebmx\KirbyPay\Drivers;
 
+use Beebmx\KirbyPay\Customer as ResourceCustomer;
 use Beebmx\KirbyPay\Elements\Buyer;
 use Beebmx\KirbyPay\Elements\Charge;
+use Beebmx\KirbyPay\Elements\Customer as ElementCustomer;
 use Beebmx\KirbyPay\Elements\Items;
+use Beebmx\KirbyPay\Elements\Order;
 use Beebmx\KirbyPay\Elements\Shipping;
+use Beebmx\KirbyPay\Elements\Source;
 use Beebmx\KirbyPay\KirbyPay;
 use Illuminate\Support\Collection;
 use Stripe\Customer;
@@ -40,102 +44,81 @@ class StripeDriver extends Driver
             return [
                 'customers' => 'https://dashboard.stripe.com/test/customers',
                 'payments' => 'https://dashboard.stripe.com/test/payments',
-                'logs' => null,
+                'logs' => 'https://dashboard.stripe.com/test/logs',
             ];
         }
 
         return [
             'customers' => 'https://dashboard.stripe.com/customers',
             'payments' => 'https://dashboard.stripe.com/payments',
-            'logs' => null,
+            'logs' => 'https://dashboard.stripe.com/logs',
         ];
     }
 
-    public function createCustomer(Collection $customer, string $token, string $payment_method = null)
+    public function createCustomer(Buyer $customer, string $token, string $payment_method = null): ElementCustomer
     {
-        if ($token) {
-            return $this->parseCustomer(
-                new Collection(Customer::create(
-                    $customer->merge([
-                        'source' =>  $token,
-                    ])->toArray()
-                ))
-            );
-        }
+        $remoteCustomer = (new Collection(
+            Customer::create([
+                'name' => $customer->name,
+                'email' => $customer->email,
+                'phone' => $customer->phone,
+                'source' => $token
+            ])
+        ))->only(['id', 'sources'])
+          ->toArray();
 
-        return $this->parseCustomer(
-            new Collection(Customer::create(
-                $customer->toArray()
-            ))
+        $customer->id = $remoteCustomer['id'];
+        $customer->customer_id = $remoteCustomer['id'];
+
+        return new ElementCustomer(
+            $customer->id,
+            $customer->email,
+            $customer,
+            new Source(
+                $remoteCustomer['sources']['data'][0]['id'],
+                $remoteCustomer['sources']['data'][0]['name'] ?? $customer->name,
+                $remoteCustomer['sources']['data'][0]['last4'],
+                $remoteCustomer['sources']['data'][0]['object'],
+                $remoteCustomer['sources']['data'][0]['brand'],
+            ),
         );
     }
 
-    public function parseCustomer(Collection $customer): array
+    public function createOrder(ResourceCustomer $customer, Items $items, string $type = null, Shipping $shipping = null): Order
     {
-        $toParse = $customer->only([
-            'id', 'name', 'email', 'phone',  'sources', 'shipping',
-        ])->toArray();
+        $buyer = new Buyer(
+            $customer->customer['name'],
+            $customer->customer['email'],
+            $customer->customer['phone'],
+            $customer->customer['id'],
+        );
 
-        $payments = (new Collection($toParse['sources']))->only('data')->map(function ($item) {
-            return (new Collection($item))->map(function ($payment) {
-                return [
-                    'id' => $payment['id'],
-                    'type' => $payment['object'],
-                    'last4' => $payment['last4'],
-                    'brand' => $payment['brand'],
-                    'name' => $payment['name'],
-                    'customer_id' => $payment['customer'],
-                ];
-            });
-        })->toArray()['data'];
-
-        return [
-            'name' => $toParse['name'],
-            'email' => $toParse['email'],
-            'phone' => $toParse['phone'] ?? null,
-            'customer_id' => $toParse['id'],
-            'id' => $toParse['id'],
-            'payments' => $payments,
+        $options = [
+            'customer' => $customer->id,
         ];
-    }
 
-    public function createOrder(Collection $customer, Collection $items, string $token = null, string $type = null, Collection $shipping = null)
-    {
-        return $this->parseOrder(
-            new Collection($this->orderWithItems($customer, $items, null, $type, $shipping)),
-            $customer,
-            $items
+        $order = $this->remotePayment($options, $buyer, $items, $shipping)
+                      ->only(['id', 'status', 'charges'])
+                      ->toArray();
+
+        return new Order(
+            $order['id'],
+            $order['status'],
+            $buyer,
+            $items,
+            $shipping,
         );
     }
 
     public function createCharge(Buyer $customer, Items $items, string $token = null, string $type = null, Shipping $shipping = null): Charge
     {
-        $options = [];
-        if (strtolower($type) === 'card') {
-            $options = [
-                'payment_method' => $this->getPaymentMethod($token),
-            ];
-        }
+        $options = [
+            'payment_method' => $this->getPaymentMethod($token),
+        ];
 
-        $payment =  PaymentIntent::create(
-            array_merge([
-                'amount' => $this->preparePrice($items->amount()),
-                'currency' => strtoupper(pay('currency')),
-                'confirm' => true,
-                'confirmation_method' => 'automatic',
-                'description' => pay('default_item_name'),
-                'metadata' => array_merge([
-                    'Total amount' => '$' . $items->amount(),
-                    'Items' => $items->count(),
-                    'Total items' => $items->totalQuantity(),
-                ],
-                $items->all()->mapWithKeys(function($item) {
-                    return ['Item: ' . $item->name => $item->quantity . ' x $' . $item->amount];
-                })->toArray()),
-            ], $options, $shipping ? $this->prepareShipping($shipping, $customer) : [])
-        );
-
-        $charge = (new Collection($payment))->only(['id', 'status', 'charges']);
+        $charge = $this->remotePayment($options, $customer, $items, $shipping)
+                       ->only(['id', 'status', 'charges'])
+                       ->toArray();
 
         return new Charge(
             $charge['id'],
@@ -146,79 +129,27 @@ class StripeDriver extends Driver
         );
     }
 
-    protected function orderWithItems(Collection $customer, Collection $items, string $token = null, string $type = null, Collection $shipping = null)
+    protected function remotePayment(array $options, Buyer $customer, Items $items, Shipping $shipping = null)
     {
-        $options = [];
-        if ($token) {
-            if (strtolower($type) === 'card') {
-                $options = [
-                    'payment_method' => $this->getPaymentMethod($token),
-                ];
-            }
-        }
-        else {
-            $options = [
-                'customer' => $customer->get('customer_id'),
-            ];
-        }
-
-        return PaymentIntent::create(
+        return new Collection(PaymentIntent::create(
             array_merge([
-                'amount' => $this->getAmount($items),
+                'amount' => $this->preparePrice($items->amount()),
                 'currency' => strtoupper(pay('currency')),
                 'confirm' => true,
                 'confirmation_method' => 'automatic',
                 'description' => pay('default_item_name'),
-                'metadata' => array_merge([
-                    'Real amount' => '$' . $this->parsePrice($this->getAmount($items)),
-                    'Items' => $this->getCountItems($items),
-                    'Total items' => $this->getTotalItems($items),
-                ], $this->prepareItems($items)),
+                'metadata' => array_merge(
+                    [
+                        'Total amount' => '$' . $items->amount(),
+                        'Items' => $items->count(),
+                        'Total items' => $items->totalQuantity(),
+                    ],
+                    $items->all()->mapWithKeys(function ($item) {
+                        return ['Item: ' . $item->name => $item->quantity . ' x $' . $item->amount];
+                    })->toArray()
+                ),
             ], $options, $shipping ? $this->prepareShipping($shipping, $customer) : [])
-        );
-    }
-
-    public function parseOrder(Collection $order, Collection $customer = null, Collection $items = null): array
-    {
-        $toParse = $order->only([
-            'id', 'amount', 'status', 'currency', 'customer', 'charges', 'object', 'shipping'
-        ])->toArray();
-
-        if ($shipping = $toParse['shipping'] ?? null) {
-            $shipping = $this->parseShipping(new Collection($toParse['shipping']));
-        }
-
-        return array_merge([
-            'status' => $toParse['status'],
-            'currency' => $toParse['currency'],
-            'customer' => $this->parseOrderCustomer($customer, $toParse['customer']),
-            'amount' => $this->parsePrice($toParse['amount']),
-            'id' => $toParse['id'],
-            'payment_id' => $toParse['id'],
-            'charges' => $toParse['charges'],
-            'items' =>  $this->parseItems($items),
-        ], $shipping ?? []);
-    }
-
-    protected function getAmount(Collection $items)
-    {
-        $amount = $items->sum(function($item) {
-            return $item['amount'] * $item['quantity'];
-        });
-
-        return $this->preparePrice($amount);
-    }
-
-    protected function getCountItems(Collection $items)
-    {
-        return $items->count();
-    }
-
-    protected function getTotalItems(Collection $items)
-    {
-        return $items->sum(function($item) {
-            return $item['quantity'];
-        });
+        ));
     }
 
     protected function getPaymentMethod(string $token)
@@ -231,40 +162,15 @@ class StripeDriver extends Driver
         ]);
     }
 
-    protected function parseOrderCustomer(Collection $customer, $id = null)
-    {
-        return $customer->filter(function($value){
-            return !empty($value);
-        })->merge(['id' => $id])->toArray();
-    }
-
-    protected function prepareItems(Collection $items)
-    {
-        return $items->mapWithKeys(function($item) {
-            return ['Item: ' . $item['item'] => $item['quantity'] . ' x $' . $item['amount']];
-        })->toArray();
-    }
-
-    protected function parseItems(Collection $items)
-    {
-        return $items->map(function($item) {
-            return [
-                'item' => $item['item'],
-                'amount' => $item['amount'],
-                'quantity' => $item['quantity'],
-            ];
-        })->toArray();
-    }
-
     protected function prepareShipping(Shipping $shipping, Buyer $customer)
     {
-        if ($shipping->isNotEmpty()) {
+        if ($shipping) {
             $address = (new Collection([
-                'line1' => $shipping->get('address'),
-                'city' => $shipping->get('city'),
-                'state' => $shipping->get('state'),
-                'postal_code' => $shipping->get('postal_code'),
-                'country' => $shipping->get('country'),
+                'line1' => $shipping->address,
+                'city' => $shipping->city,
+                'state' => $shipping->state,
+                'postal_code' => $shipping->postal_code,
+                'country' => $shipping->country,
             ]))->filter(function ($value) {
                 return !empty($value);
             })->toArray();
@@ -272,23 +178,11 @@ class StripeDriver extends Driver
             return [
                 'shipping' => [
                     'address' => $address,
-                    'name' => $customer->get('name'),
+                    'name' => $customer->name,
                 ],
             ];
         }
 
         return [];
-    }
-
-    protected function parseShipping(Collection $shipping)
-    {
-        return ['shipping' => [
-            'address' => $shipping['address']['line1'],
-            'city' => $shipping['address']['city'],
-            'state' => $shipping['address']['state'],
-            'postal_code' => $shipping['address']['postal_code'],
-            'country' => strtoupper($shipping['address']['country']),
-            'name' => $shipping['name'],
-        ]];
     }
 }

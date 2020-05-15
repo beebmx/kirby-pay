@@ -50,7 +50,7 @@
 
   function kirbyPay() {
     return {
-      <?php snippet('kirby-pay.js.data') ?>
+      <?php snippet('kirby-pay.js.data', ['customer' => $customer, 'shipping' => $shipping]) ?>
       mount: function(){
 <?php if((bool) pay('shipping')): ?>
         axios.get('https://restcountries.eu/rest/v2/all')

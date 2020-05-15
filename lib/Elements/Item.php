@@ -23,10 +23,10 @@ class Item
     public function toArray()
     {
         return [
+            'id' => $this->id,
             'name' => $this->name,
             'amount' => $this->amount,
             'quantity' => $this->quantity,
-            'id' => $this->id,
         ];
     }
 }

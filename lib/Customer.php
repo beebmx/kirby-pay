@@ -2,7 +2,7 @@
 
 namespace Beebmx\KirbyPay;
 
-use Illuminate\Support\Collection;
+use Beebmx\KirbyPay\Elements\Buyer;
 
 class Customer extends Model
 {
@@ -10,20 +10,20 @@ class Customer extends Model
 
     protected static $type = '.json';
 
-    public static function create(Collection $customer, $token, $method = null)
+    public static function create(Buyer $customer, $token, $method = null)
     {
         return static::write(
-            static::driver()->createCustomer($customer, $token, $method)
+            static::driver()->createCustomer($customer, $token, $method)->toArray()
         );
     }
 
-    public static function firstOrCreate(Collection $promise, $token, $method = null)
+    public static function firstOrCreate(Buyer $promise, $token, $method = null)
     {
-        if ($found = static::email($promise['email'])) {
-            return $found->toArray();
+        if ($found = static::email($promise->email)) {
+            return $found;
         }
 
-        return static::create($promise, $token, $method)->toArray();
+        return static::create($promise, $token, $method);
     }
 
     public static function email(string $email)

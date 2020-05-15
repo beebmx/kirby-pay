@@ -61,6 +61,7 @@ return [
     'beebmx.kirby-pay.view.next' => 'Next',
     'beebmx.kirby-pay.view.prev' => 'Previous',
     'beebmx.kirby-pay.view.payment_methods' => 'Payment Methods',
+    'beebmx.kirby-pay.view.payment_method' => 'Payment Method',
     'beebmx.kirby-pay.view.charges' => 'Charges',
     'beebmx.kirby-pay.view.development' => 'Development',
     'beebmx.kirby-pay.view.webhook' => 'Webhook',

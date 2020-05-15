@@ -30,7 +30,7 @@ trait ValidateRoutes
             [
                 'name' => ['required', 'min' => 5],
                 'email' => ['required', 'email'],
-                'phone' => ['required', 'minLength' => 10],
+                'phone' => ['required', 'minLength' => 8],
             ],
             [
                 'name' => kpT('validation.name'),

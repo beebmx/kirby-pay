@@ -13,7 +13,7 @@
     <k-list>
       <k-list-item
               v-for="customer in customers"
-              :key="customer.id"
+              :key="customer.pay_id"
               :icon="{type: 'user', back: 'black'}"
               :text="title(customer)"
               :info="customer.updated_at"
@@ -64,7 +64,7 @@ export default {
           })
     },
     title(customer) {
-      return `${customer.name}`;
+      return `${customer.customer.name}`;
     },
   }
 };

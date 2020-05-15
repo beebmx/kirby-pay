@@ -22,12 +22,11 @@
             </k-column>
 
             <k-column width="1/1">
-                <kp-table-data
-                    :title="$t('beebmx.kirby-pay.view.payment_methods')"
-                    :data="customer.payments"
+                <kp-table-key-pair
+                    :title="$t('beebmx.kirby-pay.view.payment_method')"
+                    :data="customer.source"
                 />
             </k-column>
-
         </k-grid>
     </k-view>
 </template>
@@ -57,6 +56,11 @@
       serviceUrl() {
         return this.$store.getters['kpResources/getServiceUrl']('customers');
       },
+      hasSource() {
+        return this.customer.source
+          ? !!Object.keys(this.customer.source).length
+          : false
+      },
     },
     created() {
       this.load()
@@ -70,9 +74,9 @@
             this.customer = customer
             this.summary = {
               id: customer.id,
-              name: customer.name,
+              name: customer.customer.name,
               email: customer.email,
-              phone: customer.phone,
+              phone: customer.customer.phone,
               updated_at: this.$library.dayjs(customer.updated_at).format("YYYY-MM-DD H:m:s"),
             }
             this.next = next

@@ -14,20 +14,23 @@ class Payment extends Model
 
     protected static $type = '.json';
 
-    public static function order(Collection $customer, Collection $items, string $token = null, string $type = 'card', Collection $shipping = null)
+    public static function order(Collection $customer, Collection $items_to_sell, string $token = null, string $type = 'card', Collection $shipping_instructions = null)
     {
-        $customer = Customer::firstOrCreate($customer, $token, $type);
+        $buyer = static::setBuyer($customer);
+        $items = static::setItems($items_to_sell);
+        $shipping = static::setShipping($shipping_instructions);
+        $customer = Customer::firstOrCreate($buyer, $token, $type);
 
         return static::write(
-            static::driver()->createOrder(new Collection($customer), $items, $token, $type, $shipping)
+            static::driver()->createOrder($customer, $items, $type, $shipping)->toArray()
         );
     }
 
-    public static function charge(Collection $customer, Collection $items, string $token = null, string $type = 'card', Collection $shipping = null)
+    public static function charge(Collection $customer, Collection $items_to_sell, string $token = null, string $type = 'card', Collection $shipping_instructions = null)
     {
         $buyer = static::setBuyer($customer);
-        $items = static::setItems($items);
-        $shipping = static::setShipping($shipping);
+        $items = static::setItems($items_to_sell);
+        $shipping = static::setShipping($shipping_instructions);
 
         return static::write(
             static::driver()->createCharge($buyer, $items, $token, $type, $shipping)->toArray()
@@ -55,6 +58,7 @@ class Payment extends Model
             $customer['name'],
             $customer['email'],
             $customer['phone'] ?? null,
+            $customer['id'] ?? null,
         );
     }
 
@@ -64,11 +68,11 @@ class Payment extends Model
 
         $elements->each(function ($element) use ($items) {
             $items->put(new Item(
-               $element['name'],
-               $element['amount'],
-               $element['quantity'],
-               $element['id'] ?? null,
-           ));
+                $element['name'],
+                $element['amount'],
+                $element['quantity'],
+                $element['id'] ?? null,
+            ));
         });
 
         return $items;

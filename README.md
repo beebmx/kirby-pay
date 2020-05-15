@@ -28,8 +28,8 @@ After you install the package just include the snippets and set the items (produ
 <?php
     snippet('kirby-pay.form', [
         'items' => [
-            ['item' => 'Product 001', 'amount' => 20.00, 'quantity' => 1],
-            ['item' => 'Product 002', 'amount' => 10.00, 'quantity' => 2],
+            ['name' => 'Product 001', 'amount' => 20.00, 'quantity' => 1],
+            ['name' => 'Product 002', 'amount' => 10.00, 'quantity' => 2],
         ],
     ]);
 ?>

@@ -28,7 +28,7 @@
                 <kp-table-key-pair
                     :title="$t('beebmx.kirby-pay.view.customer')"
                     :data="payment.customer"
-                    :exclude="['object']"
+                    :exclude="['object', 'customer_id']"
                 />
             </k-column>
 
@@ -36,7 +36,7 @@
                 <kp-table-data
                     :title="$t('beebmx.kirby-pay.view.purchase')"
                     :data="payment.items"
-                    :only="['item','amount', 'quantity']"
+                    :only="['id', 'name','amount', 'quantity']"
                 />
             </k-column>
 

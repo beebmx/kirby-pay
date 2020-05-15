@@ -3,7 +3,6 @@
 namespace Beebmx\KirbyPay\Drivers;
 
 use Beebmx\KirbyPay\Contracts\Driverable;
-use Exception;
 
 abstract class Driver implements Driverable
 {
@@ -15,14 +14,14 @@ abstract class Driver implements Driverable
 
     /**
      * Driver constructor.
-     * @throws Exception
+     * @throws DriverSecretException
      */
     public function __construct()
     {
         $this->service = $this->getServiceName();
 
         if (empty($this->secret) && empty(option('beebmx.kirby-pay.service_secret', null))) {
-            throw new Exception("You must provide a secret key for the service {$this->service}");
+            throw new DriverSecretException("You must provide a secret key for the service {$this->service}");
         }
 
         if (!$this->secret) {
