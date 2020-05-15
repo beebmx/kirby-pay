@@ -1,0 +1,149 @@
+/* Kirby Pay OXXO --------------------------------------------------------------------- */
+.kirby-pay-oxxo {
+    border-radius: 0.25rem;
+    box-sizing: border-box;
+    padding: 0 2rem;
+    margin: 20px auto;
+    overflow: hidden;
+    color: #4f5365;
+    background: #ffffff;
+    max-width: 37rem;
+    width: 100%;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.kirby-pay-oxxo h3 {
+    text-align: left;
+    margin-bottom: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.kirby-pay-oxxo .oxxopay-reminder {
+    position: relative;
+    top: -1px;
+    padding: 9px 0 10px;
+    font-size: 11px;
+    text-transform: uppercase;
+    color: #ffffff;
+    background: #000000;
+    border-bottom-right-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
+
+}
+
+.kirby-pay-oxxo .oxxopay-info {
+    margin-top: 26px;
+    position: relative;
+}
+
+.kirby-pay-oxxo .oxxopay-info:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+
+}
+
+.kirby-pay-oxxo .oxxopay-brand {
+    width: 45%;
+    float: left;
+}
+
+.kirby-pay-oxxo .oxxopay-brand img {
+    max-width: 150px;
+    margin-top: 2px;
+}
+
+.kirby-pay-oxxo .oxxopay-amount {
+    width: 55%;
+    float: right;
+}
+
+.kirby-pay-oxxo .oxxopay-amount h2 {
+    font-size: 36px;
+    color: #000000;
+    line-height: 24px;
+    margin-bottom: 15px;
+}
+
+.kirby-pay-oxxo .oxxopay-amount h2 sup {
+    font-size: 16px;
+    position: relative;
+    top: -2px
+}
+
+.kirby-pay-oxxo .oxxopay-amount p {
+    font-size: 0.6rem;
+    line-height: 14px;
+}
+
+.kirby-pay-oxxo .oxxopay-reference {
+    margin-top: 14px;
+}
+
+.kirby-pay-oxxo h1 {
+    font-size: 27px;
+    color: #000000;
+    text-align: center;
+    margin-top: -1px;
+    padding: 6px 0 7px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 0.25rem;
+    background: #f8f9fa;
+}
+
+.kirby-pay-oxxo .oxxopay-instructions {
+    margin: 1.5rem -2rem 0;
+    padding: 1.5rem 2rem 1.75rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    background: #f8f9fa;
+}
+
+.kirby-pay-oxxo ol {
+    list-style: decimal;
+    margin: 17px 0 0 16px;
+    font-size: 0.875rem;
+    text-align: left;
+}
+
+.kirby-pay-oxxo li {
+    margin-top: 0.5rem;
+    color: #000000;
+}
+
+.kirby-pay-oxxo a {
+    color: #1155cc;
+}
+
+.kirby-pay-oxxo strong {
+    font-weight: 700;
+}
+
+.kirby-pay-oxxo .oxxopay-footnote {
+    font-size: 1rem;
+    margin-top: 22px;
+    padding: 1rem 0.75rem 1rem;
+    color: #000000;
+    text-align: center;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    background: #ffffff;
+}
+
+.kirby-pay-oxxo .text-center {
+    text-align: center;
+}
+
+.kirby-pay-oxxo .mx-auto {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.kirby-pay-oxxo .my-2 {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}

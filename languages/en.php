@@ -32,10 +32,10 @@ return [
     'beebmx.kirby-pay.pay-process' => 'Processing payment',
 
     //Form validations
-    'beebmx.kirby-pay.validation.name'  => 'Please enter a valid name',
+    'beebmx.kirby-pay.validation.name' => 'Please enter a valid name',
     'beebmx.kirby-pay.validation.email' => 'Please enter a valid email address',
     'beebmx.kirby-pay.validation.phone' => 'Please enter a valid phone number',
-    'beebmx.kirby-pay.validation.address'  => 'Please enter a valid address',
+    'beebmx.kirby-pay.validation.address' => 'Please enter a valid address',
     'beebmx.kirby-pay.validation.state' => 'Please enter a valid state',
     'beebmx.kirby-pay.validation.postal-code' => 'Please enter a valid postal code',
     'beebmx.kirby-pay.validation.country' => 'Please select a country',
@@ -112,4 +112,21 @@ return [
     'beebmx.kirby-pay.status.fulfilled' => 'Fulfilled',
     'beebmx.kirby-pay.status.succeeded' => 'Succeeded',
 
+    //Oxxo
+    'beebmx.kirby-pay.oxxo.pay' => 'OXXOPay',
+    'beebmx.kirby-pay.oxxo.reminder' => 'Digital Stub. Printing is not necessary.',
+    'beebmx.kirby-pay.oxxo.amount' => 'Amount due',
+    'beebmx.kirby-pay.oxxo.hint' => 'OXXO will charge an additional fee at the time of payment.',
+    'beebmx.kirby-pay.oxxo.reference' => 'Reference',
+    'beebmx.kirby-pay.oxxo.instructions' => 'Instructions',
+    'beebmx.kirby-pay.oxxo.step.1.1' => 'Go to the nearest OXXO store.',
+    'beebmx.kirby-pay.oxxo.step.1.2' => 'Find it here',
+    'beebmx.kirby-pay.oxxo.step.2.1' => 'Tell the cashier that you want to make an',
+    'beebmx.kirby-pay.oxxo.step.2.2' => ' payment.',
+    'beebmx.kirby-pay.oxxo.step.3' => 'Dictate the cashier the reference number on this stub.',
+    'beebmx.kirby-pay.oxxo.step.4' => 'Make the payment with cash.',
+    'beebmx.kirby-pay.oxxo.step.5.1' => 'To confirm your payment, the cashier will hand you a printed receipt.',
+    'beebmx.kirby-pay.oxxo.step.5.2' => 'Check on it that it was performed correctly.',
+    'beebmx.kirby-pay.oxxo.alert.1' => 'When completing these steps you will receive confirmation email from',
+    'beebmx.kirby-pay.oxxo.alert.2' => '.',
 ];

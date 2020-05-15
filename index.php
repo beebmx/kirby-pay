@@ -5,6 +5,7 @@ use Beebmx\KirbyPay\Routes\Routes;
 
 Kirby::plugin('beebmx/kirby-pay', [
     'options' => [
+        'name' => 'My Business',
         'env' => 'production',
         'service' => 'sandbox',
         'service_key' => null,
@@ -89,5 +90,7 @@ Kirby::plugin('beebmx/kirby-pay', [
         'kirby-pay.form.errors' => __DIR__ . '/snippets/form/errors.php',
         'kirby-pay.form.button' => __DIR__ . '/snippets/form/button.php',
         'kirby-pay.js.data' => __DIR__ . '/snippets/js/data.php',
+        'kirby-pay.oxxo-styles' => __DIR__ . '/snippets/oxxo-styles.php',
+        'kirby-pay.oxxo' => __DIR__ . '/snippets/oxxo.php',
     ],
 ]);

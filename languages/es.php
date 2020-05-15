@@ -32,10 +32,10 @@ return [
     'beebmx.kirby-pay.pay-process' => 'Procesando pago',
 
     //Form validations
-    'beebmx.kirby-pay.validation.name'  => 'Favor de ingresar un nombre válido',
+    'beebmx.kirby-pay.validation.name' => 'Favor de ingresar un nombre válido',
     'beebmx.kirby-pay.validation.email' => 'Favor de ingresar un email válido',
     'beebmx.kirby-pay.validation.phone' => 'Favor de ingresar un teléfono válido',
-    'beebmx.kirby-pay.validation.address'  => 'Favor de ingresar una dirección válida',
+    'beebmx.kirby-pay.validation.address' => 'Favor de ingresar una dirección válida',
     'beebmx.kirby-pay.validation.state' => 'Favor de ingresar un estado válido',
     'beebmx.kirby-pay.validation.postal-code' => 'Favor de ingresar un código postal válido',
     'beebmx.kirby-pay.validation.country' => 'Favor de seleccionar un país',
@@ -111,4 +111,22 @@ return [
     'beebmx.kirby-pay.status.created' => 'Creado',
     'beebmx.kirby-pay.status.fulfilled' => 'Cumplido',
     'beebmx.kirby-pay.status.succeeded' => 'Exitoso',
+
+    //Oxxo
+    'beebmx.kirby-pay.oxxo.pay' => 'OXXOPay',
+    'beebmx.kirby-pay.oxxo.reminder' => 'Ficha digital. No es necesario imprimir.',
+    'beebmx.kirby-pay.oxxo.amount' => 'Monto a pagar',
+    'beebmx.kirby-pay.oxxo.hint' => 'OXXO cobrará una comisión adicional al momento de realizar el pago.',
+    'beebmx.kirby-pay.oxxo.reference' => 'Referencia',
+    'beebmx.kirby-pay.oxxo.instructions' => 'Instrucciones',
+    'beebmx.kirby-pay.oxxo.step.1.1' => 'Acude a la tienda OXXO más cercana.',
+    'beebmx.kirby-pay.oxxo.step.1.2' => 'Encuéntrala aquí',
+    'beebmx.kirby-pay.oxxo.step.2.1' => 'Indica en caja que quieres realizar un pago de',
+    'beebmx.kirby-pay.oxxo.step.2.2' => '',
+    'beebmx.kirby-pay.oxxo.step.3' => 'Dicta al cajero el número de referencia en esta ficha para que tecleé directamete en la pantalla de venta.',
+    'beebmx.kirby-pay.oxxo.step.4' => 'Realiza el pago correspondiente con dinero en efectivo.',
+    'beebmx.kirby-pay.oxxo.step.5.1' => 'Al confirmar tu pago, el cajero te entregará un comprobante impreso.',
+    'beebmx.kirby-pay.oxxo.step.5.2' => 'En el podrás verificar que se haya realizado correctamente.',
+    'beebmx.kirby-pay.oxxo.alert.1' => 'Al completar estos pasos recibirás un correo de',
+    'beebmx.kirby-pay.oxxo.alert.2' => ' confirmando tu pago.',
 ];
