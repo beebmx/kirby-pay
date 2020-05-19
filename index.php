@@ -67,9 +67,13 @@ Kirby::plugin('beebmx/kirby-pay', [
             ]
         ],
     ],
-    'routes' => (new Routes())->all(),
+    'routes' => function ($kirby) {
+        return (new Routes())->all();
+    },
     'api' => [
-        'routes' => (new ApiRoutes)->all()
+        'routes' => function ($kirby) {
+            return (new ApiRoutes)->all();
+        }
     ],
     'translations' => [
         'en' => require(__DIR__ . '/languages/en.php'),

@@ -44,14 +44,14 @@ if (!function_exists('kpT')) {
 if (!function_exists('kpUrl')) {
     function kpUrl($key)
     {
-        return (new Routes)->getRoutePathByName($key);
+        return Routes::getRoutePathByName($key);
     }
 }
 
 if (!function_exists('kpMethod')) {
     function kpMethod($key)
     {
-        return (new Routes)->getRouteMethodByName($key);
+        return Routes::getRouteMethodByName($key);
     }
 }
 

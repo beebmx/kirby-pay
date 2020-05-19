@@ -7,53 +7,53 @@ use Beebmx\KirbyPay\Drivers\Factory;
 use Beebmx\KirbyPay\Drivers\SandboxDriver;
 use Beebmx\KirbyPay\Drivers\StripeDriver;
 use Exception;
-use Kirby\Cms\App as Kirby;
-use PHPUnit\Framework\TestCase;
+use Kirby\Cms\App;
 
 class DriverTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        Kirby::destroy();
-    }
-
     /** @test */
     public function it_throw_an_error_if_the_driver_does_not_exists()
     {
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('The driver requested does not exists');
 
-        Kirby::plugin('beebmx/kirby-pay', [
+        new App([
+            'roots' => [
+                'index' => '/dev/null',
+            ],
             'options' => [
-                'service' => 'invalid',
-                'keys' => [
-                    'secret' => 'my-secret-key'
-                ]
+                'beebmx.kirby-pay.service' => 'invalid',
+                'beebmx.kirby-pay.service_secret' => 'demo-token',
             ]
         ]);
-
-        new Kirby;
 
         (new Factory)->find();
     }
 
     /** @test */
-    public function it_validates_demo_driver_exists()
+    public function it_validates_sandbox_driver_exists()
     {
+        new App([
+            'roots' => [
+                'index' => '/dev/null',
+            ]
+        ]);
+
         $this->assertInstanceOf(SandboxDriver::class, (new Factory)->find());
     }
 
     /** @test */
     public function it_validates_conekta_driver_exists()
     {
-
-        Kirby::plugin('beebmx/kirby-pay', [
+        new App([
+            'roots' => [
+                'index' => '/dev/null',
+            ],
             'options' => [
-                'service' => 'conekta',
-                'service_secret' => 'conekta_secret_key',
+                'beebmx.kirby-pay.service' => 'conekta',
+                'beebmx.kirby-pay.service_secret' => 'demo-token',
             ]
         ]);
-        new Kirby;
 
         $this->assertInstanceOf(ConektaDriver::class, (new Factory)->find());
     }
@@ -61,14 +61,15 @@ class DriverTest extends TestCase
     /** @test */
     public function it_validates_stripe_driver_exists()
     {
-
-        Kirby::plugin('beebmx/kirby-pay', [
+        new App([
+            'roots' => [
+                'index' => '/dev/null',
+            ],
             'options' => [
-                'service' => 'stripe',
-                'service_secret' => 'stripe_secret_key',
+                'beebmx.kirby-pay.service' => 'stripe',
+                'beebmx.kirby-pay.service_secret' => 'demo-token',
             ]
         ]);
-        new Kirby;
 
         $this->assertInstanceOf(StripeDriver::class, (new Factory)->find());
     }

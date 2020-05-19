@@ -115,10 +115,11 @@ class Resource
         }
     }
 
-    public function write(array $data, int $id = null, string $uuid = null)
+    public function write(array $data, int $pay_id = null, string $uuid = null)
     {
         $dates = [];
-        if (!$id && !$uuid) {
+
+        if (!$pay_id && !$uuid) {
             $dates = [
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
@@ -127,16 +128,16 @@ class Resource
             $dates = ['updated_at' => Carbon::now()];
         }
 
-        $id = $id ?? (int) $this->getNextId();
+        $pay_id = $pay_id ?? (int) $this->getNextId();
         $uuid = $uuid ?? (string) Str::uuid();
 
         $record = array_merge($data, [
-            'pay_id' => $id,
+            'pay_id' => $pay_id,
             'uuid' => $uuid,
         ], $dates);
 
         Data::write(
-            Storage::path($this->path) . '/' . $id . '-' . $uuid . $this->type,
+            Storage::path($this->path) . '/' . $pay_id . '-' . $uuid . $this->type,
             $this->uncast(
                 (new Collection($record))
             )
@@ -166,13 +167,13 @@ class Resource
         $this->loadFiles();
 
         $this->data = $this->data->take($take);
-
         return $this;
     }
 
     public function skip(int $count = 10)
     {
         $this->loadFiles();
+
         if ($this->isPopulated) {
             $this->data = $this->data->skip($count);
         } else {
@@ -185,6 +186,7 @@ class Resource
     public function search(string $query = null, $params = [])
     {
         $this->populate();
+
         if (empty(trim($query)) === true) {
             return false;
         }
@@ -261,6 +263,11 @@ class Resource
     public function isEmpty(): bool
     {
         return Storage::isEmpty($this->path);
+    }
+
+    public function getPath(): string
+    {
+        return $this->path;
     }
 
     protected function collection()

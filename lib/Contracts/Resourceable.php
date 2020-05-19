@@ -8,5 +8,5 @@ interface Resourceable
 {
     public function boot();
 
-    public static function serviceUrl();
+    public static function serviceUrl(): string;
 }

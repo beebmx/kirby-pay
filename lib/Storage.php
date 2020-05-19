@@ -22,12 +22,12 @@ class Storage
         }
     }
 
-    public static function path(string $dir = '')
+    public static function path(string $dir = ''): string
     {
         return static::getBase() . '/' . $dir;
     }
-    
-    public static function files(string $dir = '')
+
+    public static function files(string $dir = ''): array
     {
         return Dir::files(static::getBase() . '/' . $dir);
     }

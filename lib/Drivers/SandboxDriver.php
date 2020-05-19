@@ -30,9 +30,9 @@ class SandboxDriver extends Driver
     public function getUrls(): array
     {
         return [
-            'customers' => null,
-            'payments' => null,
-            'logs' => null,
+            'customers' => '',
+            'payments' => '',
+            'logs' => '',
         ];
     }
 

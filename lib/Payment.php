@@ -12,8 +12,6 @@ class Payment extends Model
 {
     protected static $path = 'payment';
 
-    protected static $type = '.json';
-
     public static function order(Collection $customer, Collection $items_to_sell, string $token = null, string $type = 'card', Collection $shipping_instructions = null)
     {
         $buyer = static::setBuyer($customer);
@@ -37,7 +35,7 @@ class Payment extends Model
         );
     }
 
-    public static function serviceUrl()
+    public static function serviceUrl(): string
     {
         return static::driver()->getUrls()['payments'];
     }

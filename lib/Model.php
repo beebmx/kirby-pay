@@ -15,13 +15,16 @@ abstract class Model implements Resourceable, JsonSerializable, ArrayAccess
 
     protected static $path;
 
-    protected static $type;
+    protected static $type = '.json';
 
     public $attributes;
 
     public function __construct(array $attributes = [])
     {
-        $this->fill($attributes);
+        $this->fill(array_merge([
+            'pay_id' => null,
+            'uuid' => null
+        ], $attributes));
         $this->boot();
     }
 
@@ -43,7 +46,7 @@ abstract class Model implements Resourceable, JsonSerializable, ArrayAccess
 
     public function save()
     {
-        return static::write($this->getAttributes(), $this->id, $this->uuid);
+        return static::write($this->getAttributes(), $this->pay_id, $this->uuid);
     }
 
     public function newInstance($attributes = [])

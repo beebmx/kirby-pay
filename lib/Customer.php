@@ -8,8 +8,6 @@ class Customer extends Model
 {
     protected static $path = 'customer';
 
-    protected static $type = '.json';
-
     public static function create(Buyer $customer, $token, $method = null)
     {
         return static::write(
@@ -31,7 +29,7 @@ class Customer extends Model
         return static::search($email, 'email')->first();
     }
 
-    public static function serviceUrl()
+    public static function serviceUrl(): string
     {
         return static::driver()->getUrls()['customers'];
     }

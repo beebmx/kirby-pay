@@ -6,24 +6,24 @@ use Illuminate\Support\Collection;
 
 trait ValidateRoutes
 {
-    public function getInputs(array $inputs)
+    public static function getInputs(array $inputs)
     {
         return (new Collection(get()))->only($inputs);
     }
 
-    public function only(Collection $inputs, array $values)
+    public static function only(Collection $inputs, array $values)
     {
         return $inputs->only($values)->filter(function ($value) {
             return !empty($value);
         });
     }
 
-    public function get($inputs, $value)
+    public static function get($inputs, $value)
     {
         return $inputs->only([$value])->get($value);
     }
 
-    public function validateCustomer(Collection $customer)
+    public static function validateCustomer(Collection $customer)
     {
         return invalid(
             $customer->toArray(),
@@ -40,7 +40,7 @@ trait ValidateRoutes
         );
     }
 
-    public function validateShipping(Collection $shipping)
+    public static function validateShipping(Collection $shipping)
     {
         return invalid(
             $shipping->toArray(),
@@ -59,7 +59,7 @@ trait ValidateRoutes
         );
     }
 
-    public function hasErrors(array $customerError, array $shippingError)
+    public static function hasErrors(array $customerError, array $shippingError)
     {
         return [
             'success' => false,

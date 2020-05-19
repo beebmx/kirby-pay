@@ -12,31 +12,26 @@ class ApiRoutes implements Routable
 {
     use ManagesRoutes;
 
-    protected $instance;
 
-    public function __construct()
-    {
-        $this->instance = $this;
-    }
-
-    public function all(): array
+    public static function all(): array
     {
         return [
-            $this->config(),
-            $this->getPayments(),
-            $this->getPayment(),
-            $this->getCustomers(),
-            $this->getCustomer(),
-            $this->getDevelopment(),
+            static::config(),
+            static::getPayments(),
+            static::getPayment(),
+            static::getCustomers(),
+            static::getCustomer(),
+            static::getDevelopment(),
         ];
     }
 
-    public function config()
+    public static function config()
     {
         return [
             'pattern' => 'beebmx/kirby-pay/config',
             'method' => 'GET',
             'action' => function () {
+
                 return [
                     'success' => true,
                     'service' => [
@@ -55,7 +50,7 @@ class ApiRoutes implements Routable
         ];
     }
 
-    public function getPayments()
+    public static function getPayments()
     {
         return [
             'pattern' => 'beebmx/kirby-pay/payments/(:num)',
@@ -74,7 +69,7 @@ class ApiRoutes implements Routable
         ];
     }
 
-    public function getPayment()
+    public static function getPayment()
     {
         return [
             'pattern' => 'beebmx/kirby-pay/payment/(:any)',
@@ -94,7 +89,7 @@ class ApiRoutes implements Routable
         ];
     }
 
-    public function getCustomers()
+    public static function getCustomers()
     {
         return [
             'pattern' => 'beebmx/kirby-pay/customers/(:num)',
@@ -113,7 +108,7 @@ class ApiRoutes implements Routable
         ];
     }
 
-    public function getCustomer()
+    public static function getCustomer()
     {
         return [
             'pattern' => 'beebmx/kirby-pay/customer/(:any)',
@@ -133,7 +128,7 @@ class ApiRoutes implements Routable
         ];
     }
 
-    public function getDevelopment()
+    public static function getDevelopment()
     {
         return [
             'pattern' => 'beebmx/kirby-pay/development/(:num)',

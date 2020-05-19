@@ -9,3 +9,5 @@ package-lock.json
 .DS_Store
 .phpunit.result.cache
 .php_cs.cache
+/tests/tmp/*
+!/tests/tmp/.gitkeep

@@ -6,5 +6,5 @@ namespace Beebmx\KirbyPay\Contracts;
 
 interface Routable
 {
-    public function all(): array;
+    public static function all(): array;
 }
