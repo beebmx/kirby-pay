@@ -10,8 +10,6 @@ use Kirby\Toolkit\Dir;
 
 class ResourceTest extends TestCase
 {
-    public $kirby;
-
     public $model;
 
     public function setUp(): void
@@ -25,7 +23,7 @@ class ResourceTest extends TestCase
             }
         };
 
-        $this->kirby = new App([
+        new App([
             'roots' => [
                 'index' => '/dev/null',
             ],

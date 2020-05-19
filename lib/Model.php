@@ -81,7 +81,7 @@ abstract class Model implements Resourceable, JsonSerializable, ArrayAccess
 
     public function offsetExists($offset)
     {
-        return ! is_null($this->getAttribute($offset));
+        return !is_null($this->getAttribute($offset));
     }
 
     public function offsetGet($offset)
@@ -93,7 +93,6 @@ abstract class Model implements Resourceable, JsonSerializable, ArrayAccess
     {
         $this->setAttribute($offset, $value);
     }
-
 
     public function offsetUnset($offset)
     {

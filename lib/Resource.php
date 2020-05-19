@@ -157,8 +157,8 @@ class Resource
     {
         $this->populate();
 
-        return $this->data->map(function($resource) {
-           return $this->model->newInstance($resource->toArray());
+        return $this->data->map(function ($resource) {
+            return $this->model->newInstance($resource->toArray());
         })->toArray();
     }
 
@@ -390,7 +390,7 @@ class Resource
 
     protected function unparseMoney($value)
     {
-        return (float) preg_replace("/[^0-9.]/", '', $value);
+        return (float) preg_replace('/[^0-9.]/', '', $value);
     }
 
     protected function cast(Collection $collection)

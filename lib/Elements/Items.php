@@ -8,9 +8,15 @@ class Items
 {
     public $items;
 
-    public function __construct()
+    public function __construct(array $items = [])
     {
-        $this->items = new Collection;
+        foreach($items as $item) {
+            if (!$item instanceof Item) {
+                throw new ItemException('Must provide an instance of Item Element');
+            }
+        }
+
+        $this->items = new Collection($items);
     }
 
     public function put(Item $item)

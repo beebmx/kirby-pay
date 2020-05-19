@@ -8,14 +8,12 @@ use Kirby\Toolkit\Dir;
 
 class StorageTest extends TestCase
 {
-    public $kirby;
-
     public $dir;
 
     public function setUp(): void
     {
         $this->dir = __DIR__ . '/tmp';
-        $this->kirby = new App([
+        new App([
             'roots' => [
                 'index' => '/dev/null',
             ],

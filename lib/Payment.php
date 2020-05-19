@@ -40,7 +40,7 @@ class Payment extends Model
         return static::driver()->getUrls()['payments'];
     }
 
-    public static function getPaymentMethods()
+    public static function getPaymentMethods(): array
     {
         return static::driver()->getPaymentMethods();
     }

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Beebmx\KirbyPay;
-
 
 class Log extends Model
 {
@@ -14,6 +12,7 @@ class Log extends Model
     {
         return static::write($data);
     }
+
     public static function serviceUrl(): string
     {
         return static::driver()->getUrls()['logs'];

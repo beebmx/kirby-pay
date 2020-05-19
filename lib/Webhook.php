@@ -237,7 +237,7 @@ class Webhook
         }
     }
 
-    protected  function eventToMethod($event)
+    protected function eventToMethod($event)
     {
         return 'handle' . Str::studly(str_replace('.', '_', $event));
     }

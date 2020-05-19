@@ -9,7 +9,7 @@ use Beebmx\KirbyPay\Drivers\StripeDriver;
 use Exception;
 use Kirby\Cms\App;
 
-class DriverTest extends TestCase
+class DriversTest extends TestCase
 {
     /** @test */
     public function it_throw_an_error_if_the_driver_does_not_exists()
