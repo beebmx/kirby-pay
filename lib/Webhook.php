@@ -7,13 +7,12 @@ use Kirby\Http\Request;
 
 class Webhook
 {
-    protected $request;
-
     protected $payload;
+
+    protected $payment;
 
     public function __construct(Request $request)
     {
-        $this->request = $request;
         $this->payload = $request->get();
     }
 
@@ -126,19 +125,21 @@ class Webhook
 
     public function handleChargeChargebackCreated()
     {
-        $id = $this->getPaymentId();
-        $payment = $this->updatePayment($id);
+        $payment = $this->updatePayment();
+        $this->saveLog([
+            'id' => $payment->id ?? null
+        ]);
 
-        $this->saveLog();
         return $payment;
     }
 
     public function handleTestWebhook()
     {
-        $payment = new Payment;
+        $payment = $this->getPayment() ?? new Payment;
         $payment->status = 'created';
 
         $this->saveLog([
+            'id' => $payment->id ?? 'test_id',
             'test' => 'webhook',
             'type' => 'test.webhook',
             'status' => 'created',
@@ -150,23 +151,22 @@ class Webhook
     protected function notifyPayment()
     {
         $this->saveLog();
-
         return $this->getPayment();
     }
 
     protected function processPayment()
     {
-        $id = $this->getPaymentId();
-        $payment = $this->updatePayment($id);
-
-        $this->saveLog(['payment_id' => $id]);
+        $payment = $this->updatePayment();
+        $this->saveLog([
+            'id' => $payment->id ?? null
+        ]);
 
         return $payment;
     }
 
-    protected function updatePayment($id)
+    protected function updatePayment()
     {
-        $payment = Payment::search($id, 'payment_id')->first();
+        $payment = $this->getPayment();
         if ($payment) {
             $payment->status = $this->getStatus($payment);
             $payment->save();
@@ -202,8 +202,12 @@ class Webhook
 
     protected function getPayment()
     {
-        $id = $this->getPaymentId();
-        return Payment::search($id, 'payment_id')->first();
+        if (!$this->payment) {
+            $this->payment = Payment::search($this->getPaymentId(), 'id')->first();
+            return $this->payment;
+        }
+
+        return $this->payment;
     }
 
     protected function getStatus(Payment $payment)
