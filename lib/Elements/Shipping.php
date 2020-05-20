@@ -2,7 +2,9 @@
 
 namespace Beebmx\KirbyPay\Elements;
 
-class Shipping
+use Beebmx\KirbyPay\Contracts\Elementable;
+
+class Shipping implements Elementable
 {
     public $address;
 
@@ -23,7 +25,7 @@ class Shipping
         $this->postal_code = $postal_code;
     }
 
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'address' => $this->address,

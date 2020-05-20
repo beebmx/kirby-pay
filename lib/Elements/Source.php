@@ -2,7 +2,9 @@
 
 namespace Beebmx\KirbyPay\Elements;
 
-class Source
+use Beebmx\KirbyPay\Contracts\Elementable;
+
+class Source implements Elementable
 {
     public $id;
 
@@ -23,7 +25,7 @@ class Source
         $this->brand = $brand;
     }
 
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'id' => $this->id,

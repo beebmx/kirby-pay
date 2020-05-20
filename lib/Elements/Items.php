@@ -2,9 +2,10 @@
 
 namespace Beebmx\KirbyPay\Elements;
 
+use Beebmx\KirbyPay\Contracts\Elementable;
 use Illuminate\Support\Collection;
 
-class Items
+class Items implements Elementable
 {
     public $items;
 
@@ -48,7 +49,7 @@ class Items
         return $this->items;
     }
 
-    public function toArray()
+    public function toArray(): array
     {
         return $this->items->map(function($item) {
             return $item->toArray();

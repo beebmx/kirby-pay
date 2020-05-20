@@ -2,9 +2,10 @@
 
 namespace Beebmx\KirbyPay\Elements;
 
+use Beebmx\KirbyPay\Contracts\Elementable;
 use Illuminate\Support\Str;
 
-abstract class Payment
+abstract class Payment implements Elementable
 {
     public $id;
 
@@ -35,7 +36,7 @@ abstract class Payment
         $this->amount = $items->amount();
     }
 
-    public function toArray()
+    public function toArray(): array
     {
         return [];
     }
