@@ -1,36 +1,35 @@
 <div class="kirby-pay">
     <form class="<?= kpStyle('form', 'kp-form') ?>" x-data="kirbyPay()" x-init="mount" @submit.prevent="send">
         <input type="hidden" x-model="type">
-
         <?php snippet('kirby-pay.form.customer') ?>
         <?php snippet('kirby-pay.form.shipping') ?>
-
-        <fieldset class="<?= kpStyle('fieldset', 'kp-fieldset') ?> <?= kpStyle('background', 'kp-bg-transparent') ?>">
-            <legend class="<?= kpStyle('legend', 'kp-legend') ?>"><?= kpT('payment-information') ?>:</legend>
-            <div class="<?= kpStyle('field', 'kp-field') ?>">
-                <label for="kp-card-name" class="<?= kpStyle('label', 'kp-label') ?>"><?= kpT('card-name') ?></label>
-                <input id="kp-card-name" name="kp-card-name" type="text" class="<?= kpStyle('input', 'kp-input') ?> <?= kpStyle('background', 'kp-bg-transparent') ?>" aria-label="Card name" required placeholder="<?= kpT('card-name') ?>" x-model="data.card_name">
-            </div>
-            <div class="<?= kpStyle('field', 'kp-field') ?>">
-                <label for="kp-card-number" class="<?= kpStyle('label', 'kp-label') ?>"><?= kpT('card-number') ?></label>
-                <div class="kp-input">
-                    <div id="kp-card-number" class="input empty"></div>
+        <div>
+            <div class="<?= kpStyle('title', 'kp-title') ?>"><?= kpT('payment-information') ?>:</div>
+            <div class="<?= kpStyle('fieldset', 'kp-fieldset') ?> <?= kpStyle('background', 'kp-bg-transparent') ?>">
+                <div class="<?= kpStyle('field', 'kp-field') ?>">
+                    <label for="kp-card-name" class="<?= kpStyle('label', 'kp-label') ?>"><?= kpT('card-name') ?></label>
+                    <input id="kp-card-name" name="kp-card-name" type="text" class="<?= kpStyle('input', 'kp-input') ?> <?= kpStyle('background', 'kp-bg-transparent') ?>" aria-label="Card name" required placeholder="<?= kpT('card-name') ?>" x-model="data.card_name">
                 </div>
-            </div>
-            <div class="<?= kpStyle('field', 'kp-field') ?>">
-                <div class="kp-flex kp-items-center kp-w-1/2">
+                <div class="<?= kpStyle('field', 'kp-field') ?>">
+                    <label for="kp-card-number" class="<?= kpStyle('label', 'kp-label') ?>"><?= kpT('card-number') ?></label>
                     <div class="kp-input">
-                        <div id="kp-card-expiry" class="input empty"></div>
+                        <div id="kp-card-number" class="input empty"></div>
                     </div>
                 </div>
-                <div class="kp-w-1/2 kp">
-                    <div class="kp-input">
-                        <div id="kp-card-cvc" class=""></div>
+                <div class="<?= kpStyle('field', 'kp-field') ?>">
+                    <div class="kp-flex kp-items-center kp-w-1/2">
+                        <div class="kp-input">
+                            <div id="kp-card-expiry" class="input empty"></div>
+                        </div>
+                    </div>
+                    <div class="kp-w-1/2 kp">
+                        <div class="kp-input">
+                            <div id="kp-card-cvc" class=""></div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </fieldset>
-
+        </div>
         <?php snippet('kirby-pay.form.errors') ?>
         <?php snippet('kirby-pay.form.button') ?>
     </form>
@@ -88,50 +87,19 @@
               url: '<?= kpUrl("payment.create") ?>',
               method: '<?= kpMethod("payment.create") ?>',
               data: {
-                name: this.data.name,
-                email: this.data.email,
-                phone: this.data.phone,
+                customer: this.customer,
 <?php if((bool) pay('shipping')): ?>
-                address: this.data.address,
-                state: this.data.state,
-                city: this.data.city,
-                postal_code: this.data.postal_code,
-                country: this.data.country,
+                shipping: this.shipping,
 <?php endif ?>
                 items: <?= json_encode($items) ?>,
                 token: result.token.id,
-                type: this.type,
-                trash: 'trash-value',
+                type: this.type
               }
             }).then(response)
           }.bind(this));
 
       },
-      handleSuccess: function(data) {
-        if (!data.errors) {
-          window.location = data.redirect;
-        } else {
-          this.process = false;
-          this.setErrors(data.errors)
-        }
-      },
-      handleErrors: function(data) {
-        this.process = false;
-        this.errors = data.errors
-        this.setErrors(data.errors)
-      },
-      error: function(key) {
-        return this.errors.hasOwnProperty(key)
-      },
-      setErrors: function(errors) {
-        if (typeof errors === 'string') {
-          this.showErrors = [errors]
-        } else {
-          this.showErrors = Object.keys(this.errors).map(function(key) {
-            return this.errors[key]
-          }.bind(this))
-        }
-      },
+<?php snippet('kirby-pay.js.handlers') ?>
     }
   }
 </script>

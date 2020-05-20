@@ -1,35 +1,34 @@
 <div class="kirby-pay">
     <form class="<?= kpStyle('form', 'kp-form') ?>" x-data="kirbyPay()" x-init="mount" @submit.prevent="setConekta">
         <input type="hidden" x-model="type">
-
         <?php snippet('kirby-pay.form.customer') ?>
         <?php snippet('kirby-pay.form.shipping') ?>
         <?php snippet('kirby-pay.form.payment-methods') ?>
-
         <?php if(in_array('card', kpPaymentMethods())): ?>
-        <fieldset x-show="type === 'card'" class="<?= kpStyle('fieldset', 'kp-fieldset') ?> <?= kpStyle('background', 'kp-bg-transparent') ?>">
-            <legend class="<?= kpStyle('legend', 'kp-legend') ?>"><?= kpT('payment-information') ?>:</legend>
-            <div class="<?= kpStyle('field', 'kp-field') ?>">
-                <label for="kp-card-name" class="<?= kpStyle('label', 'kp-label') ?>"><?= kpT('card-name') ?></label>
-                <input id="kp-card-name" name="kp-card-name" type="text" class="<?= kpStyle('input', 'kp-input') ?> <?= kpStyle('background', 'kp-bg-transparent') ?>" aria-label="Card name" required placeholder="<?= kpT('card-name') ?>" size="20" x-model="data.card_name" data-conekta="card[name]">
-            </div>
-            <div class="<?= kpStyle('field', 'kp-field') ?>">
-                <label for="kp-card-number" class="<?= kpStyle('label', 'kp-label') ?>"><?= kpT('card-number') ?></label>
-                <input id="kp-card-number" name="kp-card-number" type="text" class="<?= kpStyle('input', 'kp-input') ?> <?= kpStyle('background', 'kp-bg-transparent') ?>" aria-label="Card number" required max="16" placeholder="<?= kpT('card-number') ?>" size="20" x-model="data.card_number" data-conekta="card[number]">
-            </div>
-            <div class="<?= kpStyle('field', 'kp-field') ?>">
-                <div class="kp-flex kp-items-center kp-w-1/2">
-                    <input type="text" class="kp-input-month <?= kpStyle('input', 'kp-input') ?> <?= kpStyle('background', 'kp-bg-transparent') ?>" aria-label="Card expiration month" maxlength="2" size="2" required placeholder="<?= kpT('card-month') ?>" x-model="data.card_month" data-conekta="card[exp_month]">
-                    <span>/</span>
-                    <input type="text" class="kp-input-year <?= kpStyle('input', 'kp-input') ?> <?= kpStyle('background', 'kp-bg-transparent') ?>" aria-label="Card expiration year" maxlength="3" size="4" required placeholder="<?= kpT('card-year') ?>" x-model="data.card_year" data-conekta="card[exp_year]">
+        <div x-show="type === 'card'">
+            <div class="<?= kpStyle('title', 'kp-title') ?>"><?= kpT('payment-information') ?>:</div>
+            <div class="<?= kpStyle('fieldset', 'kp-fieldset') ?> <?= kpStyle('background', 'kp-bg-transparent') ?>">
+                <div class="<?= kpStyle('field', 'kp-field') ?>">
+                    <label for="kp-card-name" class="<?= kpStyle('label', 'kp-label') ?>"><?= kpT('card-name') ?></label>
+                    <input id="kp-card-name" name="kp-card-name" type="text" class="<?= kpStyle('input', 'kp-input') ?> <?= kpStyle('background', 'kp-bg-transparent') ?>" aria-label="Card name" required placeholder="<?= kpT('card-name') ?>" size="20" x-model="data.card_name" data-conekta="card[name]">
                 </div>
-                <div class="kp-w-1/2 kp">
-                    <input class="<?= kpStyle('input', 'kp-input') ?> <?= kpStyle('background', 'kp-bg-transparent') ?>" aria-label="Card CVC" maxlength="4" size="4" required placeholder="<?= kpT('card-cvc') ?>" x-model="data.card_cvc" data-conekta="card[cvc]">
+                <div class="<?= kpStyle('field', 'kp-field') ?>">
+                    <label for="kp-card-number" class="<?= kpStyle('label', 'kp-label') ?>"><?= kpT('card-number') ?></label>
+                    <input id="kp-card-number" name="kp-card-number" type="text" class="<?= kpStyle('input', 'kp-input') ?> <?= kpStyle('background', 'kp-bg-transparent') ?>" aria-label="Card number" required max="16" placeholder="<?= kpT('card-number') ?>" size="20" x-model="data.card_number" data-conekta="card[number]">
+                </div>
+                <div class="<?= kpStyle('field', 'kp-field') ?>">
+                    <div class="kp-flex kp-items-center kp-w-1/2">
+                        <input type="text" class="kp-input-month <?= kpStyle('input', 'kp-input') ?> <?= kpStyle('background', 'kp-bg-transparent') ?>" aria-label="Card expiration month" maxlength="2" size="2" required placeholder="<?= kpT('card-month') ?>" x-model="data.card_month" data-conekta="card[exp_month]">
+                        <span>/</span>
+                        <input type="text" class="kp-input-year <?= kpStyle('input', 'kp-input') ?> <?= kpStyle('background', 'kp-bg-transparent') ?>" aria-label="Card expiration year" maxlength="3" size="4" required placeholder="<?= kpT('card-year') ?>" x-model="data.card_year" data-conekta="card[exp_year]">
+                    </div>
+                    <div class="kp-w-1/2 kp">
+                        <input class="<?= kpStyle('input', 'kp-input') ?> <?= kpStyle('background', 'kp-bg-transparent') ?>" aria-label="Card CVC" maxlength="4" size="4" required placeholder="<?= kpT('card-cvc') ?>" x-model="data.card_cvc" data-conekta="card[cvc]">
+                    </div>
                 </div>
             </div>
-        </fieldset>
+        </div>
         <?php endif ?>
-
         <?php snippet('kirby-pay.form.errors') ?>
         <?php snippet('kirby-pay.form.button') ?>
     </form>
@@ -83,15 +82,9 @@
           url: '<?= kpUrl("payment.create") ?>',
           method: '<?= kpMethod("payment.create") ?>',
           data: {
-            name: this.data.name,
-            email: this.data.email,
-            phone: this.data.phone,
+            customer: this.customer,
 <?php if((bool) pay('shipping')): ?>
-            address: this.data.address,
-            state: this.data.state,
-            city: this.data.city,
-            postal_code: this.data.postal_code,
-            country: this.data.country,
+            shipping: this.shipping,
 <?php endif ?>
             items: <?= json_encode($items) ?>,
             token: token ? token.id : null,
@@ -105,31 +98,7 @@
           response.message_to_purchaser
         ]
       },
-      handleSuccess: function(data) {
-        if (!data.errors) {
-          window.location = data.redirect;
-        } else {
-          this.process = false;
-          this.setErrors(data.errors)
-        }
-      },
-      handleErrors: function(data) {
-        this.process = false;
-        this.errors = data.errors
-        this.setErrors(data.errors)
-      },
-      error: function(key) {
-        return this.errors.hasOwnProperty(key)
-      },
-      setErrors: function(errors) {
-        if (typeof errors === 'string') {
-          this.showErrors = [errors]
-        } else {
-          this.showErrors = Object.keys(this.errors).map(function(key) {
-            return this.errors[key]
-          }.bind(this))
-        }
-      },
+<?php snippet('kirby-pay.js.handlers') ?>
     }
   }
 </script>

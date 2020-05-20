@@ -94,6 +94,7 @@ Kirby::plugin('beebmx/kirby-pay', [
         'kirby-pay.form.errors' => __DIR__ . '/snippets/form/errors.php',
         'kirby-pay.form.button' => __DIR__ . '/snippets/form/button.php',
         'kirby-pay.js.data' => __DIR__ . '/snippets/js/data.php',
+        'kirby-pay.js.handlers' => __DIR__ . '/snippets/js/handlers.php',
         'kirby-pay.oxxo-styles' => __DIR__ . '/snippets/oxxo-styles.php',
         'kirby-pay.oxxo' => __DIR__ . '/snippets/oxxo.php',
     ],

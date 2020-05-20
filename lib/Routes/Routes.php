@@ -18,12 +18,12 @@ class Routes implements Routable
     public static function all(): array
     {
         return [
-            static::createPaymentCard(),
+            static::createPayment(),
             static::handleWebhooks(),
         ];
     }
 
-    public static function createPaymentCard()
+    public static function createPayment()
     {
         return [
             'pattern' => static::getBaseApiPath() . 'payment/create',
@@ -42,18 +42,18 @@ class Routes implements Routable
                 }
 
                 $process = pay('payment_process', 'charge');
-                $inputs = Routes::getInputs(['name', 'email', 'phone', 'token', 'type', 'process', 'items', 'address', 'state', 'city', 'postal_code', 'country']);
+                $inputs = Routes::getInputs(['token', 'type', 'customer', 'items', 'shipping']);
 
-                $customer = Routes::only($inputs, ['name', 'email', 'phone']);
-                $items = new Collection(Routes::get($inputs, 'items'));
-                $token = Routes::get($inputs, 'token');
-                $type = Routes::get($inputs, 'type');
+                $customer = Routes::only($inputs->get('customer'), ['name', 'email', 'phone']);
+                $items = new Collection($inputs->get('items'));
+                $token = $inputs->get('token');
+                $type = $inputs->get('type');
 
                 $customerError = Routes::validateCustomer($customer);
                 $shippingError = [];
 
                 if ((bool) pay('shipping', false)) {
-                    $shipping = Routes::only($inputs, ['address', 'state', 'city', 'postal_code', 'country']);
+                    $shipping = Routes::only($inputs->get('shipping'), ['address', 'state', 'city', 'postal_code', 'country']);
                     $shippingError = Routes::validateShipping($shipping);
                 }
 

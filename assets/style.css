@@ -7,7 +7,7 @@
 .kirby-pay .kp-fieldset {
     border: 0;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-    margin-bottom: 3.75rem;
+    margin-bottom: 1.75rem;
     border-radius: 0.25rem;
     position: relative;
 }
@@ -137,8 +137,7 @@
     list-style-type: disc;
 }
 .kirby-pay .kp-payment-selector {
-    margin-top: -2rem;
-    margin-bottom: 3.75rem;
+    margin-bottom: 1.75rem;
 }
 .kirby-pay .kp-payment-methods {
     position: relative;

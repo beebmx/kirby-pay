@@ -11,9 +11,9 @@ trait ValidateRoutes
         return (new Collection(get()))->only($inputs);
     }
 
-    public static function only(Collection $inputs, array $values)
+    public static function only(array $inputs, array $values): Collection
     {
-        return $inputs->only($values)->filter(function ($value) {
+        return (new Collection($inputs))->only($values)->filter(function ($value) {
             return !empty($value);
         });
     }
@@ -30,7 +30,7 @@ trait ValidateRoutes
             [
                 'name' => ['required', 'min' => 5],
                 'email' => ['required', 'email'],
-                'phone' => ['required', 'minLength' => 8],
+                'phone' => ['required', 'minLength' => 6],
             ],
             [
                 'name' => kpT('validation.name'),
@@ -64,7 +64,7 @@ trait ValidateRoutes
         return [
             'success' => false,
             'error' => true,
-            'errors' => array_merge($customerError ?? [], $shippingError),
+            'errors' => array_merge($customerError, $shippingError),
         ];
     }
 }

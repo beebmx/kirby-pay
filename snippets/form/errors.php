@@ -1,4 +1,4 @@
-<div class="kp--mt-10 mb-10 <?= kpStyle('alert', 'kp-alert') ?> <?= kpStyle('errors', 'kp-errors') ?>" x-show="showErrors.length" style="display: none">
+<div class="mb-8 <?= kpStyle('alert', 'kp-alert') ?> <?= kpStyle('errors', 'kp-errors') ?>" x-show="showErrors.length" style="display: none">
     <div class="kp-alert-content">
         <div class="kp-flex-shrink">
             <?= kpStyle('alert-icon') ?>

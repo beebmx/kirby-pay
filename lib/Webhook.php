@@ -108,6 +108,11 @@ class Webhook
         return $payment;
     }
 
+    public function handleOrderPartiallyRefunded()
+    {
+        return $this->processPayment();
+    }
+
     public function handlePaymentIntentCreated()
     {
         return $this->processPayment();
@@ -125,7 +130,7 @@ class Webhook
 
     public function handleChargeChargebackCreated()
     {
-        $payment = $this->updatePayment();
+        $payment = $this->updatePaymentStatus();
         $this->saveLog([
             'id' => $payment->id ?? null
         ]);
@@ -156,7 +161,7 @@ class Webhook
 
     protected function processPayment()
     {
-        $payment = $this->updatePayment();
+        $payment = $this->updatePaymentStatus();
         $this->saveLog([
             'id' => $payment->id ?? null
         ]);
@@ -164,7 +169,7 @@ class Webhook
         return $payment;
     }
 
-    protected function updatePayment()
+    protected function updatePaymentStatus()
     {
         $payment = $this->getPayment();
         if ($payment) {

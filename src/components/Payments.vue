@@ -98,11 +98,11 @@ export default {
   }
   .k-list-item.refunded .k-list-item-options .k-icon,
   .k-icon.refunded {
-    color: var(--color-positive-light);
+    color: var(--color-focus);
   }
   .k-list-item.partially_refunded .k-list-item-options .k-icon,
   .k-icon.partially_refunded {
-    color: var(--color-positive-light);
+    color: var(--color-positive);
   }
   .k-list-item.charged_back .k-list-item-options .k-icon,
   .k-icon.charged_back {

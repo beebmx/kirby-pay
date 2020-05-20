@@ -12,7 +12,6 @@ class ApiRoutes implements Routable
 {
     use ManagesRoutes;
 
-
     public static function all(): array
     {
         return [
@@ -31,7 +30,6 @@ class ApiRoutes implements Routable
             'pattern' => 'beebmx/kirby-pay/config',
             'method' => 'GET',
             'action' => function () {
-
                 return [
                     'success' => true,
                     'service' => [
