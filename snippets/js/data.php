@@ -3,7 +3,7 @@ name: '<?= $customer['name'] ?? ''?>',
 email: '<?= $customer['email'] ?? ''?>',
 phone: '<?= $customer['phone'] ?? ''?>',
 },
-<?php if((bool) pay('shipping')): ?>
+<?php if(kpHasShipping()): ?>
 shipping: {
     address: '<?= $shipping['address'] ?? ''?>',
     state: '<?= $shipping['state'] ?? ''?>',

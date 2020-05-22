@@ -30,57 +30,7 @@ class Routes implements Routable
             'name' => 'payment.create',
             'method' => 'POST',
             'action' => function () {
-                $request = new Request();
-
-                if (csrf($request->csrf()) !== true) {
-                    return [
-                        'success' => false,
-                        'error' => true,
-                        'errors' => kpT('validation.token'),
-                        'request' => $request->csrf()
-                    ];
-                }
-
-                $process = pay('payment_process', 'charge');
-                $inputs = Routes::getInputs(['token', 'type', 'customer', 'items', 'shipping']);
-
-                $customer = Routes::only($inputs->get('customer'), ['name', 'email', 'phone']);
-                $items = new Collection($inputs->get('items'));
-                $token = $inputs->get('token');
-                $type = $inputs->get('type');
-
-                $customerError = Routes::validateCustomer($customer);
-                $shippingError = [];
-
-                if ((bool) pay('shipping', false)) {
-                    $shipping = Routes::only($inputs->get('shipping'), ['address', 'state', 'city', 'postal_code', 'country']);
-                    $shippingError = Routes::validateShipping($shipping);
-                }
-
-                if ($customerError || $shippingError) {
-                    return Routes::hasErrors($customerError, $shippingError);
-                } else {
-                    try {
-                        $payment = Payment::$process(
-                            $customer,
-                            $items,
-                            $token,
-                            $type,
-                            $shipping ?? null,
-                        );
-                        return [
-                            'redirect' => url(pay('redirect', 'thanks'), ['params' => ['id' => $payment->uuid]]),
-                            'success' => true,
-                            'error' => false,
-                        ];
-                    } catch (Exception $e) {
-                        return [
-                            'success' => false,
-                            'error' => true,
-                            'errors' => $e->getMessage(),
-                        ];
-                    }
-                }
+                return Routes::handleCreatePayment(new Request);
             },
         ];
     }
@@ -96,5 +46,54 @@ class Routes implements Routable
                 return (new Webhook($request))->handle();
             }
         ];
+    }
+
+    public static function handleCreatePayment(Request $request)
+    {
+        if (($requiredError = Routes::hasPaymentFields($request)) !== true) {
+            return $requiredError;
+        }
+
+        $process = pay('payment_process', 'charge');
+        $inputs = static::getInputs($request, ['token', 'type', 'customer', 'items', 'shipping']);
+
+        $customer = static::only($inputs->get('customer'), ['name', 'email', 'phone']);
+        $items = new Collection($inputs->get('items'));
+        $token = $inputs->get('token');
+        $type = $inputs->get('type');
+
+        $customerError = static::validateCustomer($customer);
+        $itemsError = static::validateItems($items);
+        $shippingError = [];
+
+        if (kpHasShipping()) {
+            $shipping = static::only($inputs->get('shipping'), ['address', 'state', 'city', 'postal_code', 'country']);
+            $shippingError = static::validateShipping($shipping);
+        }
+
+        if ($customerError || $itemsError || $shippingError) {
+            return static::hasErrors($customerError, $itemsError, $shippingError);
+        } else {
+            try {
+                $payment = Payment::$process(
+                    $customer,
+                    $items,
+                    $token,
+                    $type,
+                    $shipping ?? null,
+                );
+                return [
+                    'redirect' => url(pay('redirect', 'thanks'), ['params' => ['id' => $payment->uuid]]),
+                    'success' => true,
+                    'error' => false,
+                ];
+            } catch (Exception $e) {
+                return [
+                    'success' => false,
+                    'error' => true,
+                    'errors' => $e->getMessage(),
+                ];
+            }
+        }
     }
 }

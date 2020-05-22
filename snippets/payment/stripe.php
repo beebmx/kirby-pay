@@ -51,7 +51,7 @@
     return {
       <?php snippet('kirby-pay.js.data', ['customer' => $customer, 'shipping' => $shipping]) ?>
       mount: function(){
-<?php if((bool) pay('shipping')): ?>
+<?php if(kpHasShipping()): ?>
         axios.get('https://restcountries.eu/rest/v2/all')
           .then(function (response) {
             this.countries = response.data.map(function(country) {
@@ -88,7 +88,7 @@
               method: '<?= kpMethod("payment.create") ?>',
               data: {
                 customer: this.customer,
-<?php if((bool) pay('shipping')): ?>
+<?php if(kpHasShipping()): ?>
                 shipping: this.shipping,
 <?php endif ?>
                 items: <?= json_encode($items) ?>,

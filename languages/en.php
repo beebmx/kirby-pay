@@ -40,6 +40,13 @@ return [
     'beebmx.kirby-pay.validation.postal-code' => 'Please enter a valid postal code',
     'beebmx.kirby-pay.validation.country' => 'Please select a country',
     'beebmx.kirby-pay.validation.token' => 'The token not exists or is incorrect',
+    'beebmx.kirby-pay.validation.type' => 'It\'s required a payment method "type"',
+    'beebmx.kirby-pay.validation.customer' => 'It\'s required an object "customer"',
+    'beebmx.kirby-pay.validation.items' => 'It\'s required an object "items"',
+    'beebmx.kirby-pay.validation.shopping' => 'It\'s required an object "shopping"',
+    'beebmx.kirby-pay.validation.items.name' => 'Please enter the name of the item',
+    'beebmx.kirby-pay.validation.items.amount' => 'Please enter the amount of the item',
+    'beebmx.kirby-pay.validation.items.quantity' => 'Please enter the quantity of the item',
     'beebmx.kirby-pay.error' => 'An error occurred',
 
     //Panel view

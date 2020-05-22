@@ -14,7 +14,7 @@ if (!function_exists('pay')) {
 if (!function_exists('kpStyle')) {
     function kpStyle($key, $default = null)
     {
-        return option("beebmx.kirby-pay.styles", $default)[$key] ?? $default;
+        return option('beebmx.kirby-pay.styles', $default)[$key] ?? $default;
     }
 }
 
@@ -37,7 +37,7 @@ if (!function_exists('kpStripe')) {
 if (!function_exists('kpT')) {
     function kpT($key, $default = null)
     {
-        return t("beebmx.kirby-pay.".$key, $default);
+        return t('beebmx.kirby-pay.' . $key, $default);
     }
 }
 
@@ -61,9 +61,9 @@ if (!function_exists('kpPaymentMethods')) {
         $methods = Payment::getPaymentMethods();
 
         return (new Collection(pay('payment_types')))
-            ->filter(function($method) use ($methods) {
+            ->filter(function ($method) use ($methods) {
                 return (in_array($method, $methods));
-        })->values()->toArray();
+            })->values()->toArray();
     }
 }
 
@@ -78,5 +78,12 @@ if (!function_exists('kpGetFirstPaymentMethod')) {
     function kpGetFirstPaymentMethod()
     {
         return kpPaymentMethods()[0] ?? 'card';
+    }
+}
+
+if (!function_exists('kpHasShipping')) {
+    function kpHasShipping(): bool
+    {
+        return pay('shipping', false);
     }
 }

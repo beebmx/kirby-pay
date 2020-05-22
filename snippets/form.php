@@ -1,6 +1,6 @@
 <?php if(($items ?? null)): ?>
 <?php
-    snippet('kirby-pay.driver.' . pay('service'), [
+    snippet('kirby-pay.payment.' . pay('service'), [
         'items' => $items,
         'customer' => $customer ?? [],
         'shipping' => $shipping ?? [],
