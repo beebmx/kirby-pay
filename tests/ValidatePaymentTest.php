@@ -42,6 +42,20 @@ class ValidatePaymentTest extends TestCase
 
         $this->assertFalse($response['success']);
         $this->assertTrue($response['error']);
+        $this->assertEquals('csrf-token', $response['type']);
+    }
+
+    /** @test */
+    public function a_request_require_a_token()
+    {
+        $response = Routes::handleCreatePayment(
+            new Request([
+                'query' => ['csrf' => csrf()],
+            ])
+        );
+
+        $this->assertFalse($response['success']);
+        $this->assertTrue($response['error']);
         $this->assertEquals('token', $response['type']);
     }
 
@@ -51,6 +65,9 @@ class ValidatePaymentTest extends TestCase
         $response = Routes::handleCreatePayment(
             new Request([
                 'query' => ['csrf' => csrf()],
+                'body' => [
+                    'token' => 'sandbox-token',
+                ]
             ])
         );
 
@@ -66,6 +83,7 @@ class ValidatePaymentTest extends TestCase
             new Request([
                 'query' => ['csrf' => csrf()],
                 'body' => [
+                    'token' => 'sandbox-token',
                     'type' => 'card',
                 ]
             ])
@@ -83,6 +101,7 @@ class ValidatePaymentTest extends TestCase
             new Request([
                 'query' => ['csrf' => csrf()],
                 'body' => [
+                    'token' => 'sandbox-token',
                     'type' => 'card',
                     'customer' => [[]],
                 ]
@@ -112,6 +131,7 @@ class ValidatePaymentTest extends TestCase
             new Request([
                 'query' => ['csrf' => csrf()],
                 'body' => [
+                    'token' => 'sandbox-token',
                     'type' => 'card',
                     'customer' => [[]],
                     'items' => [[]],
@@ -131,6 +151,7 @@ class ValidatePaymentTest extends TestCase
             new Request([
                 'query' => ['csrf' => csrf()],
                 'body' => [
+                    'token' => 'sandbox-token',
                     'type' => 'card',
                     'customer' => [[]],
                     'items' => [
@@ -152,6 +173,7 @@ class ValidatePaymentTest extends TestCase
             new Request([
                 'query' => ['csrf' => csrf()],
                 'body' => [
+                    'token' => 'sandbox-token',
                     'type' => 'card',
                     'customer' => [
                         'name' => 'John Doe',
@@ -176,6 +198,7 @@ class ValidatePaymentTest extends TestCase
             new Request([
                 'query' => ['csrf' => csrf()],
                 'body' => [
+                    'token' => 'sandbox-token',
                     'type' => 'card',
                     'customer' => [
                         'name' => 'John Doe',
@@ -213,6 +236,7 @@ class ValidatePaymentTest extends TestCase
             new Request([
                 'query' => ['csrf' => csrf()],
                 'body' => [
+                    'token' => 'sandbox-token',
                     'type' => 'card',
                     'customer' => [
                         'name' => 'John Doe',
@@ -253,6 +277,7 @@ class ValidatePaymentTest extends TestCase
             new Request([
                 'query' => ['csrf' => csrf()],
                 'body' => [
+                    'token' => 'sandbox-token',
                     'type' => 'card',
                     'customer' => [
                         'name' => 'John Doe',
@@ -293,6 +318,7 @@ class ValidatePaymentTest extends TestCase
             new Request([
                 'query' => ['csrf' => csrf()],
                 'body' => [
+                    'token' => 'sandbox-token',
                     'type' => 'card',
                     'customer' => [
                         'name' => 'John Doe',
@@ -335,6 +361,7 @@ class ValidatePaymentTest extends TestCase
             new Request([
                 'query' => ['csrf' => csrf()],
                 'body' => [
+                    'token' => 'sandbox-token',
                     'type' => 'card',
                     'customer' => [
                         'name' => 'John Doe',
@@ -368,6 +395,7 @@ class ValidatePaymentTest extends TestCase
             new Request([
                 'query' => ['csrf' => csrf()],
                 'body' => [
+                    'token' => 'sandbox-token',
                     'type' => 'card',
                     'customer' => [
                         'name' => 'John Doe',
@@ -393,6 +421,7 @@ class ValidatePaymentTest extends TestCase
             new Request([
                 'query' => ['csrf' => csrf()],
                 'body' => [
+                    'token' => 'sandbox-token',
                     'type' => 'card',
                     'customer' => [
                         'name' => 'John Doe',
@@ -421,6 +450,7 @@ class ValidatePaymentTest extends TestCase
             new Request([
                 'query' => ['csrf' => csrf()],
                 'body' => [
+                    'token' => 'sandbox-token',
                     'type' => 'card',
                     'customer' => [
                         'name' => 'John Doe',

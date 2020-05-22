@@ -1,8 +1,6 @@
 <div class="kirby-pay">
     <form class="<?= kpStyle('form', 'kp-form') ?>" x-data="kirbyPay()" x-init="mount" @submit.prevent="send">
-        <input type="hidden" x-model="type">
         <?php snippet('kirby-pay.form.customer') ?>
-        <?php snippet('kirby-pay.form.shipping') ?>
         <div>
             <div class="<?= kpStyle('title', 'kp-title') ?>"><?= kpT('payment-information') ?>:</div>
             <div class="<?= kpStyle('fieldset', 'kp-fieldset') ?> <?= kpStyle('background', 'kp-bg-transparent') ?>">
@@ -31,7 +29,7 @@
             </div>
         </div>
         <?php snippet('kirby-pay.form.errors') ?>
-        <?php snippet('kirby-pay.form.button') ?>
+        <?php snippet('kirby-pay.form.button', ['label' => 'customer-create']) ?>
     </form>
 </div>
 <script src="https://js.stripe.com/v3/"></script>
@@ -49,19 +47,8 @@
 
   function kirbyPay() {
     return {
-      <?php snippet('kirby-pay.js.payment-data', ['customer' => $customer ?? [], 'shipping' => $shipping ?? []]) ?>
+      <?php snippet('kirby-pay.js.customer-data', ['customer' => $customer ?? []]) ?>
       mount: function(){
-<?php if(kpHasShipping()): ?>
-        axios.get('https://restcountries.eu/rest/v2/all')
-          .then(function (response) {
-            this.countries = response.data.map(function(country) {
-              return {
-                value: country.alpha2Code,
-                label: country.translations['<?= substr(kirby()->language()->code(), 0, 2) ?>'] || country.name,
-              };
-            })
-          }.bind(this))
-<?php endif ?>
         var token = document.head.querySelector('meta[name="csrf-token"]');
         if (token) {
           window.axios.defaults.headers.common['x-csrf'] = token.content;
@@ -84,16 +71,11 @@
           })
           .then(function(result) {
             axios({
-              url: '<?= kpUrl("payment.create") ?>',
-              method: '<?= kpMethod("payment.create") ?>',
+              url: '<?= kpUrl("customer.create") ?>',
+              method: '<?= kpMethod("customer.create") ?>',
               data: {
                 customer: this.customer,
-<?php if(kpHasShipping()): ?>
-                shipping: this.shipping,
-<?php endif ?>
-                items: <?= json_encode($items) ?>,
                 token: result.token.id,
-                type: this.type
               }
             }).then(response)
           }.bind(this));

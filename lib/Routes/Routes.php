@@ -5,6 +5,8 @@ namespace Beebmx\KirbyPay\Routes;
 use Beebmx\KirbyPay\Concerns\ManagesRoutes;
 use Beebmx\KirbyPay\Concerns\ValidateRoutes;
 use Beebmx\KirbyPay\Contracts\Routable;
+use Beebmx\KirbyPay\Customer;
+use Beebmx\KirbyPay\Elements\Buyer;
 use Beebmx\KirbyPay\Payment;
 use Beebmx\KirbyPay\Webhook;
 use Exception;
@@ -19,6 +21,7 @@ class Routes implements Routable
     {
         return [
             static::createPayment(),
+            static::createCustomer(),
             static::handleWebhooks(),
         ];
     }
@@ -31,6 +34,18 @@ class Routes implements Routable
             'method' => 'POST',
             'action' => function () {
                 return Routes::handleCreatePayment(new Request);
+            },
+        ];
+    }
+
+    public static function createCustomer()
+    {
+        return [
+            'pattern' => static::getBaseApiPath() . 'customer/create',
+            'name' => 'customer.create',
+            'method' => 'POST',
+            'action' => function () {
+                return Routes::handleCreateCustomer(new Request);
             },
         ];
     }
@@ -50,7 +65,7 @@ class Routes implements Routable
 
     public static function handleCreatePayment(Request $request)
     {
-        if (($requiredError = Routes::hasPaymentFields($request)) !== true) {
+        if (($requiredError = static::hasPaymentFields($request)) !== true) {
             return $requiredError;
         }
 
@@ -84,6 +99,47 @@ class Routes implements Routable
                 );
                 return [
                     'redirect' => url(pay('redirect', 'thanks'), ['params' => ['id' => $payment->uuid]]),
+                    'success' => true,
+                    'error' => false,
+                ];
+            } catch (Exception $e) {
+                return [
+                    'success' => false,
+                    'error' => true,
+                    'errors' => $e->getMessage(),
+                ];
+            }
+        }
+    }
+
+    public static function handleCreateCustomer(Request $request)
+    {
+        if (($requiredError = static::hasCustomerFields($request)) !== true) {
+            return $requiredError;
+        }
+
+        $inputs = static::getInputs($request, ['token', 'customer']);
+        $customer = static::only($inputs->get('customer'), ['name', 'email', 'phone']);
+        $token = $inputs->get('token');
+
+        $customerError = static::validateCustomer($customer);
+
+        if ($customerError) {
+            return static::hasErrors($customerError);
+        } else {
+            try {
+
+                $resource = Customer::create(
+                    new Buyer(
+                        $customer['name'],
+                        $customer['email'],
+                        $customer['phone'],
+                    ),
+                    $token,
+                    'card',
+                );
+                return [
+                    'redirect' => url(pay('redirect-customer-create', 'customer-created'), ['params' => ['id' => $resource->uuid]]),
                     'success' => true,
                     'error' => false,
                 ];

@@ -85,18 +85,20 @@ trait ValidateRoutes
         );
     }
 
-    public static function hasErrors(array $customerError, array $itemsError, array $shippingError)
+    public static function hasErrors(array ...$errors)
     {
         return [
             'success' => false,
             'error' => true,
-            'errors' => array_merge($customerError, $itemsError, $shippingError),
+            'errors' => array_merge(...$errors),
         ];
     }
 
     protected static function hasPaymentFields(Request $request)
     {
         if (!static::hasCsrf($request)) {
+            return static::setErrorType('csrf-token');
+        } elseif (!static::hasField($request, 'token')) {
             return static::setErrorType('token');
         } elseif (!static::hasField($request, 'type')) {
             return static::setErrorType('type');
@@ -106,6 +108,19 @@ trait ValidateRoutes
             return static::setErrorType('items');
         } elseif (!static::hasField($request, 'shipping') && kpHasShipping()) {
             return static::setErrorType('shipping');
+        }
+
+        return true;
+    }
+
+    protected static function hasCustomerFields(Request $request)
+    {
+        if (!static::hasCsrf($request)) {
+            return static::setErrorType('csrf-token');
+        } elseif (!static::hasField($request, 'token')) {
+            return static::setErrorType('token');
+        } elseif (!static::hasField($request, 'customer')) {
+            return static::setErrorType('customer');
         }
 
         return true;

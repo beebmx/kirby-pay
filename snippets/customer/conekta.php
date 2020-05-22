@@ -1,11 +1,7 @@
 <div class="kirby-pay">
     <form class="<?= kpStyle('form', 'kp-form') ?>" x-data="kirbyPay()" x-init="mount" @submit.prevent="setConekta">
-        <input type="hidden" x-model="type">
         <?php snippet('kirby-pay.form.customer') ?>
-        <?php snippet('kirby-pay.form.shipping') ?>
-        <?php snippet('kirby-pay.form.payment-methods') ?>
-        <?php if(in_array('card', kpPaymentMethods())): ?>
-        <div x-show="type === 'card'">
+        <div>
             <div class="<?= kpStyle('title', 'kp-title') ?>"><?= kpT('payment-information') ?>:</div>
             <div class="<?= kpStyle('fieldset', 'kp-fieldset') ?> <?= kpStyle('background', 'kp-bg-transparent') ?>">
                 <div class="<?= kpStyle('field', 'kp-field') ?>">
@@ -28,9 +24,8 @@
                 </div>
             </div>
         </div>
-        <?php endif ?>
         <?php snippet('kirby-pay.form.errors') ?>
-        <?php snippet('kirby-pay.form.button') ?>
+        <?php snippet('kirby-pay.form.button', ['label' => 'customer-create']) ?>
     </form>
 </div>
 <script type="text/javascript" src="https://cdn.conekta.io/js/latest/conekta.js"></script>
@@ -39,19 +34,8 @@
 
   function kirbyPay() {
     return {
-      <?php snippet('kirby-pay.js.payment-data', ['customer' => $customer ?? [], 'shipping' => $shipping ?? [], 'card' => $card ?? []]) ?>
+      <?php snippet('kirby-pay.js.customer-data', ['customer' => $customer ?? [], 'card' => $card ?? []]) ?>
       mount: function(){
-<?php if(kpHasShipping()): ?>
-        axios.get('https://restcountries.eu/rest/v2/all')
-          .then(function (response) {
-            this.countries = response.data.map(function(country) {
-              return {
-                value: country.alpha2Code,
-                label: country.translations['<?= substr(kirby()->language()->code(), 0, 2) ?>'] || country.name,
-              };
-            })
-          }.bind(this))
-<?php endif ?>
         var token = document.head.querySelector('meta[name="csrf-token"]');
         if (token) {
           window.axios.defaults.headers.common['x-csrf'] = token.content;
@@ -62,11 +46,7 @@
       setConekta: function() {
         this.process = true;
         this.showErrors = [];
-        if (this.type === 'card') {
-          this.requestToken()
-        } else {
-          this.send()
-        }
+        this.requestToken()
       },
       requestToken: function() {
         Conekta.Token.create(this.$el, this.send.bind(this), this.conektaErrorResponseHandler.bind(this));
@@ -79,16 +59,11 @@
         }.bind(this)
 
         axios({
-          url: '<?= kpUrl("payment.create") ?>',
-          method: '<?= kpMethod("payment.create") ?>',
+          url: '<?= kpUrl("customer.create") ?>',
+          method: '<?= kpMethod("customer.create") ?>',
           data: {
             customer: this.customer,
-<?php if(kpHasShipping()): ?>
-            shipping: this.shipping,
-<?php endif ?>
-            items: <?= json_encode($items) ?>,
             token: token ? token.id : null,
-            type: this.type,
           }
         }).then(response)
       },

@@ -30,6 +30,8 @@ return [
 
     'beebmx.kirby-pay.pay' => 'Make payment',
     'beebmx.kirby-pay.pay-process' => 'Processing payment',
+    'beebmx.kirby-pay.customer-create' => 'Customer registration',
+    'beebmx.kirby-pay.customer-create-process' => 'Processing customer',
 
     //Form validations
     'beebmx.kirby-pay.validation.name' => 'Please enter a valid name',
