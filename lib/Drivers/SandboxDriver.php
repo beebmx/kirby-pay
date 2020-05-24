@@ -38,7 +38,7 @@ class SandboxDriver extends Driver
 
     public function createCustomer(Buyer $customer, string $token, string $payment_method = null): Customer
     {
-        $remoteCustomer = $this->simulateCustomer($customer, $payment_method)
+        $remoteCustomer = $this->simulateCustomer($customer)
                         ->only(['id', 'sources'])
                         ->toArray();
 
@@ -48,33 +48,66 @@ class SandboxDriver extends Driver
             $customer->id,
             $customer->email,
             $customer,
-            new Source(
-                $remoteCustomer['sources']['data'][0]['id'],
-                $remoteCustomer['sources']['data'][0]['name'],
-                $remoteCustomer['sources']['data'][0]['last4'],
-                $remoteCustomer['sources']['data'][0]['type'],
-                $remoteCustomer['sources']['data'][0]['brand'],
-            ),
+            $this->createSource($remoteCustomer),
         );
     }
 
-    protected function simulateCustomer(Buyer $customer, $payment_method)
+    public function updateCustomer(ResourceCustomer $customer): bool
+    {
+        return true;
+    }
+
+    public function deleteCustomer(ResourceCustomer $customer): bool
+    {
+        return true;
+    }
+
+    public function updateCustomerSource(ResourceCustomer $customer, string $token): Source
+    {
+        return $this->createSource([
+            'sources' => $this->simulateSource(
+                new Buyer(
+                    $customer->customer['name'],
+                    $customer->customer['email'],
+                    $customer->customer['phone'],
+                )
+            )
+        ]);
+    }
+
+    protected function simulateCustomer(Buyer $customer)
     {
         return new Collection([
             'id' => 'cus_' . Str::random(20),
-            'sources' => [
-                'total' => 1,
-                'data' => [[
-                    'id' => 'src_' . Str::random(20),
-                    'name' => $customer->name,
-                    'exp_month' => 12,
-                    'exp_year' => 19,
-                    'type' => 'card',
-                    'last4' => '4242',
-                    'brand' => 'visa',
-                ]]
-            ],
+            'sources' => $this->simulateSource($customer)
         ]);
+    }
+
+    protected function simulateSource(Buyer $customer): array
+    {
+        return [
+            'total' => 1,
+            'data' => [[
+                'id' => 'src_' . Str::random(20),
+                'name' => $customer->name,
+                'exp_month' => 12,
+                'exp_year' => 19,
+                'type' => 'card',
+                'last4' => '4242',
+                'brand' => 'visa',
+            ]]
+        ];
+    }
+
+    protected function createSource(array $source): Source
+    {
+        return new Source(
+            $source['sources']['data'][0]['id'],
+            $source['sources']['data'][0]['name'],
+            $source['sources']['data'][0]['last4'],
+            $source['sources']['data'][0]['type'],
+            $source['sources']['data'][0]['brand'],
+        );
     }
 
     public function createOrder(ResourceCustomer $customer, Items $items, string $type = null, Shipping $shipping = null): Order

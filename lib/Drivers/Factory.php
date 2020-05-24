@@ -2,6 +2,7 @@
 
 namespace Beebmx\KirbyPay\Drivers;
 
+use Beebmx\KirbyPay\Exception\DriverException;
 use Illuminate\Support\Str;
 
 class Factory

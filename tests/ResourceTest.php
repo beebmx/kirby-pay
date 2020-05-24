@@ -165,7 +165,7 @@ class ResourceTest extends TestCase
     /** @test */
     public function a_resource_can_take_a_number_of_instances()
     {
-        for($i = 0; $i < 25; $i++) {
+        for ($i = 0; $i < 25; $i++) {
             $this->model::write([]);
         }
 
@@ -177,7 +177,7 @@ class ResourceTest extends TestCase
     /** @test */
     public function a_resource_can_skip_a_number_of_instances()
     {
-        for($i = 0; $i < 25; $i++) {
+        for ($i = 0; $i < 25; $i++) {
             $this->model::write([]);
         }
 
@@ -189,7 +189,7 @@ class ResourceTest extends TestCase
     /** @test */
     public function a_resource_can_paginate_a_number_of_instances()
     {
-        for($i = 0; $i < 25; $i++) {
+        for ($i = 0; $i < 25; $i++) {
             $this->model::write([]);
         }
 
@@ -242,5 +242,15 @@ class ResourceTest extends TestCase
         $example = $this->model::write(['email' => 'mail@example.com']);
 
         $this->assertCount(1, $this->model::search(3, 'pay_id:int')->get());
+    }
+
+    /** @test */
+    public function a_resource_can_be_destroy()
+    {
+        $instance = $this->model::write(['email' => 'john@doe.com']);
+        $this->assertCount(1, $this->model::get());
+
+        $this->model::destroy($instance->pay_id, $instance->uuid);
+        $this->assertCount(0, $this->model::get());
     }
 }

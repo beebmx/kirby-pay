@@ -1,6 +1,6 @@
 <?php
 
-namespace Beebmx\KirbyPay\Drivers;
+namespace Beebmx\KirbyPay\Exception;
 
 use Exception;
 

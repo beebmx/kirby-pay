@@ -76,6 +76,40 @@ class ConektaDriver extends Driver
         );
     }
 
+    public function updateCustomer(ResourceCustomer $customer): bool
+    {
+        return !!Customer::find($customer->id)
+            ->update([
+                'name' => $customer->customer['name'],
+                'email' => $customer->customer['email'],
+                'phone' => $customer->customer['phone'],
+            ]);
+    }
+
+    public function deleteCustomer(ResourceCustomer $customer): bool
+    {
+        return !!Customer::find($customer->id)->delete();
+    }
+
+    public function updateCustomerSource(ResourceCustomer $customer, string $token): Source
+    {
+        $cus = Customer::find($customer->id);
+        $cus->payment_sources[0]->delete();
+
+        $source = $cus->createPaymentSource([
+            'token_id' => $token,
+            'type' => 'card'
+        ]);
+
+        return new Source(
+            $source['id'],
+            $source['name'],
+            $source['last4'],
+            $source['type'],
+            $source['brand'],
+        );
+    }
+
     public function createOrder(ResourceCustomer $customer, Items $items, string $type = null, Shipping $shipping = null): ElementOrder
     {
         $buyer = new Buyer(

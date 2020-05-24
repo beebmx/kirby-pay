@@ -3,6 +3,7 @@
 namespace Beebmx\KirbyPay\Elements;
 
 use Beebmx\KirbyPay\Contracts\Elementable;
+use Beebmx\KirbyPay\Exception\ItemException;
 use Illuminate\Support\Collection;
 
 class Items implements Elementable

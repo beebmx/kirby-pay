@@ -172,9 +172,29 @@ class ModelTest extends TestCase
         $instance->foo = 'baz';
         $resource = $instance->save();
 
-
         $this->assertEquals(2, $resource->pay_id);
         $this->assertEquals('baz', $resource->foo);
+
+        Dir::remove(__DIR__ . '/tmp/test');
+    }
+
+    /** @test */
+    public function a_model_can_be_deleted()
+    {
+        new App([
+            'roots' => [
+                'index' => '/dev/null',
+            ],
+            'options' => [
+                'beebmx.kirby-pay.storage' => __DIR__ . '/tmp',
+            ]
+        ]);
+
+        $instance = $this->model::write(['foo' => 'bar', 'bar' => 'baz']);
+        $this->assertCount(1, $this->model::get());
+
+        $instance->delete();
+        $this->assertCount(0, $this->model::get());
 
         Dir::remove(__DIR__ . '/tmp/test');
     }

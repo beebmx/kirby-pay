@@ -3,7 +3,7 @@
 namespace Beebmx\KirbyPay\Tests;
 
 use Beebmx\KirbyPay\Elements\Item;
-use Beebmx\KirbyPay\Elements\ItemException;
+use Beebmx\KirbyPay\Exception\ItemException;
 use Beebmx\KirbyPay\Elements\Items;
 use Illuminate\Support\Collection;
 

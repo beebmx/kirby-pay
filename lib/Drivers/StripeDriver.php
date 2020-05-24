@@ -74,13 +74,48 @@ class StripeDriver extends Driver
             $customer->id,
             $customer->email,
             $customer,
-            new Source(
-                $remoteCustomer['sources']['data'][0]['id'],
-                $remoteCustomer['sources']['data'][0]['name'] ?? $customer->name,
-                $remoteCustomer['sources']['data'][0]['last4'],
-                $remoteCustomer['sources']['data'][0]['object'],
-                $remoteCustomer['sources']['data'][0]['brand'],
+            $this->createSource($remoteCustomer, $customer->name),
+        );
+    }
+
+    public function updateCustomer(ResourceCustomer $customer): bool
+    {
+        return !!Customer::update(
+            $customer->id,
+            [
+                'name' => $customer->customer['name'],
+                'email' => $customer->customer['email'],
+                'phone' => $customer->customer['phone'],
+            ]
+        );
+    }
+
+    public function deleteCustomer(ResourceCustomer $customer): bool
+    {
+        return !!Customer::retrieve($customer->id)->delete();
+    }
+
+    public function updateCustomerSource(ResourceCustomer $customer, string $token): Source
+    {
+        return $this->createSource(
+            Customer::update(
+                $customer->id,
+                [
+                    'source' => $token
+                ]
             ),
+            $customer->name
+        );
+    }
+
+    protected function createSource($stripeCustomer, $name = ''): Source
+    {
+        return new Source(
+            $stripeCustomer['sources']['data'][0]['id'],
+            $stripeCustomer['sources']['data'][0]['name'] ?? $name,
+            $stripeCustomer['sources']['data'][0]['last4'],
+            $stripeCustomer['sources']['data'][0]['object'],
+            $stripeCustomer['sources']['data'][0]['brand'],
         );
     }
 

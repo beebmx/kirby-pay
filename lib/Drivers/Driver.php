@@ -3,6 +3,7 @@
 namespace Beebmx\KirbyPay\Drivers;
 
 use Beebmx\KirbyPay\Contracts\Driverable;
+use Beebmx\KirbyPay\Exception\DriverSecretException;
 
 abstract class Driver implements Driverable
 {

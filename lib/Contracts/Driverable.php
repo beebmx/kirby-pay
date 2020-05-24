@@ -9,6 +9,7 @@ use Beebmx\KirbyPay\Elements\Customer;
 use Beebmx\KirbyPay\Elements\Items;
 use Beebmx\KirbyPay\Elements\Order;
 use Beebmx\KirbyPay\Elements\Shipping;
+use Beebmx\KirbyPay\Elements\Source;
 
 interface Driverable
 {
@@ -19,6 +20,12 @@ interface Driverable
     public function getUrls(): array;
 
     public function createCustomer(Buyer $customer, string $token, string $payment_method = null): Customer;
+
+    public function updateCustomer(ResourceCustomer $customer): bool;
+
+    public function updateCustomerSource(ResourceCustomer $customer, string $token): Source;
+
+    public function deleteCustomer(ResourceCustomer $customer): bool;
 
     public function createOrder(ResourceCustomer $customer, Items $items, string $type = null, Shipping $shipping = null): Order;
 

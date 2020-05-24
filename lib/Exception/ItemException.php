@@ -1,6 +1,6 @@
 <?php
 
-namespace Beebmx\KirbyPay\Elements;
+namespace Beebmx\KirbyPay\Exception;
 
 use Exception;
 

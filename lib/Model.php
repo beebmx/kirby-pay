@@ -49,6 +49,11 @@ abstract class Model implements Resourceable, JsonSerializable, ArrayAccess
         return static::write($this->getAttributes(), $this->pay_id, $this->uuid);
     }
 
+    public function delete(): bool
+    {
+        return !!static::destroy($this->pay_id, $this->uuid);
+    }
+
     public function newInstance($attributes = [])
     {
         return new static((array) $attributes);

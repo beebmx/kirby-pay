@@ -6,7 +6,7 @@ use Beebmx\KirbyPay\Drivers\ConektaDriver;
 use Beebmx\KirbyPay\Drivers\Factory;
 use Beebmx\KirbyPay\Drivers\SandboxDriver;
 use Beebmx\KirbyPay\Drivers\StripeDriver;
-use Exception;
+use Beebmx\KirbyPay\Exception\DriverException;
 use Kirby\Cms\App;
 
 class DriversTest extends TestCase
@@ -14,7 +14,7 @@ class DriversTest extends TestCase
     /** @test */
     public function it_throw_an_error_if_the_driver_does_not_exists()
     {
-        $this->expectException(Exception::class);
+        $this->expectException(DriverException::class);
         $this->expectExceptionMessage('The driver requested does not exists');
 
         new App([

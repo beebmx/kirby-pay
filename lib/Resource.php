@@ -9,6 +9,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Kirby\Data\Data;
+use Kirby\Toolkit\F;
 
 class Resource
 {
@@ -151,6 +152,11 @@ class Resource
         return $this->cast(new Collection(Data::read(
             Storage::path($this->path) . '/' . $file,
         )));
+    }
+
+    public function destroy(int $pay_id, string $uuid)
+    {
+        return F::remove(Storage::path($this->path) . '/' . $pay_id . '-' . $uuid . $this->type);
     }
 
     public function get()
