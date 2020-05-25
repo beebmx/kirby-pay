@@ -271,6 +271,11 @@ class Resource
         return Storage::isEmpty($this->path);
     }
 
+    public function isNotEmpty(): bool
+    {
+        return !$this->isEmpty();
+    }
+
     public function getPath(): string
     {
         return $this->path;

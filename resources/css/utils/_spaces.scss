@@ -1,0 +1,63 @@
+@each $index, $size in $space-sizes {
+  .kirby-pay .kp-m-#{$index} {
+    margin: #{$size};
+  }
+  .kirby-pay .kp-mt-#{$index} {
+    margin-top: #{$size};
+  }
+  .kirby-pay .kp--mt-#{$index} {
+    margin-top: -#{$size};
+  }
+  .kirby-pay .kp-mb-#{$index} {
+    margin-bottom: #{$size};
+  }
+  .kirby-pay .kp-ml-#{$index} {
+    margin-left: #{$size};
+  }
+  .kirby-pay .kp-mr-#{$index} {
+    margin-right: #{$size};
+  }
+  .kirby-pay .kp-mx-#{$index} {
+    margin-left: #{$size};
+    margin-right: #{$size};
+  }
+  .kirby-pay .kp-my-#{$index} {
+    margin-top: #{$size};
+    margin-bottom: #{$size};
+  }
+  .kirby-pay .kp-p-#{$index} {
+    padding: #{$size};
+  }
+  .kirby-pay .kp-pt-#{$index} {
+    padding-top: #{$size};
+  }
+  .kirby-pay .kp-pb-#{$index} {
+    padding-bottom: #{$size};
+  }
+  .kirby-pay .kp-pl-#{$index} {
+    padding-left: #{$size};
+  }
+  .kirby-pay .kp-pr-#{$index} {
+    padding-right: #{$size};
+  }
+  .kirby-pay .kp-px-#{$index} {
+    padding-left: #{$size};
+    padding-right: #{$size};
+  }
+  .kirby-pay .kp-py-#{$index} {
+    padding-top: #{$size};
+    padding-bottom: #{$size};
+  }
+  .kirby-pay .kp-w-#{$index} {
+    width: #{$size};
+  }
+  .kirby-pay .kp-h-#{$index} {
+    height: #{$size};
+  }
+}
+.kirby-pay .kp-w-1\/2 {
+  width: 50%;
+}
+.kirby-pay .kp-w-full {
+  width: 100%;
+}

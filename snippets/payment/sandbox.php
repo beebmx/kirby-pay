@@ -1,5 +1,6 @@
 <div class="kirby-pay">
-    <form class="<?= kpStyle('form', 'kp-form') ?>" x-data="kirbyPay()" x-init="mount" @submit.prevent="send">
+    <form class="<?= kpStyle('form', 'kp-form') ?>"
+          x-data="{...payment(), ...kp}" x-init="mount" @submit.prevent="prepare">
         <input type="hidden" x-model="type">
         <?php snippet('kirby-pay.form.customer') ?>
         <?php snippet('kirby-pay.form.shipping') ?>
@@ -30,52 +31,18 @@
         <?php snippet('kirby-pay.form.button') ?>
     </form>
 </div>
+<?= js('media/plugins/beebmx/kirby-pay/app.js') ?>
 <script type="text/javascript" >
-  function kirbyPay() {
+  var kp = (new KirbyPay(
+    '<?= kpUrl("payment.create") ?>','<?= kpMethod("payment.create") ?>', '<?= substr(kirby()->language()->code(), 0, 2) ?>'
+  )).payment({
+    type:'<?= kpGetFirstPaymentMethod() ?>', items:<?= json_encode($items ?? []) ?>, customer:<?= json_encode($customer ?? []) ?>, <?php if(kpHasShipping()): ?>shipping:<?= json_encode($shipping ?? []) ?>,<?php endif ?>card:<?= json_encode($card ?? []) ?>,country:'<?= pay('default_country') ?>',
+  })
+  function payment() {
     return {
-      <?php snippet('kirby-pay.js.payment-data', ['customer' => $customer ?? [], 'shipping' => $shipping ?? [], 'card' => $card ?? []]) ?>
-      mount: function(){
-<?php if(kpHasShipping()): ?>
-        axios.get('https://restcountries.eu/rest/v2/all')
-          .then(function (response) {
-            this.countries = response.data.map(function(country) {
-              return {
-                value: country.alpha2Code,
-                label: country.translations['<?= substr(kirby()->language()->code(), 0, 2) ?>'] || country.name,
-              };
-            })
-          }.bind(this))
-<?php endif ?>
-        var token = document.head.querySelector('meta[name="csrf-token"]');
-        if (token) {
-          window.axios.defaults.headers.common['x-csrf'] = token.content;
-        } else {
-          console.error('CSRF token not found');
-        }
-      },
-      send: function() {
-        this.process = true;
-        this.showErrors = [];
-        var response = function(response) {
-          !response.data.errors
-            ? this.handleSuccess(response.data)
-            : this.handleErrors(response.data)
-        }.bind(this)
-        axios({
-          url: '<?= kpUrl("payment.create") ?>',
-          method: '<?= kpMethod("payment.create") ?>',
-          data: {
-            customer: this.customer,
-<?php if(kpHasShipping()): ?>
-            shipping: this.shipping,
-<?php endif ?>
-            items: <?= json_encode($items) ?>,
-            token: 'sandbox-token',
-            type: this.type
-          }
-        }).then(response)
-      },
-<?php snippet('kirby-pay.js.handlers') ?>
+      prepare: function() {
+        this.send('sandbox-token')
+      }
     }
   }
 </script>

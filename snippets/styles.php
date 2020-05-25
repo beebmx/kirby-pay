@@ -1,1 +1,1 @@
-<?= css('media/plugins/beebmx/kirby-pay/style.css') ?>
+<?= css('media/plugins/beebmx/kirby-pay/app.css') ?>

@@ -1,5 +1,5 @@
 <div class="kirby-pay">
-    <form class="<?= kpStyle('form', 'kp-form') ?>" x-data="kirbyPay()" x-init="mount" @submit.prevent="send">
+    <form class="<?= kpStyle('form', 'kp-form') ?>" x-data="{...customer(), ...kp}" @submit.prevent="prepare">
 
         <?php snippet('kirby-pay.form.customer') ?>
         <div>
@@ -29,36 +29,18 @@
         <?php snippet('kirby-pay.form.button', ['label' => 'customer-create']) ?>
     </form>
 </div>
+<?= js('media/plugins/beebmx/kirby-pay/app.js') ?>
 <script type="text/javascript" >
-  function kirbyPay() {
+  var kp = (new KirbyPay(
+    '<?= kpUrl("customer.create") ?>','<?= kpMethod("customer.create") ?>', '<?= substr(kirby()->language()->code(), 0, 2) ?>'
+  )).customer({
+    customer:<?= json_encode($customer ?? []) ?>, card:<?= json_encode($card ?? []) ?>,
+  })
+  function customer() {
     return {
-      <?php snippet('kirby-pay.js.customer-data', ['customer' => $customer ?? [], 'card' => $card ?? []]) ?>
-      mount: function(){
-        var token = document.head.querySelector('meta[name="csrf-token"]');
-        if (token) {
-          window.axios.defaults.headers.common['x-csrf'] = token.content;
-        } else {
-          console.error('CSRF token not found');
-        }
-      },
-      send: function() {
-        this.process = true;
-        this.showErrors = [];
-        var response = function(response) {
-          !response.data.errors
-            ? this.handleSuccess(response.data)
-            : this.handleErrors(response.data)
-        }.bind(this)
-        axios({
-          url: '<?= kpUrl("customer.create") ?>',
-          method: '<?= kpMethod("customer.create") ?>',
-          data: {
-            customer: this.customer,
-            token: 'sandbox-token',
-          }
-        }).then(response)
-      },
-<?php snippet('kirby-pay.js.handlers') ?>
+      prepare: function() {
+        this.send('sandbox-token')
+      }
     }
   }
 </script>

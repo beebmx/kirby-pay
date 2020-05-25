@@ -84,7 +84,6 @@ Kirby::plugin('beebmx/kirby-pay', [
     ],
     'snippets' => [
         'kirby-pay.styles' => __DIR__ . '/snippets/styles.php',
-        'kirby-pay.scripts' => __DIR__ . '/snippets/scripts.php',
         'kirby-pay.form' => __DIR__ . '/snippets/form.php',
         'kirby-pay.payment.sandbox' => __DIR__ . '/snippets/payment/sandbox.php',
         'kirby-pay.payment.conekta' => __DIR__ . '/snippets/payment/conekta.php',
@@ -98,9 +97,6 @@ Kirby::plugin('beebmx/kirby-pay', [
         'kirby-pay.form.payment-methods' => __DIR__ . '/snippets/form/payment-methods.php',
         'kirby-pay.form.errors' => __DIR__ . '/snippets/form/errors.php',
         'kirby-pay.form.button' => __DIR__ . '/snippets/form/button.php',
-        'kirby-pay.js.payment-data' => __DIR__ . '/snippets/js/payment-data.php',
-        'kirby-pay.js.customer-data' => __DIR__ . '/snippets/js/customer-data.php',
-        'kirby-pay.js.handlers' => __DIR__ . '/snippets/js/handlers.php',
         'kirby-pay.oxxo-styles' => __DIR__ . '/snippets/oxxo-styles.php',
         'kirby-pay.oxxo' => __DIR__ . '/snippets/oxxo.php',
     ],

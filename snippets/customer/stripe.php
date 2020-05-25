@@ -1,5 +1,5 @@
 <div class="kirby-pay">
-    <form class="<?= kpStyle('form', 'kp-form') ?>" x-data="kirbyPay()" x-init="mount" @submit.prevent="send">
+    <form class="<?= kpStyle('form', 'kp-form') ?>"  x-data="{...customer(), ...kp}" @submit.prevent="prepare">
         <?php snippet('kirby-pay.form.customer') ?>
         <div>
             <div class="<?= kpStyle('title', 'kp-title') ?>"><?= kpT('payment-information') ?>:</div>
@@ -32,8 +32,14 @@
         <?php snippet('kirby-pay.form.button', ['label' => 'customer-create']) ?>
     </form>
 </div>
+<?= js('media/plugins/beebmx/kirby-pay/app.js') ?>
 <script src="https://js.stripe.com/v3/"></script>
 <script type="text/javascript" >
+  var kp = (new KirbyPay(
+    '<?= kpUrl("customer.create") ?>','<?= kpMethod("customer.create") ?>', '<?= substr(kirby()->language()->code(), 0, 2) ?>'
+  )).customer({
+    customer:<?= json_encode($customer ?? []) ?>, card:<?= json_encode($card ?? []) ?>,
+  })
   var stripe = Stripe('<?= pay('service_key') ?>');
   var elements = stripe.elements();
 
@@ -45,43 +51,20 @@
   cardExpiry.mount('#kp-card-expiry');
   cardCvc.mount('#kp-card-cvc');
 
-  function kirbyPay() {
+  function customer() {
     return {
-      <?php snippet('kirby-pay.js.customer-data', ['customer' => $customer ?? []]) ?>
-      mount: function(){
-        var token = document.head.querySelector('meta[name="csrf-token"]');
-        if (token) {
-          window.axios.defaults.headers.common['x-csrf'] = token.content;
-        } else {
-          console.error('CSRF token not found');
-        }
-      },
-      send: function() {
+      prepare: function () {
         this.process = true;
         this.showErrors = [];
-        var response = function(response) {
-          !response.data.errors
-            ? this.handleSuccess(response.data)
-            : this.handleErrors(response.data)
-        }.bind(this)
-
-        stripe
-          .createToken(cardNumber, {
-            name: this.data.card_name
-          })
-          .then(function(result) {
-            axios({
-              url: '<?= kpUrl("customer.create") ?>',
-              method: '<?= kpMethod("customer.create") ?>',
-              data: {
-                customer: this.customer,
-                token: result.token.id,
-              }
-            }).then(response)
-          }.bind(this));
-
+        this.requestToken()
       },
-<?php snippet('kirby-pay.js.handlers') ?>
+      requestToken: function() {
+        stripe.createToken(cardNumber, {
+          name: this.data.card_name
+        }).then(function(result) {
+          this.send(result.token.id || result.token)
+        }.bind(this))
+      },
     }
   }
 </script>

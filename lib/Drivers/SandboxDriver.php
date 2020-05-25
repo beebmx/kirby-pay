@@ -43,6 +43,7 @@ class SandboxDriver extends Driver
                         ->toArray();
 
         $customer->id = $remoteCustomer['id'];
+        $customer->customer_id = $remoteCustomer['id'];
 
         return new Customer(
             $customer->id,

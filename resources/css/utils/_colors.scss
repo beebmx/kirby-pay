@@ -1,0 +1,8 @@
+@each $index, $color in $colors {
+  .kirby-pay .kp-bg-#{$index} {
+    background-color: #{$color};
+  }
+  .kirby-pay .kp-text-#{$index} {
+    color: #{$color};
+  }
+}

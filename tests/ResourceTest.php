@@ -53,6 +53,14 @@ class ResourceTest extends TestCase
     }
 
     /** @test */
+    public function a_resource_knows_if_has_an_own_directory_is_not_empty()
+    {
+        $this->assertTrue($this->model::isEmpty());
+        touch(option('beebmx.kirby-pay.storage') . "/{$this->model::getPath()}/file-02");
+        $this->assertTrue($this->model::isNotEmpty());
+    }
+
+    /** @test */
     public function a_resource_can__write_a_new_model_object()
     {
         $this->assertTrue($this->model::isEmpty());

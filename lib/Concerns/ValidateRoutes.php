@@ -59,7 +59,7 @@ trait ValidateRoutes
                     ]
                 )
             ];
-        })->map(function ($item){
+        })->map(function ($item) {
             return !empty($item['item']) ? $item : null;
         })->first(function ($item) {
             return is_array($item) && !empty($item);
@@ -98,7 +98,7 @@ trait ValidateRoutes
     {
         if (!static::hasCsrf($request)) {
             return static::setErrorType('csrf-token');
-        } elseif (!static::hasField($request, 'token')) {
+        } elseif (!static::hasField($request, 'token', true)) {
             return static::setErrorType('token');
         } elseif (!static::hasField($request, 'type')) {
             return static::setErrorType('type');
@@ -117,7 +117,7 @@ trait ValidateRoutes
     {
         if (!static::hasCsrf($request)) {
             return static::setErrorType('csrf-token');
-        } elseif (!static::hasField($request, 'token')) {
+        } elseif (!static::hasField($request, 'token', true)) {
             return static::setErrorType('token');
         } elseif (!static::hasField($request, 'customer')) {
             return static::setErrorType('customer');
@@ -131,9 +131,13 @@ trait ValidateRoutes
         return csrf($request->csrf()) === true;
     }
 
-    protected static function hasField(Request $request, string $type): bool
+    protected static function hasField(Request $request, string $type, bool $empty = false): bool
     {
-        return !empty($request->get($type));
+        if ($empty) {
+            return array_key_exists($type, $request->get());
+        }
+
+        return array_key_exists($type, $request->get()) && !empty($request->get($type));
     }
 
     protected static function setErrorType(string $type): array

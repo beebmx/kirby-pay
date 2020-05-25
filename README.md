@@ -35,7 +35,6 @@ After you install the package just include the snippets and set the items (produ
 ?>
 <!-- Ends Kirby Pay Form -->
 
-<?php snippet('kirby-pay.scripts') ?>
 </body>
 ```
 

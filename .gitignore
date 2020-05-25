@@ -1,4 +1,5 @@
 /node_modules
+/resources/node_modules
 /vendor
 /kirby
 /pay

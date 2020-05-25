@@ -12,6 +12,17 @@ class Payment extends Model
 {
     protected static $path = 'payment';
 
+    public static function orderWithCustomer(Customer $customer, $items_to_sell, string $type = 'card', $shipping = null)
+    {
+        $items = $items_to_sell instanceof Items
+            ? $items_to_sell
+            : static::setItems($items_to_sell);
+
+        return static::write(
+            static::driver()->createOrder($customer, $items, $type, $shipping)->toArray()
+        );
+    }
+
     public static function order(Collection $customer, Collection $items_to_sell, string $token = null, string $type = 'card', Collection $shipping_instructions = null)
     {
         $buyer = static::setBuyer($customer);
@@ -19,9 +30,7 @@ class Payment extends Model
         $shipping = static::setShipping($shipping_instructions);
         $customer = Customer::firstOrCreate($buyer, $token, $type);
 
-        return static::write(
-            static::driver()->createOrder($customer, $items, $type, $shipping)->toArray()
-        );
+        return static::orderWithCustomer($customer, $items, $type, $shipping);
     }
 
     public static function charge(Collection $customer, Collection $items_to_sell, string $token = null, string $type = 'card', Collection $shipping_instructions = null)

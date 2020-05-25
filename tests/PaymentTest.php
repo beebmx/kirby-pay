@@ -3,6 +3,7 @@
 namespace Beebmx\KirbyPay\Tests;
 
 use Beebmx\KirbyPay\Customer;
+use Beebmx\KirbyPay\Elements\Buyer;
 use Beebmx\KirbyPay\Payment;
 use Illuminate\Support\Collection;
 use Kirby\Cms\App;
@@ -54,7 +55,7 @@ class PaymentTest extends TestCase
     }
 
     /** @test */
-    public function a_payment_can_create_an_order()
+    public function a_payment_can_creates_an_order()
     {
         $this->assertTrue(Payment::isEmpty());
         Payment::order($this->buyer, $this->items, 'token');
@@ -83,7 +84,26 @@ class PaymentTest extends TestCase
     }
 
     /** @test */
-    public function a_payment_can_create_a_charge()
+    public function a_payment_creates_an_order_with_an_existing_customer()
+    {
+        $this->assertTrue(Customer::isEmpty());
+        $this->assertTrue(Payment::isEmpty());
+        $buyer = new Buyer(
+            $this->buyer['name'],
+            $this->buyer['email'],
+            $this->buyer['phone'],
+        );
+        $customer = Customer::create($buyer, 'token');
+        $this->assertTrue(Customer::isNotEmpty());
+        $this->assertCount(1, Customer::get());
+
+        Payment::orderWithCustomer($customer, $this->items);
+        $this->assertCount(1, Customer::get());
+        $this->assertTrue(Payment::isNotEmpty());
+    }
+
+    /** @test */
+    public function a_payment_can_creates_a_charge()
     {
         $this->assertTrue(Payment::isEmpty());
         Payment::charge($this->buyer, $this->items, 'token');
