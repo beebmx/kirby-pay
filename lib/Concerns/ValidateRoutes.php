@@ -159,6 +159,8 @@ trait ValidateRoutes
     {
         if (!static::hasCsrf($request)) {
             return static::setErrorType('csrf-token');
+        } elseif (!static::hasUuid($request, 'id')) {
+            return static::setErrorType('id');
         } elseif (!static::hasField($request, 'token', true)) {
             return static::setErrorType('token');
         }

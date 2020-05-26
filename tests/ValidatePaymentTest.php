@@ -2,7 +2,11 @@
 
 namespace Beebmx\KirbyPay\Tests;
 
+use Beebmx\KirbyPay\Customer;
+use Beebmx\KirbyPay\Elements\Buyer;
+use Beebmx\KirbyPay\Payment;
 use Beebmx\KirbyPay\Routes\Routes;
+use Illuminate\Support\Str;
 use Kirby\Cms\App;
 use Kirby\Http\Request;
 use Kirby\Toolkit\Dir;
@@ -36,7 +40,7 @@ class ValidatePaymentTest extends TestCase
     }
 
     /** @test */
-    public function a_request_require_a_csrf_token()
+    public function a_request_for_payment_require_a_csrf_token()
     {
         $response = Routes::handleCreatePayment(new Request);
 
@@ -46,7 +50,7 @@ class ValidatePaymentTest extends TestCase
     }
 
     /** @test */
-    public function a_request_require_a_token()
+    public function a_request_for_payment_require_a_token()
     {
         $response = Routes::handleCreatePayment(
             new Request([
@@ -60,7 +64,7 @@ class ValidatePaymentTest extends TestCase
     }
 
     /** @test */
-    public function a_request_require_a_type_payment_method()
+    public function a_request_for_payment_require_a_type_payment_method()
     {
         $response = Routes::handleCreatePayment(
             new Request([
@@ -77,7 +81,7 @@ class ValidatePaymentTest extends TestCase
     }
 
     /** @test */
-    public function a_request_require_a_customer_object()
+    public function a_request_for_payment_require_a_customer_object()
     {
         $response = Routes::handleCreatePayment(
             new Request([
@@ -95,7 +99,7 @@ class ValidatePaymentTest extends TestCase
     }
 
     /** @test */
-    public function a_request_require_an_items_object()
+    public function a_request_for_payment_require_an_items_object()
     {
         $response = Routes::handleCreatePayment(
             new Request([
@@ -114,7 +118,7 @@ class ValidatePaymentTest extends TestCase
     }
 
     /** @test */
-    public function a_request_require_a_shipping_object()
+    public function a_request_for_payment_require_a_shipping_object()
     {
         App::destroy();
         $this->kirby = new App([
@@ -145,7 +149,7 @@ class ValidatePaymentTest extends TestCase
     }
 
     /** @test */
-    public function a_request_require_a_valid_customer_name()
+    public function a_request_for_payment_require_a_valid_customer_name()
     {
         $response = Routes::handleCreatePayment(
             new Request([
@@ -167,7 +171,7 @@ class ValidatePaymentTest extends TestCase
     }
 
     /** @test */
-    public function a_request_require_a_valid_customer_email()
+    public function a_request_for_payment_require_a_valid_customer_email()
     {
         $response = Routes::handleCreatePayment(
             new Request([
@@ -192,7 +196,7 @@ class ValidatePaymentTest extends TestCase
     }
 
     /** @test */
-    public function a_request_require_a_valid_customer_phone()
+    public function a_request_for_payment_require_a_valid_customer_phone()
     {
         $response = Routes::handleCreatePayment(
             new Request([
@@ -219,7 +223,7 @@ class ValidatePaymentTest extends TestCase
     }
 
     /** @test */
-    public function a_request_require_a_valid_shipping_address()
+    public function a_request_for_payment_require_a_valid_shipping_address()
     {
         App::destroy();
         $this->kirby = new App([
@@ -260,7 +264,7 @@ class ValidatePaymentTest extends TestCase
     }
 
     /** @test */
-    public function a_request_require_a_valid_shipping_state()
+    public function a_request_for_payment_require_a_valid_shipping_state()
     {
         App::destroy();
         $this->kirby = new App([
@@ -301,7 +305,7 @@ class ValidatePaymentTest extends TestCase
     }
 
     /** @test */
-    public function a_request_require_a_valid_shipping_country()
+    public function a_request_for_payment_require_a_valid_shipping_country()
     {
         App::destroy();
         $this->kirby = new App([
@@ -344,7 +348,7 @@ class ValidatePaymentTest extends TestCase
     }
 
     /** @test */
-    public function a_request_require_a_valid_shipping_postal_code()
+    public function a_request_for_payment_require_a_valid_shipping_postal_code()
     {
         App::destroy();
         $this->kirby = new App([
@@ -389,7 +393,7 @@ class ValidatePaymentTest extends TestCase
     }
 
     /** @test */
-    public function a_request_validate_items_structure()
+    public function a_request_for_payment_validate_items_structure()
     {
         $response = Routes::handleCreatePayment(
             new Request([
@@ -415,7 +419,7 @@ class ValidatePaymentTest extends TestCase
     }
 
     /** @test */
-    public function a_request_validate_item_structure()
+    public function a_request_for_payment_validate_item_structure()
     {
         $response = Routes::handleCreatePayment(
             new Request([
@@ -444,7 +448,7 @@ class ValidatePaymentTest extends TestCase
     }
 
     /** @test */
-    public function a_request_validate_and_create_a_payment()
+    public function a_request_for_payment_validate_and_create_a_payment()
     {
         $response = Routes::handleCreatePayment(
             new Request([
@@ -467,5 +471,333 @@ class ValidatePaymentTest extends TestCase
 
         $this->assertTrue($response['success']);
         $this->assertFalse($response['error']);
+    }
+
+    /** @test */
+    public function a_request_for_order_require_a_csrf_token()
+    {
+        $response = Routes::handleCreateOrder(new Request);
+
+        $this->assertFalse($response['success']);
+        $this->assertTrue($response['error']);
+        $this->assertEquals('csrf-token', $response['type']);
+    }
+
+    /** @test */
+    public function a_request_for_order_require_an_id()
+    {
+        $response = Routes::handleCreateOrder(
+            new Request([
+                'query' => ['csrf' => csrf()],
+            ])
+        );
+
+        $this->assertFalse($response['success']);
+        $this->assertTrue($response['error']);
+        $this->assertEquals('id', $response['type']);
+    }
+
+    /** @test */
+    public function a_request_for_order_require_a_valid_uuid()
+    {
+        $response = Routes::handleCreateOrder(
+            new Request([
+                'query' => ['csrf' => csrf()],
+                'body' => [
+                    'id' => 'invalid-uuid',
+                ]
+            ])
+        );
+
+        $this->assertFalse($response['success']);
+        $this->assertTrue($response['error']);
+        $this->assertEquals('id', $response['type']);
+    }
+
+    /** @test */
+    public function a_request_for_order_require_an_items_object()
+    {
+        $response = Routes::handleCreateOrder(
+            new Request([
+                'query' => ['csrf' => csrf()],
+                'body' => [
+                    'id' => (string) Str::uuid(),
+                ]
+            ])
+        );
+
+        $this->assertFalse($response['success']);
+        $this->assertTrue($response['error']);
+        $this->assertEquals('items', $response['type']);
+    }
+
+    /** @test */
+    public function a_request_for_order_require_a_shipping_object()
+    {
+        App::destroy();
+        $this->kirby = new App([
+            'roots' => [
+                'index' => __DIR__ . '/tmp'
+            ],
+            'options' => [
+                'beebmx.kirby-pay.shipping' => true,
+            ]
+        ]);
+        $this->session = $this->kirby->session();
+
+        $response = Routes::handleCreateOrder(
+            new Request([
+                'query' => ['csrf' => csrf()],
+                'body' => [
+                    'id' => (string) Str::uuid(),
+                    'items' => [[]],
+                ]
+            ])
+        );
+
+        $this->assertFalse($response['success']);
+        $this->assertTrue($response['error']);
+        $this->assertEquals('shipping', $response['type']);
+    }
+
+    /** @test */
+    public function a_request_for_order_require_a_valid_shipping_address()
+    {
+        App::destroy();
+        $this->kirby = new App([
+            'roots' => [
+                'index' => __DIR__ . '/tmp'
+            ],
+            'options' => [
+                'beebmx.kirby-pay.shipping' => true,
+            ]
+        ]);
+        $this->session = $this->kirby->session();
+
+        $response = Routes::handleCreateOrder(
+            new Request([
+                'query' => ['csrf' => csrf()],
+                'body' => [
+                    'id' => (string) Str::uuid(),
+                    'items' => [
+                        ['name' => 'Product 001', 'amount' => 300.00, 'quantity' => 1],
+                    ],
+                    'shipping' => [[]],
+                ]
+            ])
+        );
+
+        $this->assertFalse($response['success']);
+        $this->assertTrue($response['error']);
+        $this->assertArrayNotHasKey('name', $response['errors']);
+        $this->assertArrayNotHasKey('email', $response['errors']);
+        $this->assertArrayNotHasKey('phone', $response['errors']);
+        $this->assertArrayHasKey('address', $response['errors']);
+    }
+
+    /** @test */
+    public function a_request_for_order_require_a_valid_shipping_state()
+    {
+        App::destroy();
+        $this->kirby = new App([
+            'roots' => [
+                'index' => __DIR__ . '/tmp'
+            ],
+            'options' => [
+                'beebmx.kirby-pay.shipping' => true,
+            ]
+        ]);
+        $this->session = $this->kirby->session();
+
+        $response = Routes::handleCreateOrder(
+            new Request([
+                'query' => ['csrf' => csrf()],
+                'body' => [
+                    'id' => (string) Str::uuid(),
+                    'items' => [
+                        ['name' => 'Product 001', 'amount' => 300.00, 'quantity' => 1],
+                    ],
+                    'shipping' => [
+                        'address' => 'Know address 123',
+                    ],
+                ]
+            ])
+        );
+
+        $this->assertFalse($response['success']);
+        $this->assertTrue($response['error']);
+        $this->assertArrayNotHasKey('address', $response['errors']);
+        $this->assertArrayHasKey('state', $response['errors']);
+    }
+
+    /** @test */
+    public function a_request_for_order_require_a_valid_shipping_country()
+    {
+        App::destroy();
+        $this->kirby = new App([
+            'roots' => [
+                'index' => __DIR__ . '/tmp'
+            ],
+            'options' => [
+                'beebmx.kirby-pay.shipping' => true,
+            ]
+        ]);
+        $this->session = $this->kirby->session();
+
+        $response = Routes::handleCreateOrder(
+            new Request([
+                'query' => ['csrf' => csrf()],
+                'body' => [
+                    'id' => (string) Str::uuid(),
+                    'items' => [
+                        ['name' => 'Product 001', 'amount' => 300.00, 'quantity' => 1],
+                    ],
+                    'shipping' => [
+                        'address' => 'Know address 123',
+                        'state' => 'State',
+                    ],
+                ]
+            ])
+        );
+
+        $this->assertFalse($response['success']);
+        $this->assertTrue($response['error']);
+        $this->assertArrayNotHasKey('address', $response['errors']);
+        $this->assertArrayNotHasKey('state', $response['errors']);
+        $this->assertArrayHasKey('country', $response['errors']);
+    }
+
+    /** @test */
+    public function a_request_for_order_require_a_valid_shipping_postal_code()
+    {
+        App::destroy();
+        $this->kirby = new App([
+            'roots' => [
+                'index' => __DIR__ . '/tmp'
+            ],
+            'options' => [
+                'beebmx.kirby-pay.shipping' => true,
+            ]
+        ]);
+        $this->session = $this->kirby->session();
+
+        $response = Routes::handleCreateOrder(
+            new Request([
+                'query' => ['csrf' => csrf()],
+                'body' => [
+                    'id' => (string) Str::uuid(),
+                    'items' => [
+                        ['name' => 'Product 001', 'amount' => 300.00, 'quantity' => 1],
+                    ],
+                    'shipping' => [
+                        'address' => 'Know address 123',
+                        'state' => 'State',
+                        'country' => 'US',
+                    ],
+                ]
+            ])
+        );
+
+        $this->assertFalse($response['success']);
+        $this->assertTrue($response['error']);
+        $this->assertArrayNotHasKey('address', $response['errors']);
+        $this->assertArrayNotHasKey('state', $response['errors']);
+        $this->assertArrayNotHasKey('country', $response['errors']);
+        $this->assertArrayHasKey('postal_code', $response['errors']);
+    }
+
+    /** @test */
+    public function a_request_for_order_validate_items_structure()
+    {
+        $response = Routes::handleCreateOrder(
+            new Request([
+                'query' => ['csrf' => csrf()],
+                'body' => [
+                    'id' => (string) Str::uuid(),
+                    'items' => [[]],
+                ]
+            ])
+        );
+
+        $this->assertFalse($response['success']);
+        $this->assertTrue($response['error']);
+        $this->assertArrayHasKey('item', $response['errors']);
+        $this->assertArrayHasKey('item', $response['errors']);
+        $this->assertArrayHasKey('item', $response['errors']);
+    }
+
+    /** @test */
+    public function a_request_for_order_validate_item_structure()
+    {
+        $response = Routes::handleCreateOrder(
+            new Request([
+                'query' => ['csrf' => csrf()],
+                'body' => [
+                    'id' => (string) Str::uuid(),
+                    'items' => [
+                        ['name' => 'Product 001', 'amount' => 300.00, 'quantity' => 1],
+                        ['amount' => 200.00, 'quantity' => 1],
+                    ],
+                ]
+            ])
+        );
+
+        $this->assertFalse($response['success']);
+        $this->assertTrue($response['error']);
+        $this->assertArrayHasKey('item', $response['errors']);
+        $this->assertArrayHasKey('item', $response['errors']);
+        $this->assertArrayHasKey('item', $response['errors']);
+    }
+
+    /** @test */
+    public function a_request_for_order_require_an_existing_customer()
+    {
+        $response = Routes::handleCreateOrder(
+            new Request([
+                'query' => ['csrf' => csrf()],
+                'body' => [
+                    'id' => (string) Str::uuid(),
+                    'items' => [
+                        ['name' => 'Product 001', 'amount' => 300.00, 'quantity' => 1],
+                        ['name' => 'Product 002', 'amount' => 300.00, 'quantity' => 1],
+                    ],
+                ]
+            ])
+        );
+
+        $this->assertFalse($response['success']);
+        $this->assertTrue($response['error']);
+        $this->assertEquals(kpT('validation.customer.not-found'), $response['errors']);
+    }
+
+    /** @test */
+    public function a_request_for_order_validate_and_create_a_payment()
+    {
+        $this->assertCount(0, Payment::get());
+        $customer = Customer::create(
+            new Buyer(
+                'John Doe',
+                'example@mail.com',
+                '1122334455'
+            ),
+            'test-token'
+        );
+
+        $response = Routes::handleCreateOrder(
+            new Request([
+                'query' => ['csrf' => csrf()],
+                'body' => [
+                    'id' => $customer->uuid,
+                    'items' => [
+                        ['name' => 'Product 001', 'amount' => 300.00, 'quantity' => 1],
+                        ['name' => 'Product 002', 'amount' => 300.00, 'quantity' => 1],
+                    ],
+                ]
+            ])
+        );
+
+        $this->assertTrue($response['success']);
+        $this->assertFalse($response['error']);
+        $this->assertCount(1, Payment::get());
     }
 }
