@@ -3,6 +3,7 @@
 namespace Beebmx\KirbyPay\Concerns;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Kirby\Http\Request;
 
 trait ValidateRoutes
@@ -113,6 +114,21 @@ trait ValidateRoutes
         return true;
     }
 
+    protected static function hasOrderFields(Request $request)
+    {
+        if (!static::hasCsrf($request)) {
+            return static::setErrorType('csrf-token');
+        } elseif (!static::hasUuid($request, 'id')) {
+            return static::setErrorType('id');
+        } elseif (!static::hasField($request, 'items')) {
+            return static::setErrorType('items');
+        } elseif (!static::hasField($request, 'shipping') && kpHasShipping()) {
+            return static::setErrorType('shipping');
+        }
+
+        return true;
+    }
+
     protected static function hasCustomerFields(Request $request)
     {
         if (!static::hasCsrf($request)) {
@@ -126,27 +142,56 @@ trait ValidateRoutes
         return true;
     }
 
+    protected static function hasCustomerUpdateFields(Request $request)
+    {
+        if (!static::hasCsrf($request)) {
+            return static::setErrorType('csrf-token');
+        } elseif (!static::hasUuid($request, 'id')) {
+            return static::setErrorType('id');
+        } elseif (!static::hasField($request, 'customer')) {
+            return static::setErrorType('customer');
+        }
+
+        return true;
+    }
+
+    protected static function hasSourceUpdateFields(Request $request)
+    {
+        if (!static::hasCsrf($request)) {
+            return static::setErrorType('csrf-token');
+        } elseif (!static::hasField($request, 'token', true)) {
+            return static::setErrorType('token');
+        }
+
+        return true;
+    }
+
     protected static function hasCsrf(Request $request): bool
     {
         return csrf($request->csrf()) === true;
     }
 
-    protected static function hasField(Request $request, string $type, bool $empty = false): bool
+    protected static function hasUuid(Request $request, $field): bool
     {
-        if ($empty) {
-            return array_key_exists($type, $request->get());
-        }
-
-        return array_key_exists($type, $request->get()) && !empty($request->get($type));
+        return Str::isUuid((string) $request->get($field));
     }
 
-    protected static function setErrorType(string $type): array
+    protected static function hasField(Request $request, string $field, bool $empty = false): bool
+    {
+        if ($empty) {
+            return array_key_exists($field, $request->get());
+        }
+
+        return array_key_exists($field, $request->get()) && !empty($request->get($field));
+    }
+
+    protected static function setErrorType(string $field): array
     {
         return [
             'success' => false,
             'error' => true,
-            'errors' => kpT("validation.{$type}"),
-            'type' => $type
+            'errors' => kpT("validation.{$field}"),
+            'type' => $field
         ];
     }
 }

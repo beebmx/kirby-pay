@@ -1,5 +1,8 @@
 <div class="kirby-pay">
-    <form class="<?= kpStyle('form', 'kp-form') ?>" x-data="{...customer(), ...kp}" @submit.prevent="prepare">
+    <form class="<?= kpStyle('form', 'kp-form') ?>"
+          x-data='{...customer(), ...(new KirbyPay("<?= kpUrl('customer.create') ?>","<?= kpMethod('customer.create') ?>","<?= substr(kirby()->language()->code(), 0, 2) ?>")).customer({customer:<?= json_encode($customer ?? []) ?>, card:<?= json_encode($card ?? []) ?>})}'
+          @submit.prevent="prepare"
+    >
         <?php snippet('kirby-pay.form.customer') ?>
         <div>
             <div class="<?= kpStyle('title', 'kp-title') ?>"><?= kpT('payment-information') ?>:</div>
@@ -32,11 +35,6 @@
 <script type="text/javascript" src="https://cdn.conekta.io/js/latest/conekta.js"></script>
 <script type="text/javascript" >
   Conekta.setPublicKey('<?= pay('service_key') ?>');
-  var kp = (new KirbyPay(
-    '<?= kpUrl("customer.create") ?>','<?= kpMethod("customer.create") ?>', '<?= substr(kirby()->language()->code(), 0, 2) ?>'
-  )).customer({
-    customer:<?= json_encode($customer ?? []) ?>, card:<?= json_encode($card ?? []) ?>,
-  })
   function customer() {
     return {
       prepare: function() {

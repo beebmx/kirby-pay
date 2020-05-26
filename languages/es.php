@@ -32,6 +32,12 @@ return [
     'beebmx.kirby-pay.pay-process' => 'Procesando pago',
     'beebmx.kirby-pay.customer-create' => 'Registro de cliente',
     'beebmx.kirby-pay.customer-create-process' => 'Procesando cliente',
+    'beebmx.kirby-pay.customer-update' => 'Actualizar cliente',
+    'beebmx.kirby-pay.customer-update-process' => 'Procesando cliente',
+    'beebmx.kirby-pay.customer-delete' => 'Eliminar cliente',
+    'beebmx.kirby-pay.customer-delete-process' => 'Procesando cliente',
+    'beebmx.kirby-pay.source-update' => 'Actualizar método de pago',
+    'beebmx.kirby-pay.source-update-process' => 'Procesando método de pago',
 
     //Form validations
     'beebmx.kirby-pay.validation.name' => 'Favor de ingresar un nombre válido',
@@ -50,6 +56,7 @@ return [
     'beebmx.kirby-pay.validation.items.amount' => 'Es necesario el monto del item',
     'beebmx.kirby-pay.validation.items.quantity' => 'Es necesaria la cantidad del item',
     'beebmx.kirby-pay.error' => 'Ha ocurrido un error',
+    'beebmx.kirby-pay.validation.customer.not-found' => 'El cliente no existe',
 
     //Panel view
     'view.payments' => 'Pagos',

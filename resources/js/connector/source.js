@@ -1,11 +1,7 @@
 export default function (kp, elements) {
   return {
     elements: elements,
-    customer: {
-      name: elements.customer['name'] || '',
-      email: elements.customer['email'] || '',
-      phone: elements.customer['phone'] || '',
-    },
+    id: elements.id,
     data: {
       card_name: elements.card['name'] || '',
       card_number: elements.card['number'] || '',
@@ -23,7 +19,7 @@ export default function (kp, elements) {
         url: kp.url,
         method: kp.method,
         data: {
-          customer: this.customer,
+          id: this.id,
           token: token,
         }
       }).then(({data}) => {

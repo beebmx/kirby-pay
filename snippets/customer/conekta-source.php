@@ -1,15 +1,9 @@
 <div class="kirby-pay">
     <form class="<?= kpStyle('form', 'kp-form') ?>"
-          x-data='{...payment(), ...(new KirbyPay("<?= kpUrl('payment.create') ?>","<?= kpMethod("payment.create") ?>","<?= substr(kirby()->language()->code(), 0, 2) ?>")).payment({type:"<?= kpGetFirstPaymentMethod() ?>",items:<?= json_encode($items ?? []) ?>,customer:<?= json_encode($customer ?? []) ?>,<?php if(kpHasShipping()): ?>shipping:<?= json_encode($shipping ?? []) ?>,<?php endif ?>card:<?= json_encode($card ?? []) ?>,country:"<?= pay('default_country') ?>"})}'
-          x-init="mount"
+          x-data='{...conekta_source(), ...(new KirbyPay("<?= kpUrl('source.update') ?>","<?= kpMethod('source.update') ?>", "<?= substr(kirby()->language()->code(), 0, 2) ?>")).source({id:"<?= $uuid ?? null ?>", card:<?= json_encode($card ?? []) ?>})}'
           @submit.prevent="prepare"
     >
-        <input type="hidden" x-model="type">
-        <?php snippet('kirby-pay.form.customer') ?>
-        <?php snippet('kirby-pay.form.shipping') ?>
-        <?php snippet('kirby-pay.form.payment-methods') ?>
-        <?php if(in_array('card', kpPaymentMethods())): ?>
-        <div x-show="type === 'card'">
+        <div>
             <div class="<?= kpStyle('title', 'kp-title') ?>"><?= kpT('payment-information') ?>:</div>
             <div class="<?= kpStyle('fieldset', 'kp-fieldset') ?> <?= kpStyle('background', 'kp-bg-transparent') ?>">
                 <div class="<?= kpStyle('field', 'kp-field') ?>">
@@ -32,25 +26,20 @@
                 </div>
             </div>
         </div>
-        <?php endif ?>
         <?php snippet('kirby-pay.form.errors') ?>
-        <?php snippet('kirby-pay.form.button') ?>
+        <?php snippet('kirby-pay.form.button', ['label' => 'source-update']) ?>
     </form>
 </div>
 <?= js('media/plugins/beebmx/kirby-pay/app.js') ?>
 <script type="text/javascript" src="https://cdn.conekta.io/js/latest/conekta.js"></script>
 <script type="text/javascript">
   Conekta.setPublicKey('<?= pay('service_key') ?>');
-  function payment() {
+  function conekta_source() {
     return {
       prepare: function() {
         this.process = true;
         this.showErrors = [];
-        if (this.type === 'card') {
-          this.requestToken()
-        } else {
-          this.send(null)
-        }
+        this.requestToken()
       },
       requestToken: function() {
         Conekta.Token.create(this.$el, this.setToken.bind(this), this.conektaErrorResponseHandler.bind(this));
@@ -66,4 +55,5 @@
       },
     }
   }
+
 </script>

@@ -1,9 +1,8 @@
 <div class="kirby-pay">
     <form class="<?= kpStyle('form', 'kp-form') ?>"
-          x-data='{...customer(), ...(new KirbyPay("<?= kpUrl("customer.create") ?>","<?= kpMethod("customer.create") ?>","<?= substr(kirby()->language()->code(), 0, 2) ?>" )).customer({customer:<?= json_encode($customer ?? []) ?>,card:<?= json_encode($card ?? []) ?>})}'
+          x-data='{...source(), ...(new KirbyPay("<?= kpUrl('source.update') ?>","<?= kpMethod('source.update') ?>", "<?= substr(kirby()->language()->code(), 0, 2) ?>")).source({id:"<?= $uuid ?? null ?>", card:<?= json_encode($card ?? []) ?>})}'
           @submit.prevent="prepare"
     >
-        <?php snippet('kirby-pay.form.customer') ?>
         <div>
             <div class="<?= kpStyle('title', 'kp-title') ?>"><?= kpT('payment-information') ?>:</div>
             <div class="<?= kpStyle('fieldset', 'kp-fieldset') ?> <?= kpStyle('background', 'kp-bg-transparent') ?>">
@@ -28,12 +27,12 @@
             </div>
         </div>
         <?php snippet('kirby-pay.form.errors') ?>
-        <?php snippet('kirby-pay.form.button', ['label' => 'customer-create']) ?>
+        <?php snippet('kirby-pay.form.button', ['label' => 'source-update']) ?>
     </form>
 </div>
 <?= js('media/plugins/beebmx/kirby-pay/app.js') ?>
-<script type="text/javascript" >
-  function customer() {
+<script type="text/javascript">
+  function source() {
     return {
       prepare: function() {
         this.send('sandbox-token')

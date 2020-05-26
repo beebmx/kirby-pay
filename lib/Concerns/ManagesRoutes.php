@@ -6,7 +6,7 @@ trait ManagesRoutes
 {
     public static function getBaseApiPath()
     {
-        return option('beebmx.kirby-pay.api_path', 'beebmx/kirby-pay/');
+        return option('beebmx.kirby-pay.api_path', '/beebmx/kirby-pay/');
     }
 
     public static function getMethodByName(string $key)

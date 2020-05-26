@@ -1,6 +1,9 @@
 <div class="kirby-pay">
     <form class="<?= kpStyle('form', 'kp-form') ?>"
-          x-data="{...payment(), ...kp}" x-init="mount" @submit.prevent="prepare">
+          x-data='{...payment(), ...(new KirbyPay("<?= kpUrl('payment.create') ?>","<?= kpMethod('payment.create') ?>","<?= substr(kirby()->language()->code(), 0, 2) ?>")).payment({type:"<?= kpGetFirstPaymentMethod() ?>",items:<?= json_encode($items ?? []) ?>,customer:<?= json_encode($customer ?? []) ?>, <?php if (kpHasShipping()): ?>shipping:<?= json_encode($shipping ?? []) ?>,<?php endif ?>card:<?= json_encode($card ?? []) ?>,country:"<?= pay('default_country') ?>"})}'
+          x-init="mount"
+          @submit.prevent="prepare"
+    >
         <input type="hidden" x-model="type">
         <?php snippet('kirby-pay.form.customer') ?>
         <?php snippet('kirby-pay.form.shipping') ?>
@@ -38,12 +41,6 @@
 <?= js('media/plugins/beebmx/kirby-pay/app.js') ?>
 <script src="https://js.stripe.com/v3/"></script>
 <script type="text/javascript" >
-  var kp = (new KirbyPay(
-    '<?= kpUrl('payment.create') ?>','<?= kpMethod('payment.create') ?>', '<?= substr(kirby()->language()->code(), 0, 2) ?>'
-  )).payment({
-    type:'<?= kpGetFirstPaymentMethod() ?>', items:<?= json_encode($items ?? []) ?>, customer:<?= json_encode($customer ?? []) ?>, <?php if (kpHasShipping()): ?>shipping:<?= json_encode($shipping ?? []) ?>,<?php endif ?>card:<?= json_encode($card ?? []) ?>,country:'<?= pay('default_country') ?>',
-  })
-
   var stripe = Stripe('<?= pay('service_key') ?>');
   var elements = stripe.elements();
 
@@ -66,7 +63,14 @@
         stripe.createToken(cardNumber, {
           name: this.data.card_name
         }).then(function(result) {
-          this.send(result.token.id || result.token)
+          try {
+            this.send(result.token.id)
+          } catch (e) {
+            this.process = false;
+            this.showErrors = [
+              result.error.message
+            ]
+          }
         }.bind(this))
       },
     }

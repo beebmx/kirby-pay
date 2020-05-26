@@ -24,16 +24,16 @@ After you install the package just include the snippets and set the items (produ
 <body>
 ...
 
-<!-- Begin Kirby Pay Form -->
+<!-- Begin Kirby Pay -->
 <?php
-    snippet('kirby-pay.form', [
+    snippet('kirby-pay.payment', [
         'items' => [
             ['name' => 'Product 001', 'amount' => 20.00, 'quantity' => 1],
             ['name' => 'Product 002', 'amount' => 10.00, 'quantity' => 2],
         ],
     ]);
 ?>
-<!-- Ends Kirby Pay Form -->
+<!-- Ends Kirby Pay -->
 
 </body>
 ```

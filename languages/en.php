@@ -32,6 +32,10 @@ return [
     'beebmx.kirby-pay.pay-process' => 'Processing payment',
     'beebmx.kirby-pay.customer-create' => 'Customer registration',
     'beebmx.kirby-pay.customer-create-process' => 'Processing customer',
+    'beebmx.kirby-pay.customer-update' => 'Update customer',
+    'beebmx.kirby-pay.customer-update-process' => 'Processing customer',
+    'beebmx.kirby-pay.source-update' => 'Update payment method',
+    'beebmx.kirby-pay.source-update-process' => 'Processing payment method',
 
     //Form validations
     'beebmx.kirby-pay.validation.name' => 'Please enter a valid name',
@@ -50,6 +54,7 @@ return [
     'beebmx.kirby-pay.validation.items.amount' => 'Please enter the amount of the item',
     'beebmx.kirby-pay.validation.items.quantity' => 'Please enter the quantity of the item',
     'beebmx.kirby-pay.error' => 'An error occurred',
+    'beebmx.kirby-pay.validation.customer.not-found' => 'Customer not found',
 
     //Panel view
     'view.payments' => 'Payments',

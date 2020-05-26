@@ -12,11 +12,10 @@ class Payment extends Model
 {
     protected static $path = 'payment';
 
-    public static function orderWithCustomer(Customer $customer, $items_to_sell, string $type = 'card', $shipping = null)
+    public static function orderWithCustomer(Customer $customer, $items_to_sell, string $type = 'card', $shipping_instructions = null)
     {
-        $items = $items_to_sell instanceof Items
-            ? $items_to_sell
-            : static::setItems($items_to_sell);
+        $items = static::getItems($items_to_sell);
+        $shipping = static::getShipping($shipping_instructions);
 
         return static::write(
             static::driver()->createOrder($customer, $items, $type, $shipping)->toArray()
@@ -69,6 +68,13 @@ class Payment extends Model
         );
     }
 
+    protected static function getItems($items): Items
+    {
+        return $items instanceof Items
+            ? $items
+            : static::setItems($items);
+    }
+
     protected static function setItems(Collection $elements): Items
     {
         $items = new Items;
@@ -83,6 +89,13 @@ class Payment extends Model
         });
 
         return $items;
+    }
+
+    protected static function getShipping($shipping)
+    {
+        return $shipping instanceof Shipping
+            ? $shipping
+            : static::setShipping($shipping);
     }
 
     protected static function setShipping(Collection $shipping = null)

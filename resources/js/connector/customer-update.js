@@ -1,22 +1,16 @@
 export default function (kp, elements) {
   return {
     elements: elements,
+    id: elements.id,
     customer: {
       name: elements.customer['name'] || '',
       email: elements.customer['email'] || '',
       phone: elements.customer['phone'] || '',
     },
-    data: {
-      card_name: elements.card['name'] || '',
-      card_number: elements.card['number'] || '',
-      card_month: elements.card['month'] || '',
-      card_year: elements.card['year'] || '',
-      card_cvc: elements.card['cvc'] || '',
-    },
     process: false,
     errors: {},
     showErrors: [],
-    send(token) {
+    send() {
       this.process = true;
       this.showErrors = [];
       kp.request()({
@@ -24,7 +18,7 @@ export default function (kp, elements) {
         method: kp.method,
         data: {
           customer: this.customer,
-          token: token,
+          id: this.id,
         }
       }).then(({data}) => {
         if (!data.errors) {

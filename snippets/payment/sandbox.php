@@ -1,6 +1,9 @@
 <div class="kirby-pay">
     <form class="<?= kpStyle('form', 'kp-form') ?>"
-          x-data="{...payment(), ...kp}" x-init="mount" @submit.prevent="prepare">
+          x-data='{...payment(), ...(new KirbyPay("<?= kpUrl("payment.create") ?>","<?= kpMethod("payment.create") ?>","<?= substr(kirby()->language()->code(), 0, 2) ?>")).payment({type:"<?= kpGetFirstPaymentMethod() ?>",items:<?= json_encode($items ?? []) ?>,customer:<?= json_encode($customer ?? []) ?>,<?php if(kpHasShipping()): ?>shipping:<?= json_encode($shipping ?? []) ?>,<?php endif ?>card:<?= json_encode($card ?? []) ?>,country:"<?= pay('default_country') ?>"})}'
+          x-init="mount"
+          @submit.prevent="prepare"
+    >
         <input type="hidden" x-model="type">
         <?php snippet('kirby-pay.form.customer') ?>
         <?php snippet('kirby-pay.form.shipping') ?>
@@ -33,11 +36,6 @@
 </div>
 <?= js('media/plugins/beebmx/kirby-pay/app.js') ?>
 <script type="text/javascript" >
-  var kp = (new KirbyPay(
-    '<?= kpUrl("payment.create") ?>','<?= kpMethod("payment.create") ?>', '<?= substr(kirby()->language()->code(), 0, 2) ?>'
-  )).payment({
-    type:'<?= kpGetFirstPaymentMethod() ?>', items:<?= json_encode($items ?? []) ?>, customer:<?= json_encode($customer ?? []) ?>, <?php if(kpHasShipping()): ?>shipping:<?= json_encode($shipping ?? []) ?>,<?php endif ?>card:<?= json_encode($card ?? []) ?>,country:'<?= pay('default_country') ?>',
-  })
   function payment() {
     return {
       prepare: function() {
