@@ -5,6 +5,7 @@
 /pay
 /.cache
 /.idea
+/docs/.vuepress/dist
 composer.lock
 package-lock.json
 .env
