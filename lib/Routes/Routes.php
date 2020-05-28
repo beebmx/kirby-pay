@@ -301,7 +301,7 @@ class Routes implements Routable
             if ($resource = Customer::find($uuid)) {
                 $resource->updateSource($token);
                 return [
-                    'redirect' => url(pay('redirect_source_update', 'profile'), ['params' => ['action' => 'update-source']]),
+                    'redirect' => url(pay('redirect_source_update', 'profile'), ['params' => ['action' => 'source-update']]),
                     'success' => true,
                     'error' => false,
                 ];

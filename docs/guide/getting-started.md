@@ -1,5 +1,7 @@
 # Installation
 
+[[toc]]
+
 ## Composer
 
 ```ssh
@@ -8,17 +10,17 @@ composer required beebmx/kirby-pay
 
 ## Usage
 
-After you install the package just include the snippets and set the items (products or services) to sell:
+The easiest way to use **Kirby Pay** is with the snippets build-in. After you install the package just include the snippets and set the items (products or services) to sell:
 
 ```php
-
 <header>
-...
+
+<!-- Begin Kirby Pay styles -->
 <?php snippet('kirby-pay.styles') ?>
-...
+<!-- Ends Kirby Pay styles -->
+
 </header>
 <body>
-...
 
 <!-- Begin Kirby Pay -->
 <?php
@@ -35,3 +37,7 @@ After you install the package just include the snippets and set the items (produ
 ```
 
 And that's it, if you use all the default values, it's the only thing you will need.
+
+::: tip
+If you need to create your own payment implementation with **Kirby Pay**, you can create it with the [API](/api)
+:::

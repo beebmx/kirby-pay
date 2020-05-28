@@ -5,3 +5,26 @@ img.is-logo {
   width: 17rem;
   max-height: 280px;
 }
+
+.table-of-contents ul {
+  list-style: none;
+}
+
+.table-of-contents ul li > a {
+  color: $textColor;
+}
+.table-of-contents ul li > a:hover {
+  text-decoration: none !important;
+}
+.table-of-contents ul li > a:before {
+  content: "# ";
+  color: lighten($accentColor, 55%)
+}
+.table-of-contents ul li > a:hover:before {
+  color: $accentColor;
+}
+img.oxxo-pay {
+  width: 27rem;
+  display:block;
+  margin: 0 auto;
+}

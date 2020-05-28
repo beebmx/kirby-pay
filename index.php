@@ -5,7 +5,7 @@ use Beebmx\KirbyPay\Routes\Routes;
 
 Kirby::plugin('beebmx/kirby-pay', [
     'options' => [
-        'name' => 'My Business',
+        'name' => 'Business',
         'env' => 'production',
         'service' => 'sandbox',
         'service_key' => null,

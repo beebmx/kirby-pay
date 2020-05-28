@@ -13,6 +13,7 @@ return [
     'beebmx.kirby-pay.payment.oxxo_cash' => 'Oxxo Pay',
     'beebmx.kirby-pay.payment.oxxo_cash.description' => 'Paga déspues en Oxxo',
 
+    //Form shipping
     'beebmx.kirby-pay.address-send' => 'Dirección de envío',
     'beebmx.kirby-pay.address' => 'Dirección',
     'beebmx.kirby-pay.state' => 'Estado',
@@ -21,6 +22,7 @@ return [
     'beebmx.kirby-pay.country' => 'País',
     'beebmx.kirby-pay.country-select' => 'Favor de seleccionar un país',
 
+    //Form card
     'beebmx.kirby-pay.payment-information' => 'Información de pago',
     'beebmx.kirby-pay.card-name' => 'Nombre tarjeta',
     'beebmx.kirby-pay.card-number' => 'Número de tarjeta',
@@ -28,6 +30,7 @@ return [
     'beebmx.kirby-pay.card-year' => 'AA',
     'beebmx.kirby-pay.card-cvc' => 'CVC',
 
+    //Form buttons
     'beebmx.kirby-pay.pay' => 'Realizar pago',
     'beebmx.kirby-pay.pay-process' => 'Procesando pago',
     'beebmx.kirby-pay.customer-create' => 'Registro de cliente',

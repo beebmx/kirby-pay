@@ -5,11 +5,12 @@ module.exports = {
   themeConfig: {
     logo: '/images/icon.png',
     title: false,
+    repo: 'beebmx/kirby-pay',
+    smoothScroll: false,
     nav: [
       { text: 'Home', link: '/' },
       { text: 'Guide', link: '/guide/' },
       { text: 'API', link: '/api/' },
-      { text: 'Github', link: 'https://github.com/beebmx/kirby-pay' }
     ],
     sidebar: {
       '/guide/': [{
@@ -21,6 +22,7 @@ module.exports = {
             'snippets',
             'options',
             'styles',
+            'languages',
             'webhooks',
             'hooks',
             'development',
@@ -34,9 +36,7 @@ module.exports = {
           ]
         }],
     },
-
-
-  },
-  extraWatchFiles: ["**/*.md", "**/*.styl", "**/*.vue"],
+    extraWatchFiles: ['**/*.md', '**/*.vue'],
+  }
 }
 

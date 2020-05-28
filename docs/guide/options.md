@@ -1,9 +1,14 @@
 # Options
 
-This package comes with many things to configure. All the options comes with the prefix `beebmx.kirby-pay.`.
+[[toc]]
+
+## Options list
+
+This package comes with many things to configure. All the options needs  the prefix `beebmx.kirby-pay.`.
 
 | Option | Default | Value | Description |
 | ------ | ------- | ----- | ----------- |
+| name | Business | (string) | Set the default name of the buisness |
 | env | production | (string) | Store if the enviroment is `local`, `test` or `production` |
 | service | sandbox | (string) | `sandbox`, `stripe` or `conekta`service |
 | service_key | null | (string) | Set the public key of the service |
@@ -19,7 +24,7 @@ This package comes with many things to configure. All the options comes with the
 | payment_types | ['card'] | (array) | Set the allowed method payments |
 | payment_process | charge |(string) | Set the process of the payment `charge` or `order` |
 | payment_expiration_days | 30 | (int) | Set the expiration days for `oxxo_charge` in `conekta` service |
-| pagination | 10 | (int) | Set the pagination for the panel |
+| pagination | 10 | (int) | Set the pagination for the `panel` |
 | redirect | thanks |(string) | Set the URL to redirect if the payment was successful |
 | redirect_customer_create | customer |(string) | Set the URL to redirect if the customer was created |
 | redirect_customer_update | profile |(string) | Set the URL to redirect if the customer was updated |
@@ -30,7 +35,7 @@ This package comes with many things to configure. All the options comes with the
 
 ## Example
 
-In your `config.php` file add:
+Here is an example to configure the `stripe` driver, in your `config.php` file just add:
 
 ```php
 $base = dirname(dirname(__DIR__));

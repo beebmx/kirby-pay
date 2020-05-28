@@ -1,17 +1,11 @@
 # Styles
-This package comes with pre-build forms for the diferent type of services.
-By default, all form are trying to mimic your colors and typography styles and all in the form are just suggest, and you can customize with your own styles or with any framework.
 
-In your `config.php` file add:
+[[toc]]
 
-```php
-return [
-    'beebmx.kirby-pay.styles' => [
-        'button' => 'button-primary button-block button-small',
-        'background' => 'background-white',
-    ]
-];
-```  
+## Style list
+
+This package comes with pre-build forms for diferent type of [snippets](/guide/snippets).
+By default, all form are trying to mimic your colors and typography styles. All forms are just suggest, and you can customize with your own styles or with any framework.  
 
 Where are the style options than you can update:
 
@@ -43,11 +37,24 @@ Where are the style options than you can update:
 | stripe-input |  |
 | stripe-invalid |  | 
 
+### Update styles
+
+To update the default styles, just add the options you need in your `config.php` file:
+
+```php
+return [
+    'beebmx.kirby-pay.styles' => [
+        'button' => 'button-primary button-block button-small',
+        'background' => 'background-white',
+    ]
+];
+```
+
 ## Examples
 
-If you use a framework you can do something like this:
+**Kirby Pay** doesn't depend on any framework since it comes with their own styles, but if you need to integrate with your own styles or framework, here's some examples how you can do implement that:
 
-[Tailwind](https://tailwindcss.com)
+### Tailwind
 
 ```php
 return [
@@ -58,7 +65,10 @@ return [
 ];
 ```
 
-[Bootstrap](https://getbootstrap.com)
+**Also see:**
+- [tailwindcss](https://tailwindcss.com)
+
+### Bootstrap
 
 ```php
 return [
@@ -69,7 +79,10 @@ return [
 ];
 ```
 
-[Bulma](https://bulma.io)
+**Also see:**
+- [Bootstrap](https://getbootstrap.com)
+
+### Bulma
 
 ```php
 return [
@@ -79,3 +92,6 @@ return [
     ]
 ];
 ```
+
+**Also see:**
+- [Bulma](https://bulma.io)

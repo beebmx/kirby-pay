@@ -1,3 +1,15 @@
+# Languages
+
+[[toc]]
+
+## Localization
+
+Out of the box are 2 languages (english and spanish), and the only thing you need to use it is to set this in your `config.php` with the proper [language](https://getkirby.com/docs/guide/languages/introduction).
+This can sound a limitation for some other languages, but fortunately is not.
+
+Here is the full list of localizations:
+
+```php
 <?php
 
 return [
@@ -148,3 +160,30 @@ return [
     'beebmx.kirby-pay.oxxo.alert.1' => 'When completing these steps you will receive confirmation email from',
     'beebmx.kirby-pay.oxxo.alert.2' => '.',
 ];
+```
+
+::: tip
+This not only applies to new localizations, if you want to change the default values, you can do it in the same way.
+:::
+
+## Example
+
+To customize this with your [language](https://getkirby.com/docs/guide/languages/introduction#adding-languages) you can setup the localization:
+
+```php
+<?php
+
+return [
+    'code' => 'pt',
+    'direction' => 'ltr',
+    'locale' => 'pt_BR',
+    'name' => 'Português',
+    'url' => '/pt',
+    'translations' => [
+        'beebmx.kirby-pay.general' => 'Geral',
+        'beebmx.kirby-pay.name' => 'Nome',
+        'beebmx.kirby-pay.phone' => 'telefone',
+        'beebmx.kirby-pay.payment-information' => 'Informação de pagamento'
+    ]
+];
+``` 
