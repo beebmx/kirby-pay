@@ -44,8 +44,12 @@ After you install the package just include the snippets and set the items (produ
 
 This plugin is provided "as is" with no guarantee. Use it at your own risk and always test it yourself before using it in a production environment.
 
+## Credits
+
+- Fernando Gutierrez [@beebmx](https://github.com/beebmx) and contributors
+- [All Contributors](../../contributors)
+
 ## License
 
-Copyright © 2019-2020 Fernando Gutierrez [@beebmx](https://github.com/beebmx) and contributors
 
 Licensed under the MIT license, see [LICENSE.md](LICENSE.md) for details.
