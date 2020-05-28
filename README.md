@@ -46,7 +46,7 @@ This plugin is provided "as is" with no guarantee. Use it at your own risk and a
 
 ## Credits
 
-- Fernando Gutierrez [@beebmx](https://github.com/beebmx) and contributors
+- Fernando Gutierrez [@beebmx](https://github.com/beebmx)
 - [All Contributors](../../contributors)
 
 ## License
