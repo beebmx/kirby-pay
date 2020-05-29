@@ -26,19 +26,19 @@ class Items implements Elementable
         $this->items->push($item);
     }
 
-    public function count()
+    public function count(): int
     {
         return $this->items->count();
     }
 
-    public function amount()
+    public function amount(): float
     {
         return $this->items->sum(function($item) {
             return $item->amount * $item->quantity;
         });
     }
 
-    public function totalQuantity()
+    public function totalQuantity(): int
     {
         return $this->items->sum(function($item) {
             return $item->quantity;

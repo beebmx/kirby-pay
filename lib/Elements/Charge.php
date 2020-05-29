@@ -2,8 +2,6 @@
 
 namespace Beebmx\KirbyPay\Elements;
 
-use Beebmx\KirbyPay\Contracts\Elementable;
-
 class Charge extends Payment
 {
     public function toArray(): array

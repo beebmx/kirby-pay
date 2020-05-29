@@ -48,7 +48,7 @@ class Storage
             : option('beebmx.kirby-pay.storage')();
     }
 
-    public static function count(string $dir = '')
+    public static function count(string $dir = ''): int
     {
         return count(static::files($dir));
     }

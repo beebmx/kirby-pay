@@ -53,7 +53,7 @@ class Payment extends Model
         return static::driver()->getPaymentMethods();
     }
 
-    public static function parseAmount($amount)
+    public static function parseAmount($amount): float
     {
         return static::driver()->parsePrice($amount);
     }

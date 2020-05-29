@@ -261,7 +261,7 @@ class Resource
         return $this;
     }
 
-    public function count()
+    public function count(): int
     {
         return Storage::count($this->path);
     }
