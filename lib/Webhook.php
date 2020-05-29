@@ -140,7 +140,7 @@ class Webhook
 
     public function handleTestWebhook()
     {
-        $payment = $this->getPayment() ?? new Payment;
+        $payment = Payment::first();
         $payment->status = 'created';
 
         $this->saveLog([
