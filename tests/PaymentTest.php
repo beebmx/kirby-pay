@@ -4,6 +4,9 @@ namespace Beebmx\KirbyPay\Tests;
 
 use Beebmx\KirbyPay\Customer;
 use Beebmx\KirbyPay\Elements\Buyer;
+use Beebmx\KirbyPay\Elements\Item;
+use Beebmx\KirbyPay\Elements\Items;
+use Beebmx\KirbyPay\Elements\Shipping;
 use Beebmx\KirbyPay\Payment;
 use Illuminate\Support\Collection;
 use Kirby\Cms\App;
@@ -73,6 +76,35 @@ class PaymentTest extends TestCase
     }
 
     /** @test */
+    public function a_payment_can_creates_an_order_with_elements()
+    {
+        $this->assertTrue(Payment::isEmpty());
+        Payment::order(
+            new Buyer(
+                'John Doe',
+                'example@email.com',
+                '1122334455'
+            ),
+            new Items([
+                new Item('Product 01', 100, 1, 'product-01'),
+                new Item('Product 02', 100, 1, 'product-02'),
+            ]),
+            'token'
+        );
+
+        $this->assertFalse(Payment::isEmpty());
+        $this->assertEquals(1, Payment::count());
+        $this->assertCount(1, Payment::get());
+        $this->assertNotNull(Payment::first()->status);
+        $this->assertEquals('paid', Payment::first()->status);
+        $this->assertEquals('order', Payment::first()->type);
+        $this->assertArrayHasKey('name', Payment::first()->customer);
+        $this->assertArrayHasKey('email', Payment::first()->customer);
+        $this->assertArrayHasKey('phone', Payment::first()->customer);
+        $this->assertSameSize($this->items->toArray(), Payment::first()->items);
+    }
+
+    /** @test */
     public function a_payment_with_an_order_also_creates_a_customer()
     {
         $this->assertTrue(Customer::isEmpty());
@@ -121,6 +153,35 @@ class PaymentTest extends TestCase
     }
 
     /** @test */
+    public function a_payment_can_creates_a_charge_with_elements()
+    {
+        $this->assertTrue(Payment::isEmpty());
+        Payment::charge(
+            new Buyer(
+                'John Doe',
+                'example@email.com',
+                '1122334455'
+            ),
+            new Items([
+                new Item('Product 01', 100, 1, 'product-01'),
+                new Item('Product 02', 100, 1, 'product-02'),
+            ]),
+            'token'
+        );
+
+        $this->assertFalse(Payment::isEmpty());
+        $this->assertEquals(1, Payment::count());
+        $this->assertCount(1, Payment::get());
+        $this->assertNotNull(Payment::first()->status);
+        $this->assertEquals('paid', Payment::first()->status);
+        $this->assertEquals('charge', Payment::first()->type);
+        $this->assertArrayHasKey('name', Payment::first()->customer);
+        $this->assertArrayHasKey('email', Payment::first()->customer);
+        $this->assertArrayHasKey('phone', Payment::first()->customer);
+        $this->assertSameSize($this->items->toArray(), Payment::first()->items);
+    }
+
+    /** @test */
     public function a_payment_with_a_charge_never_creates_a_customer()
     {
         $this->assertTrue(Customer::isEmpty());
@@ -148,6 +209,71 @@ class PaymentTest extends TestCase
     public function an_order_payment_can_has_shipping()
     {
         Payment::order($this->buyer, $this->items, 'token', 'card', $this->shipping);
+
+        $this->assertCount(1, Payment::get());
+        $this->assertEquals($this->shipping->toArray(), Payment::first()->shipping);
+    }
+
+    /** @test */
+    public function an_order_payment_can_has_shipping_with_elements()
+    {
+        Payment::order(
+            new Buyer(
+                'John Doe',
+                'example@email.com',
+                '1122334455'
+            ),
+            new Items([
+                new Item('Product 01', 100, 1, 'product-01'),
+                new Item('Product 02', 100, 1, 'product-02'),
+            ]),
+            'token',
+            'card',
+            new Shipping(
+                'Know address 123',
+                '12345',
+                'City',
+                'State',
+                'US'
+            )
+        );
+
+        $this->assertCount(1, Payment::get());
+        $this->assertEquals($this->shipping->toArray(), Payment::first()->shipping);
+    }
+
+    /** @test */
+    public function a_charge_payment_can_has_shipping()
+    {
+        Payment::charge($this->buyer, $this->items, 'token', 'card', $this->shipping);
+
+        $this->assertCount(1, Payment::get());
+        $this->assertEquals($this->shipping->toArray(), Payment::first()->shipping);
+    }
+
+    /** @test */
+    public function a_charge_payment_can_has_shipping_with_elements()
+    {
+        Payment::charge(
+            new Buyer(
+                'John Doe',
+                'example@email.com',
+                '1122334455'
+            ),
+            new Items([
+                new Item('Product 01', 100, 1, 'product-01'),
+                new Item('Product 02', 100, 1, 'product-02'),
+            ]),
+            'token',
+            'card',
+            new Shipping(
+                'Know address 123',
+                '12345',
+                'City',
+                'State',
+                'US'
+            )
+        );
 
         $this->assertCount(1, Payment::get());
         $this->assertEquals($this->shipping->toArray(), Payment::first()->shipping);

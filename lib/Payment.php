@@ -22,21 +22,21 @@ class Payment extends Model
         );
     }
 
-    public static function order(Collection $customer, Collection $items_to_sell, string $token = null, string $type = 'card', Collection $shipping_instructions = null)
+    public static function order($customer, $items_to_sell, string $token = null, string $type = 'card', $shipping_instructions = null)
     {
-        $buyer = static::setBuyer($customer);
-        $items = static::setItems($items_to_sell);
-        $shipping = static::setShipping($shipping_instructions);
+        $buyer = static::getBuyer($customer);
+        $items = static::getItems($items_to_sell);
+        $shipping = static::getShipping($shipping_instructions);
         $customer = Customer::firstOrCreate($buyer, $token, $type);
 
         return static::orderWithCustomer($customer, $items, $type, $shipping);
     }
 
-    public static function charge(Collection $customer, Collection $items_to_sell, string $token = null, string $type = 'card', Collection $shipping_instructions = null)
+    public static function charge($customer, $items_to_sell, string $token = null, string $type = 'card', $shipping_instructions = null)
     {
-        $buyer = static::setBuyer($customer);
-        $items = static::setItems($items_to_sell);
-        $shipping = static::setShipping($shipping_instructions);
+        $buyer = static::getBuyer($customer);
+        $items = static::getItems($items_to_sell);
+        $shipping = static::getShipping($shipping_instructions);
 
         return static::write(
             static::driver()->createCharge($buyer, $items, $token, $type, $shipping)->toArray()
@@ -56,6 +56,13 @@ class Payment extends Model
     public static function parseAmount($amount)
     {
         return static::driver()->parsePrice($amount);
+    }
+
+    protected static function getBuyer($customer): Buyer
+    {
+        return $customer instanceof Buyer
+            ? $customer
+            : static::setBuyer($customer);
     }
 
     protected static function setBuyer(Collection $customer): Buyer
