@@ -29,10 +29,15 @@ module.exports = {
           ]
         }],
       '/api/': [{
-          title: 'Kirby Pay API',
+          title: 'API',
           collapsable: false,
+          sidebarDepth: 3,
           children: [
-            ''
+            '',
+            'payment',
+            'customer',
+            'resource',
+            'elements',
           ]
         }],
     },
