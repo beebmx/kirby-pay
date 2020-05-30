@@ -49,6 +49,7 @@ Right now the best way to support us is to star the repository. Hope soon we wil
 ## Credits
 
 - Fernando Gutierrez [@beebmx](https://github.com/beebmx)
+- [jonatanjonas](https://github.com/jonatanjonas) (logo)
 - [All Contributors](https://github.com/beebmx/kirby-pay/contributors)
 
 ## Disclaimer

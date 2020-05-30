@@ -12,6 +12,7 @@ class Charge extends Payment
             'currency' => $this->currency,
             'amount' => $this->amount,
             'type' => 'charge',
+            'email' => $this->customer->email,
             'customer' => $this->customer->toArray(),
             'items' => $this->items->toArray(),
             'shipping' => $this->shipping ? $this->shipping->toArray() : [],

@@ -2,6 +2,10 @@
 
 ## Definition
 
+The `Payment` class inside of it, has a connection with the service or `driver` selected in your `config.php` file, and as the name describes, it performs the payments of the package.
+
+The `Payment` class is part of the [Resource](resource) object, you can use all of these methods to improve the functionallity.
+
 ## Methods
 
 ### order

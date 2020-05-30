@@ -278,4 +278,60 @@ class PaymentTest extends TestCase
         $this->assertCount(1, Payment::get());
         $this->assertEquals($this->shipping->toArray(), Payment::first()->shipping);
     }
+
+    /** @test */
+    public function an_order_payment_has_an_email_attribute()
+    {
+        Payment::order(
+            new Buyer(
+                'John Doe',
+                'example@email.com',
+                '1122334455'
+            ),
+            new Items([
+                new Item('Product 01', 100, 1, 'product-01'),
+                new Item('Product 02', 100, 1, 'product-02'),
+            ]),
+            'token',
+            'card',
+            new Shipping(
+                'Know address 123',
+                '12345',
+                'City',
+                'State',
+                'US'
+            )
+        );
+
+        $this->assertCount(1, Payment::get());
+        $this->assertEquals('example@email.com', Payment::first()->email);
+    }
+
+    /** @test */
+    public function a_charge_payment_has_an_email_attribute()
+    {
+        Payment::charge(
+            new Buyer(
+                'John Doe',
+                'example@email.com',
+                '1122334455'
+            ),
+            new Items([
+                new Item('Product 01', 100, 1, 'product-01'),
+                new Item('Product 02', 100, 1, 'product-02'),
+            ]),
+            'token',
+            'card',
+            new Shipping(
+                'Know address 123',
+                '12345',
+                'City',
+                'State',
+                'US'
+            )
+        );
+
+        $this->assertCount(1, Payment::get());
+        $this->assertEquals('example@email.com', Payment::first()->email);
+    }
 }

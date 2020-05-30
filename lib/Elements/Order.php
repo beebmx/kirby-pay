@@ -12,6 +12,7 @@ class Order extends Payment
             'currency' => $this->currency,
             'amount' => $this->amount,
             'type' => 'order',
+            'email' => $this->customer->email,
             'customer' => $this->customer->toArray(),
             'items' => $this->items->toArray(),
             'shipping' => $this->shipping ? $this->shipping->toArray() : [],
