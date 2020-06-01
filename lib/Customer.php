@@ -7,8 +7,21 @@ use Beebmx\KirbyPay\Exception\UpdateCustomerException;
 
 class Customer extends Model
 {
+    /**
+     * Path of the Customer Model
+     *
+     * @var string
+     */
     protected static $path = 'customer';
 
+    /**
+     * Create a file and Customer instance with given data
+     *
+     * @param Buyer $customer
+     * @param $token
+     * @param null $method
+     * @return Customer
+     */
     public static function create(Buyer $customer, $token, $method = null)
     {
         return static::write(
@@ -16,6 +29,13 @@ class Customer extends Model
         );
     }
 
+    /**
+     * Update the Customer data
+     *
+     * @param Buyer $customer
+     * @return $this
+     * @throws UpdateCustomerException
+     */
     public function update(Buyer $customer)
     {
         if (!$this->hasCustomerInitialized()) {
@@ -32,6 +52,13 @@ class Customer extends Model
         return $this;
     }
 
+    /**
+     * Update the Customer source
+     *
+     * @param string $token
+     * @return $this
+     * @throws UpdateCustomerException
+     */
     public function updateSource(string $token)
     {
         if (!$this->hasCustomerInitialized()) {
@@ -46,6 +73,12 @@ class Customer extends Model
         return $this;
     }
 
+    /**
+     * Delete the current Customer
+     *
+     * @return bool
+     * @throws UpdateCustomerException
+     */
     public function remove(): bool
     {
         if (!$this->hasCustomerInitialized()) {
@@ -59,6 +92,14 @@ class Customer extends Model
         return false;
     }
 
+    /**
+     * Find or create a Customer with an email
+     *
+     * @param Buyer $promise
+     * @param $token
+     * @param null $method
+     * @return Customer
+     */
     public static function firstOrCreate(Buyer $promise, $token, $method = null)
     {
         if ($found = static::email($promise->email)) {
@@ -73,11 +114,21 @@ class Customer extends Model
         return static::search($email, 'email')->first();
     }
 
+    /**
+     * Get the service customer URL
+     *
+     * @return string
+     */
     public static function serviceUrl(): string
     {
         return static::driver()->getUrls()['customers'];
     }
 
+    /**
+     * Validate if the Customer has been initialized
+     *
+     * @return bool
+     */
     protected function hasCustomerInitialized()
     {
         return $this->id && $this->pay_id && $this->uuid;

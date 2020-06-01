@@ -8,11 +8,25 @@ use Kirby\Http\Request;
 
 trait ValidateRoutes
 {
+    /**
+     * Get inputs through request
+     *
+     * @param Request $request
+     * @param array $inputs
+     * @return Collection
+     */
     public static function getInputs(Request $request, array $inputs)
     {
         return (new Collection($request->get()))->only($inputs);
     }
 
+    /**
+     * Get only selected input in array
+     *
+     * @param array $inputs
+     * @param array $values
+     * @return Collection
+     */
     public static function only(array $inputs, array $values): Collection
     {
         return (new Collection($inputs))->only($values)->filter(function ($value) {
@@ -20,11 +34,24 @@ trait ValidateRoutes
         });
     }
 
+    /**
+     * Get only one value from input collection
+     *
+     * @param $inputs
+     * @param $value
+     * @return mixed
+     */
     public static function get($inputs, $value)
     {
         return $inputs->only([$value])->get($value);
     }
 
+    /**
+     * Validate customer inputs from collection
+     *
+     * @param Collection $customer
+     * @return array|false
+     */
     public static function validateCustomer(Collection $customer)
     {
         return invalid(
@@ -42,6 +69,12 @@ trait ValidateRoutes
         );
     }
 
+    /**
+     * Validate items from collection
+     *
+     * @param Collection $items
+     * @return array|mixed
+     */
     public static function validateItems(Collection $items)
     {
         return $items->map(function ($item) {
@@ -67,6 +100,12 @@ trait ValidateRoutes
         }) ?? [];
     }
 
+    /**
+     * Validate shipping from collection
+     *
+     * @param Collection $shipping
+     * @return array|false
+     */
     public static function validateShipping(Collection $shipping)
     {
         return invalid(
@@ -86,6 +125,11 @@ trait ValidateRoutes
         );
     }
 
+    /**
+     * Set arrays errors
+     * @param array ...$errors
+     * @return array
+     */
     public static function hasErrors(array ...$errors)
     {
         return [
@@ -95,6 +139,12 @@ trait ValidateRoutes
         ];
     }
 
+    /**
+     * Validate request payment fields
+     *
+     * @param Request $request
+     * @return array|bool
+     */
     protected static function hasPaymentFields(Request $request)
     {
         if (!static::hasCsrf($request)) {
@@ -114,6 +164,12 @@ trait ValidateRoutes
         return true;
     }
 
+    /**
+     * Validate request order fields
+     *
+     * @param Request $request
+     * @return array|bool
+     */
     protected static function hasOrderFields(Request $request)
     {
         if (!static::hasCsrf($request)) {
@@ -129,6 +185,12 @@ trait ValidateRoutes
         return true;
     }
 
+    /**
+     * Validate request customer fields
+     *
+     * @param Request $request
+     * @return array|bool
+     */
     protected static function hasCustomerFields(Request $request)
     {
         if (!static::hasCsrf($request)) {
@@ -142,6 +204,12 @@ trait ValidateRoutes
         return true;
     }
 
+    /**
+     * Validate request customer update fields
+     *
+     * @param Request $request
+     * @return array|bool
+     */
     protected static function hasCustomerUpdateFields(Request $request)
     {
         if (!static::hasCsrf($request)) {
@@ -155,6 +223,12 @@ trait ValidateRoutes
         return true;
     }
 
+    /**
+     * Validate request source update fields
+     *
+     * @param Request $request
+     * @return array|bool
+     */
     protected static function hasSourceUpdateFields(Request $request)
     {
         if (!static::hasCsrf($request)) {
@@ -168,16 +242,37 @@ trait ValidateRoutes
         return true;
     }
 
+    /**
+     * Determine if has csrf token in request
+     *
+     * @param Request $request
+     * @return bool
+     */
     protected static function hasCsrf(Request $request): bool
     {
         return csrf($request->csrf()) === true;
     }
 
+    /**
+     * Determine if request has valid UUID
+     *
+     * @param Request $request
+     * @param $field
+     * @return bool
+     */
     protected static function hasUuid(Request $request, $field): bool
     {
         return Str::isUuid((string) $request->get($field));
     }
 
+    /**
+     * Determine if a field exist in request
+     *
+     * @param Request $request
+     * @param string $field
+     * @param bool $empty
+     * @return bool
+     */
     protected static function hasField(Request $request, string $field, bool $empty = false): bool
     {
         if ($empty) {
@@ -187,6 +282,12 @@ trait ValidateRoutes
         return array_key_exists($field, $request->get()) && !empty($request->get($field));
     }
 
+    /**
+     * Set error type if some validation fails
+     *
+     * @param string $field
+     * @return array
+     */
     protected static function setErrorType(string $field): array
     {
         return [

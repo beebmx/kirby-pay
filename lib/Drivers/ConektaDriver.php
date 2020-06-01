@@ -19,15 +19,35 @@ use Illuminate\Support\Collection;
 
 class ConektaDriver extends Driver
 {
+    /**
+     * Version of Conekta api
+     *
+     * @var string
+     */
     protected $version = '2.0.0';
 
+    /**
+     * Payment methods available for Conekta
+     *
+     * @var array
+     */
     protected $payment_methods = [
         'card',
         'oxxo_cash'
     ];
 
+    /**
+     * Unit in cents
+     *
+     * @var int
+     */
     protected $unit = 100;
 
+    /**
+     * Initialize Conekta service driver
+     *
+     * @return void
+     */
     public function boot()
     {
         Conekta::setApiKey($this->getSecret());
@@ -35,6 +55,11 @@ class ConektaDriver extends Driver
         Conekta::setLocale(KirbyPay::getLocaleCode());
     }
 
+    /**
+     * Get urls for Conekta service driver
+     *
+     * @return array
+     */
     public function getUrls(): array
     {
         return [
@@ -44,6 +69,14 @@ class ConektaDriver extends Driver
         ];
     }
 
+    /**
+     * Create Conekta customer
+     *
+     * @param Buyer $customer
+     * @param string $token
+     * @param string|null $payment_method
+     * @return ElementCustomer
+     */
     public function createCustomer(Buyer $customer, string $token, string $payment_method = null): ElementCustomer
     {
         $remoteCustomer = (new Collection(
@@ -76,6 +109,12 @@ class ConektaDriver extends Driver
         );
     }
 
+    /**
+     * Update Conekta customer
+     *
+     * @param ResourceCustomer $customer
+     * @return bool
+     */
     public function updateCustomer(ResourceCustomer $customer): bool
     {
         return !!Customer::find($customer->id)
@@ -86,11 +125,24 @@ class ConektaDriver extends Driver
             ]);
     }
 
+    /**
+     * Delete Conekta customer
+     *
+     * @param ResourceCustomer $customer
+     * @return bool
+     */
     public function deleteCustomer(ResourceCustomer $customer): bool
     {
         return !!Customer::find($customer->id)->delete();
     }
 
+    /**
+     * Update Conekta customer payment source
+     *
+     * @param ResourceCustomer $customer
+     * @param string $token
+     * @return Source
+     */
     public function updateCustomerSource(ResourceCustomer $customer, string $token): Source
     {
         $cus = Customer::find($customer->id);
@@ -110,6 +162,15 @@ class ConektaDriver extends Driver
         );
     }
 
+    /**
+     * Create Order Element and Conekta payment order
+     *
+     * @param ResourceCustomer $customer
+     * @param Items $items
+     * @param string|null $type
+     * @param Shipping|null $shipping
+     * @return ElementOrder
+     */
     public function createOrder(ResourceCustomer $customer, Items $items, string $type = null, Shipping $shipping = null): ElementOrder
     {
         $buyer = new Buyer(
@@ -144,6 +205,16 @@ class ConektaDriver extends Driver
         );
     }
 
+    /**
+     * Create Charge Element and Conekta order payment without Conekta customer
+     *
+     * @param Buyer $customer
+     * @param Items $items
+     * @param string|null $token
+     * @param string|null $type
+     * @param Shipping|null $shipping
+     * @return Charge
+     */
     public function createCharge(Buyer $customer, Items $items, string $token = null, string $type = null, Shipping $shipping = null): Charge
     {
         $options = [];
@@ -173,6 +244,15 @@ class ConektaDriver extends Driver
         );
     }
 
+    /**
+     * Create Conekta order
+     *
+     * @param array $options
+     * @param Buyer $customer
+     * @param Items $items
+     * @param Shipping|null $shipping
+     * @return Collection
+     */
     protected function remoteOrder(array $options, Buyer $customer, Items $items, Shipping $shipping = null)
     {
         return new Collection(Order::create(
@@ -195,22 +275,26 @@ class ConektaDriver extends Driver
         ));
     }
 
+    /**
+     * Prepare shipping data through Shipping element
+     *
+     * @param Shipping $shipping
+     * @return array
+     */
     protected function prepareShipping(Shipping $shipping)
     {
         if ($shipping) {
-            $address = (new Collection([
-                'street1' => $shipping->address,
-                'city' => $shipping->city,
-                'state' => $shipping->state,
-                'postal_code' => $shipping->postal_code,
-                'country' => $shipping->country,
-            ]))->filter(function ($value) {
-                return !empty($value);
-            })->toArray();
-
             return [
                 'shipping_contact' => [
-                    'address' => $address,
+                    'address' => (new Collection([
+                        'street1' => $shipping->address,
+                        'city' => $shipping->city,
+                        'state' => $shipping->state,
+                        'postal_code' => $shipping->postal_code,
+                        'country' => $shipping->country,
+                    ]))->filter(function ($value) {
+                        return !empty($value);
+                    })->toArray(),
                 ],
             ];
         }
@@ -218,6 +302,12 @@ class ConektaDriver extends Driver
         return [];
     }
 
+    /**
+     * Parse charges for extra data
+     *
+     * @param Collection $items
+     * @return array
+     */
     protected function parseCharges(Collection $items)
     {
         return $items->only('data')->map(function ($lines) {

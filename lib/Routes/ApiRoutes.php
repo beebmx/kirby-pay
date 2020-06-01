@@ -12,6 +12,11 @@ class ApiRoutes implements Routable
 {
     use ManagesRoutes;
 
+    /**
+     * Get all the api routes available
+     *
+     * @return array
+     */
     public static function all(): array
     {
         return [
@@ -24,6 +29,11 @@ class ApiRoutes implements Routable
         ];
     }
 
+    /**
+     * Get the Kirby Pay configuration panel
+     *
+     * @return array
+     */
     public static function config()
     {
         return [
@@ -48,6 +58,11 @@ class ApiRoutes implements Routable
         ];
     }
 
+    /**
+     * Get the payment resources for panel
+     *
+     * @return array
+     */
     public static function getPayments()
     {
         return [
@@ -67,6 +82,11 @@ class ApiRoutes implements Routable
         ];
     }
 
+    /**
+     * Get a payment resoruce for panel
+     *
+     * @return array
+     */
     public static function getPayment()
     {
         return [
@@ -87,6 +107,11 @@ class ApiRoutes implements Routable
         ];
     }
 
+    /**
+     * Get customer resources for panel
+     *
+     * @return array
+     */
     public static function getCustomers()
     {
         return [
@@ -106,6 +131,11 @@ class ApiRoutes implements Routable
         ];
     }
 
+    /**
+     * Get customer resource for panel
+     *
+     * @return array
+     */
     public static function getCustomer()
     {
         return [
@@ -126,6 +156,11 @@ class ApiRoutes implements Routable
         ];
     }
 
+    /**
+     * Get development data for panel
+     *
+     * @return array
+     */
     public static function getDevelopment()
     {
         return [

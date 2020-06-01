@@ -4,6 +4,11 @@ namespace Beebmx\KirbyPay\Elements;
 
 class Charge extends Payment
 {
+    /**
+     * Get the attributes of Charge as array
+     *
+     * @return array
+     */
     public function toArray(): array
     {
         return [

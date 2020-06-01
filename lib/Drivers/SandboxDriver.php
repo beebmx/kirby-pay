@@ -15,18 +15,43 @@ use Illuminate\Support\Str;
 
 class SandboxDriver extends Driver
 {
+    /**
+     * Simulate a secret key
+     *
+     * @var string
+     */
     protected $secret = 'fake_secret_key';
 
+    /**
+     * Sandbox version
+     *
+     * @var string
+     */
     protected $version = '1.0.0';
 
+    /**
+     * There is nothing to boot in sandbox
+     *
+     * @return void
+     */
     public function boot()
     {
     }
 
+    /**
+     * Payment methods available for Sandbox
+     *
+     * @var array
+     */
     protected $payment_methods = [
         'card',
     ];
 
+    /**
+     * There is not urls for Sandbox service driver
+     *
+     * @return array
+     */
     public function getUrls(): array
     {
         return [
@@ -36,6 +61,14 @@ class SandboxDriver extends Driver
         ];
     }
 
+    /**
+     * Create Sandbox customer
+     *
+     * @param Buyer $customer
+     * @param string $token
+     * @param string|null $payment_method
+     * @return Customer
+     */
     public function createCustomer(Buyer $customer, string $token, string $payment_method = null): Customer
     {
         $remoteCustomer = $this->simulateCustomer($customer)
@@ -53,16 +86,35 @@ class SandboxDriver extends Driver
         );
     }
 
+    /**
+     * Simulate an update in Sandox customer service driver
+     *
+     * @param ResourceCustomer $customer
+     * @return bool
+     */
     public function updateCustomer(ResourceCustomer $customer): bool
     {
         return true;
     }
 
+    /**
+     * Simulate a delete in Sandox customer service driver
+     *
+     * @param ResourceCustomer $customer
+     * @return bool
+     */
     public function deleteCustomer(ResourceCustomer $customer): bool
     {
         return true;
     }
 
+    /**
+     * Simulate an update in Sandox customer source payment service driver
+     *
+     * @param ResourceCustomer $customer
+     * @param string $token
+     * @return Source
+     */
     public function updateCustomerSource(ResourceCustomer $customer, string $token): Source
     {
         return $this->createSource([
@@ -76,6 +128,12 @@ class SandboxDriver extends Driver
         ]);
     }
 
+    /**
+     * Simulate a Customer in Sandbox service driver
+     *
+     * @param Buyer $customer
+     * @return Collection
+     */
     protected function simulateCustomer(Buyer $customer)
     {
         return new Collection([
@@ -84,6 +142,12 @@ class SandboxDriver extends Driver
         ]);
     }
 
+    /**
+     * Simulate a customer payment source in Sandbox service driver
+     *
+     * @param Buyer $customer
+     * @return array
+     */
     protected function simulateSource(Buyer $customer): array
     {
         return [
@@ -100,6 +164,12 @@ class SandboxDriver extends Driver
         ];
     }
 
+    /**
+     * Create a Source payment in Sandbox service driver
+     *
+     * @param array $source
+     * @return Source
+     */
     protected function createSource(array $source): Source
     {
         return new Source(
@@ -111,6 +181,15 @@ class SandboxDriver extends Driver
         );
     }
 
+    /**
+     * Create an Order element in Sandbox service driver
+     *
+     * @param ResourceCustomer $customer
+     * @param Items $items
+     * @param string|null $type
+     * @param Shipping|null $shipping
+     * @return Order
+     */
     public function createOrder(ResourceCustomer $customer, Items $items, string $type = null, Shipping $shipping = null): Order
     {
         $buyer = new Buyer(
@@ -138,6 +217,16 @@ class SandboxDriver extends Driver
         );
     }
 
+    /**
+     * Create a Charge element in Sandbox service driver
+     *
+     * @param Buyer $customer
+     * @param Items $items
+     * @param string|null $token
+     * @param string|null $type
+     * @param Shipping|null $shipping
+     * @return Charge
+     */
     public function createCharge(Buyer $customer, Items $items, string $token = null, string $type = null, Shipping $shipping = null): Charge
     {
         $charge = $this->simulateCharge([], $customer, $items, $type, $shipping)
@@ -153,6 +242,16 @@ class SandboxDriver extends Driver
         );
     }
 
+    /**
+     * Simulate a charge create in Sandbox service driver
+     *
+     * @param array $options
+     * @param Buyer $customer
+     * @param Items $items
+     * @param string|null $type
+     * @param Shipping|null $shipping
+     * @return Collection
+     */
     protected function simulateCharge(array $options, Buyer $customer, Items $items, string $type = null, Shipping $shipping = null)
     {
         return new Collection(

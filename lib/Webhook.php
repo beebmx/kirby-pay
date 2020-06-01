@@ -7,15 +7,37 @@ use Kirby\Http\Request;
 
 class Webhook
 {
-    protected $payload;
+    /**
+     * Webhooks request
+     *
+     * @var array
+     */
 
+    protected $payload = [];
+
+    /**
+     * Payment instance if found
+     *
+     * @var
+     */
     protected $payment;
 
+    /**
+     * Webhook constructor.
+     *
+     * @param Request $request
+     * @return void
+     */
     public function __construct(Request $request)
     {
         $this->payload = $request->get();
     }
 
+    /**
+     * Handler for all the webhook's request
+     *
+     * @return array
+     */
     public function handle()
     {
         $payment = null;
@@ -27,41 +49,81 @@ class Webhook
         return ['message' => 'Webhook Received'];
     }
 
+    /**
+     * Handle charge.created webhook event
+     *
+     * @return Payment|bool
+     */
     public function handleChargeCreated()
     {
         return $this->notifyPayment();
     }
 
+    /**
+     * Handle charge.captured webhook event
+     *
+     * @return Payment|bool
+     */
     public function handleChargeCaptured()
     {
         return $this->notifyPayment();
     }
 
+    /**
+     * Handle charge.paid webhook event
+     *
+     * @return Payment|bool
+     */
     public function handleChargePaid()
     {
         return $this->processPayment();
     }
 
+    /**
+     * Handle charge.succeeded webhook event
+     *
+     * @return Payment|bool
+     */
     public function handleChargeSucceeded()
     {
         return $this->processPayment();
     }
 
+    /**
+     * Handle charge.expired webhook event
+     *
+     * @return Payment|bool
+     */
     public function handleChargeExpired()
     {
         return $this->processPayment();
     }
 
+    /**
+     * Handle charge.failed webhook event
+     *
+     * @return Payment|bool
+     */
     public function handleChargeFailed()
     {
         return $this->processPayment();
     }
 
+    /**
+     * Handle charge.updated webhook event
+     *
+     * @return Payment|bool
+     */
     public function handleChargeUpdated()
     {
         return $this->processPayment();
     }
 
+    /**
+     * Handle charge.refunded webhook event
+     *
+     * @return Payment|bool
+     */
     public function handleChargeRefunded()
     {
         $payment = $this->getPayment();
@@ -86,6 +148,11 @@ class Webhook
         return $payment;
     }
 
+    /**
+     * Handle charge.partially_refunded webhook event
+     *
+     * @return Payment|bool
+     */
     public function handleChargePartiallyRefunded()
     {
         $payment = $this->getPayment();
@@ -108,26 +175,51 @@ class Webhook
         return $payment;
     }
 
+    /**
+     * Handle order.partially_refunded webhook event
+     *
+     * @return Payment|bool
+     */
     public function handleOrderPartiallyRefunded()
     {
         return $this->processPayment();
     }
 
+    /**
+     * Handle payment_intent.created webhook event
+     *
+     * @return Payment|bool
+     */
     public function handlePaymentIntentCreated()
     {
         return $this->processPayment();
     }
 
+    /**
+     * Handle payment_intent.succeeded webhook event
+     *
+     * @return Payment|bool
+     */
     public function handlePaymentIntentSucceeded()
     {
         return $this->processPayment();
     }
 
+    /**
+     * Handle order.paid webhook event
+     *
+     * @return Payment|bool
+     */
     public function handleOrderPaid()
     {
         return $this->processPayment();
     }
 
+    /**
+     * Handle charge.chargeback.created webhook event
+     *
+     * @return Payment|bool
+     */
     public function handleChargeChargebackCreated()
     {
         $payment = $this->updatePaymentStatus();
@@ -138,6 +230,11 @@ class Webhook
         return $payment;
     }
 
+    /**
+     * Handle test.webhook webhook event
+     *
+     * @return Payment
+     */
     public function handleTestWebhook()
     {
         $payment = Payment::first();
@@ -153,12 +250,22 @@ class Webhook
         return $payment;
     }
 
+    /**
+     * Save payment in log file
+     *
+     * @return Payment|bool
+     */
     protected function notifyPayment()
     {
         $this->saveLog();
         return $this->getPayment();
     }
 
+    /**
+     * Process payment and save log file
+     *
+     * @return Payment|bool
+     */
     protected function processPayment()
     {
         $payment = $this->updatePaymentStatus();
@@ -169,6 +276,11 @@ class Webhook
         return $payment;
     }
 
+    /**
+     * Update payment status
+     *
+     * @return Payment|bool
+     */
     protected function updatePaymentStatus()
     {
         $payment = $this->getPayment();
@@ -180,6 +292,11 @@ class Webhook
         return $payment;
     }
 
+    /**
+     * Get payment id from payload
+     *
+     * @return string|null
+     */
     protected function getPaymentId()
     {
         if (isset($this->payload['data']['object']['payment_intent'])) {
@@ -205,6 +322,11 @@ class Webhook
         return null;
     }
 
+    /**
+     * Get payment instance
+     *
+     * @return Payment|bool
+     */
     protected function getPayment()
     {
         if (!$this->payment) {
@@ -215,6 +337,12 @@ class Webhook
         return $this->payment;
     }
 
+    /**
+     * Get payment status from payload
+     *
+     * @param Payment $payment
+     * @return string
+     */
     protected function getStatus(Payment $payment)
     {
         $status = $payment->status;
@@ -236,6 +364,12 @@ class Webhook
         return $status;
     }
 
+    /**
+     * Save attributes to log file
+     *
+     * @param array $extra
+     * @return void
+     */
     protected function saveLog(array $extra = [])
     {
         if ((bool) pay('logs', false)) {
@@ -246,6 +380,12 @@ class Webhook
         }
     }
 
+    /**
+     * Get the method depending of the webhook event
+     *
+     * @param $event
+     * @return string
+     */
     protected function eventToMethod($event)
     {
         return 'handle' . Str::studly(str_replace('.', '_', $event));

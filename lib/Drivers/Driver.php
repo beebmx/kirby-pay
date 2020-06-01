@@ -7,14 +7,30 @@ use Beebmx\KirbyPay\Exception\DriverSecretException;
 
 abstract class Driver implements Driverable
 {
+    /**
+     * Service name
+     *
+     * @var string
+     */
     protected $service;
 
+    /**
+     * Secret key of the service
+     *
+     * @var string
+     */
     protected $secret;
 
+    /**
+     * Unit of the service
+     *
+     * @var int
+     */
     protected $unit = 1;
 
     /**
-     * Driver constructor.
+     * Create an instance of Driver
+     *
      * @throws DriverSecretException
      */
     public function __construct()
@@ -32,6 +48,11 @@ abstract class Driver implements Driverable
         $this->boot();
     }
 
+    /**
+     * Get the payment methods of the service
+     *
+     * @return array
+     */
     public function getPaymentMethods(): array
     {
         return $this->payment_methods;
@@ -39,6 +60,7 @@ abstract class Driver implements Driverable
 
     /**
      * Returns the current secret of the defined service
+     *
      * @return string
      */
     public function getSecret(): string
@@ -46,6 +68,11 @@ abstract class Driver implements Driverable
         return $this->secret;
     }
 
+    /**
+     * Get the service name through class
+     *
+     * @return string
+     */
     protected function getServiceName()
     {
         $class = array_slice(
@@ -57,11 +84,23 @@ abstract class Driver implements Driverable
         return strtolower(substr($class, 0, -6));
     }
 
+    /**
+     * Parse the amount for the service
+     *
+     * @param $amount
+     * @return int
+     */
     public function preparePrice($amount): int
     {
         return (float) $amount * $this->unit;
     }
 
+    /**
+     * Get the real amount
+     *
+     * @param $amount
+     * @return float
+     */
     public function parsePrice($amount): float
     {
         return (int) $amount / $this->unit;

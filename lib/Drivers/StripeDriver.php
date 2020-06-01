@@ -19,14 +19,34 @@ use Stripe\Stripe;
 
 class StripeDriver extends Driver
 {
+    /**
+     * Version of Stripe api
+     *
+     * @var string
+     */
     protected $version = '2020-03-02';
 
+    /**
+     * Payment methods available for Stripe
+     *
+     * @var array
+     */
     protected $payment_methods = [
         'card',
     ];
 
+    /**
+     * Unit in cents
+     *
+     * @var int
+     */
     protected $unit = 100;
 
+    /**
+     * Initialize Stripe service driver
+     *
+     * @return void
+     */
     public function boot()
     {
         Stripe::setApiKey($this->getSecret());
@@ -38,6 +58,11 @@ class StripeDriver extends Driver
         Stripe::setApiVersion($this->version);
     }
 
+    /**
+     * Get urls for Stripe service driver
+     *
+     * @return array
+     */
     public function getUrls(): array
     {
         if (kpInDevelopment()) {
@@ -55,6 +80,15 @@ class StripeDriver extends Driver
         ];
     }
 
+    /**
+     * Create Stripe customer
+     *
+     * @param Buyer $customer
+     * @param string $token
+     * @param string|null $payment_method
+     * @return ElementCustomer
+     * @throws \Stripe\Exception\ApiErrorException
+     */
     public function createCustomer(Buyer $customer, string $token, string $payment_method = null): ElementCustomer
     {
         $remoteCustomer = (new Collection(
@@ -78,6 +112,13 @@ class StripeDriver extends Driver
         );
     }
 
+    /**
+     * Update Stripe customer
+     *
+     * @param ResourceCustomer $customer
+     * @return bool
+     * @throws \Stripe\Exception\ApiErrorException
+     */
     public function updateCustomer(ResourceCustomer $customer): bool
     {
         return !!Customer::update(
@@ -90,11 +131,26 @@ class StripeDriver extends Driver
         );
     }
 
+    /**
+     * Delete Stripe customer
+     *
+     * @param ResourceCustomer $customer
+     * @return bool
+     * @throws \Stripe\Exception\ApiErrorException
+     */
     public function deleteCustomer(ResourceCustomer $customer): bool
     {
         return !!Customer::retrieve($customer->id)->delete();
     }
 
+    /**
+     * Update Stripe customer payment source
+     *
+     * @param ResourceCustomer $customer
+     * @param string $token
+     * @return Source
+     * @throws \Stripe\Exception\ApiErrorException
+     */
     public function updateCustomerSource(ResourceCustomer $customer, string $token): Source
     {
         return $this->createSource(
@@ -108,6 +164,13 @@ class StripeDriver extends Driver
         );
     }
 
+    /**
+     * Create Stripe payment source
+     *
+     * @param $stripeCustomer
+     * @param string $name
+     * @return Source
+     */
     protected function createSource($stripeCustomer, $name = ''): Source
     {
         return new Source(
@@ -119,6 +182,15 @@ class StripeDriver extends Driver
         );
     }
 
+    /**
+     * Create Stripe payment order
+     *
+     * @param ResourceCustomer $customer
+     * @param Items $items
+     * @param string|null $type
+     * @param Shipping|null $shipping
+     * @return Order
+     */
     public function createOrder(ResourceCustomer $customer, Items $items, string $type = null, Shipping $shipping = null): Order
     {
         $buyer = new Buyer(
@@ -145,6 +217,16 @@ class StripeDriver extends Driver
         );
     }
 
+    /**
+     * Create Stripe payment charge
+     *
+     * @param Buyer $customer
+     * @param Items $items
+     * @param string|null $token
+     * @param string|null $type
+     * @param Shipping|null $shipping
+     * @return Charge
+     */
     public function createCharge(Buyer $customer, Items $items, string $token = null, string $type = null, Shipping $shipping = null): Charge
     {
         $options = [
@@ -164,6 +246,16 @@ class StripeDriver extends Driver
         );
     }
 
+    /**
+     * Perform a Stripe Payment Intent
+     *
+     * @param array $options
+     * @param Buyer $customer
+     * @param Items $items
+     * @param Shipping|null $shipping
+     * @return Collection
+     * @throws \Stripe\Exception\ApiErrorException
+     */
     protected function remotePayment(array $options, Buyer $customer, Items $items, Shipping $shipping = null)
     {
         return new Collection(PaymentIntent::create(
@@ -187,6 +279,13 @@ class StripeDriver extends Driver
         ));
     }
 
+    /**
+     * Create Stripe Payment Method
+     *
+     * @param string $token
+     * @return PaymentMethod
+     * @throws \Stripe\Exception\ApiErrorException
+     */
     protected function getPaymentMethod(string $token)
     {
         return PaymentMethod::create([
@@ -197,22 +296,27 @@ class StripeDriver extends Driver
         ]);
     }
 
+    /**
+     * Prepare shipping data through Shipping and Buyer element
+     *
+     * @param Shipping $shipping
+     * @param Buyer $customer
+     * @return array
+     */
     protected function prepareShipping(Shipping $shipping, Buyer $customer)
     {
         if ($shipping) {
-            $address = (new Collection([
-                'line1' => $shipping->address,
-                'city' => $shipping->city,
-                'state' => $shipping->state,
-                'postal_code' => $shipping->postal_code,
-                'country' => $shipping->country,
-            ]))->filter(function ($value) {
-                return !empty($value);
-            })->toArray();
-
             return [
                 'shipping' => [
-                    'address' => $address,
+                    'address' => (new Collection([
+                        'line1' => $shipping->address,
+                        'city' => $shipping->city,
+                        'state' => $shipping->state,
+                        'postal_code' => $shipping->postal_code,
+                        'country' => $shipping->country,
+                    ]))->filter(function ($value) {
+                        return !empty($value);
+                    })->toArray(),
                     'name' => $customer->name,
                 ],
             ];

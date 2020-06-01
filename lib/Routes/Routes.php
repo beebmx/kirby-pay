@@ -17,6 +17,11 @@ class Routes implements Routable
 {
     use ManagesRoutes, ValidateRoutes;
 
+    /**
+     * Get all the routes available
+     *
+     * @return array
+     */
     public static function all(): array
     {
         return [
@@ -29,6 +34,11 @@ class Routes implements Routable
         ];
     }
 
+    /**
+     *  Create a payment route
+     *
+     * @return array
+     */
     public static function createPayment()
     {
         return [
@@ -41,6 +51,11 @@ class Routes implements Routable
         ];
     }
 
+    /**
+     * Create an order route
+     *
+     * @return array
+     */
     public static function createOrder()
     {
         return [
@@ -53,6 +68,11 @@ class Routes implements Routable
         ];
     }
 
+    /**
+     * Create a customer route
+     *
+     * @return array
+     */
     public static function createCustomer()
     {
         return [
@@ -65,6 +85,11 @@ class Routes implements Routable
         ];
     }
 
+    /**
+     * Update a customer route
+     *
+     * @return array
+     */
     public static function updateCustomer()
     {
         return [
@@ -77,6 +102,11 @@ class Routes implements Routable
         ];
     }
 
+    /**
+     * Update a customer source route
+     *
+     * @return array
+     */
     public static function updateSource()
     {
         return [
@@ -89,6 +119,11 @@ class Routes implements Routable
         ];
     }
 
+    /**
+     * Handle webhooks routes
+     *
+     * @return array
+     */
     public static function handleWebhooks()
     {
         return [
@@ -102,6 +137,12 @@ class Routes implements Routable
         ];
     }
 
+    /**
+     * Handle a payment creation
+     *
+     * @param Request $request
+     * @return array|bool
+     */
     public static function handleCreatePayment(Request $request)
     {
         if (($requiredError = static::hasPaymentFields($request)) !== true) {
@@ -151,6 +192,12 @@ class Routes implements Routable
         }
     }
 
+    /**
+     * Handle a payment order creation
+     *
+     * @param Request $request
+     * @return array|bool
+     */
     public static function handleCreateOrder(Request $request)
     {
         if (($requiredError = static::hasOrderFields($request)) !== true) {
@@ -202,6 +249,12 @@ class Routes implements Routable
         }
     }
 
+    /**
+     * Handle a customer creation
+     *
+     * @param Request $request
+     * @return array|bool
+     */
     public static function handleCreateCustomer(Request $request)
     {
         if (($requiredError = static::hasCustomerFields($request)) !== true) {
@@ -242,6 +295,12 @@ class Routes implements Routable
         }
     }
 
+    /**
+     * Handle to update a customer information
+     *
+     * @param Request $request
+     * @return array|bool
+     */
     public static function handleUpdateCustomer(Request $request)
     {
         if (($requiredError = static::hasCustomerUpdateFields($request)) !== true) {
@@ -287,6 +346,12 @@ class Routes implements Routable
         }
     }
 
+    /**
+     * Handle to update a customer source
+     *
+     * @param Request $request
+     * @return array|bool
+     */
     public static function handleUpdateSource(Request $request)
     {
         if (($requiredError = static::hasSourceUpdateFields($request)) !== true) {

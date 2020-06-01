@@ -4,6 +4,11 @@ namespace Beebmx\KirbyPay\Elements;
 
 class Order extends Payment
 {
+    /**
+     * Get the attributes of Order as array
+     *
+     * @return array
+     */
     public function toArray(): array
     {
         return [
