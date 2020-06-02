@@ -13,7 +13,7 @@ In addition to meeting [Kirby's requirements](https://getkirby.com/docs/guide/qu
 
 - PHP >= 7.3
 
-This package comes by default with some [snippets](/guide/snippets) ready to process your payments. Under the hood it's build with:
+This package comes by default with some [snippets](snippets) ready to process your payments. Under the hood it's build with:
 
 - [Alpine.js](https://github.com/alpinejs/alpine) <small>v2.3.5</small>
 - [axios](https://github.com/axios/axios) <small>v0.19.2</small>

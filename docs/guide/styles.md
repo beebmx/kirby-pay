@@ -4,7 +4,7 @@
 
 ## Style list
 
-This package comes with pre-build forms for diferent type of [snippets](/guide/snippets).
+This package comes with pre-build forms for diferent type of [snippets](snippets).
 By default, all forms are trying to mimic your colors and typography styles. All forms are just suggest, and you can customize them with your own styles or with any framework.  
 
 These are the style options than you can customize:
