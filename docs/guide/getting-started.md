@@ -5,12 +5,12 @@
 ## Composer
 
 ```ssh
-composer required beebmx/kirby-pay
+composer require beebmx/kirby-pay
 ```
 
 ## Usage
 
-The easiest way to use **Kirby Pay** is with the snippets build-in. After you install the package just include the snippets and set the items (products or services) to sell:
+The easiest way to use **Kirby Pay** is with the [snippets](/guide/snippets) build-in. After you install the package just include the snippets and set the items (products or services) to sell:
 
 ```php
 <header>

@@ -7,7 +7,7 @@ actionLink: /guide/getting-started
 sidebar: auto
 features:
 - title: Simplicity
-  details: Minimal setup and everithing ready to test your payments flow.
+  details: Minimal setup and everything ready to test your payments flow.
 - title: Integrations
   details: You have some integrations (drivers) ready to use. 
 - title: Tracking

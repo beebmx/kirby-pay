@@ -17,7 +17,7 @@ The `order` snippet requires to have a customer before to perform the payment.
 
 ### Payment
 
-The default method process for payments is `charge` but if you need to create a payment with an `order` method process, just update your `config.php` file with the proper option:
+The default method process for payments is `charge` but if you need to create a payment with an `order` method process, just update your Kirby configuration file `config.php`  with the proper option:
  
 ```php
 return [
@@ -40,10 +40,10 @@ When you set your preferred method process, you can add the snippet to create pa
 
 ::: tip
 You can add an `id` to the items *array* to show in the panel view.
-The `id` can be any *string*, like `$page->id()`, `$page->uid()`, `$page->slug()` or anything related with the product or service.
+The `id` can be any *string* like `$page->id()`, `$page->uid()`, `$page->slug()` or anything related with the product or service.
 :::
 
-Sometimes you have some customer information (maybe capture in other forms) and you can prefill these fields:
+Sometimes you already have some customer information captured in other forms. If this is the case, you can prefill these fields as shown below:
 
 ```php
 <?php
@@ -75,12 +75,12 @@ Sometimes you have some customer information (maybe capture in other forms) and 
 ```
 
 ::: warning
-You need to have at least the `items` *array* to use the payment snippet. 
+You need to set at least the `items` *array* to use the payment snippet. 
 :::
 
 ### Order
 
-When you already have a `customer` in platform, create an order is your best choice to implemente and give to your users a better experience.
+When you already have a `customer` registered in platform, create an order is your best choice to implement the payment process and to give your users a better experience.
 
 ```php
 <?php
@@ -94,7 +94,7 @@ When you already have a `customer` in platform, create an order is your best cho
 ?>
 ```
 
-Like payment snippet, you can prefill some fields:
+As in the payment snippet, you can prefill some fields:
 
 ```php
 <?php
@@ -115,16 +115,16 @@ Like payment snippet, you can prefill some fields:
 ```
 
 ::: warning
-You need to have at least the `uuid` *string* and `items` *array* to use the order snippet. 
+For the order snippet to work, you need to at least provide the `uuid` *string* and the `items` *array*. 
 :::
 
 ## Customer
 
-There are some snippets to manage your customer data: `create`, `update` and `source`.
+**Kirby Pay** also has some snippets to manage your customer data: `create`, `update` and `source`.
 
 ### Create
 
-If you need to create users before any payment and planning to use the `order snippet`, this is the way to do it:
+If you need to create users before making any payment and you are planning to use the `order snippet`, this is the way to do it:
 
 ```php
 <?php
@@ -132,7 +132,7 @@ If you need to create users before any payment and planning to use the `order sn
 ?>
 ```
 
-If you need to prefill the fields, you can do it with:
+Or, if you need to prefill the fields:
 
 ```php
 <?php
@@ -155,7 +155,7 @@ If you need to prefill the fields, you can do it with:
 
 ### Update
 
-Once you have a customer in the platform, you can update the basic data: 
+Once you have a customer registered in the platform, you can update their basic data: 
 
 ```php
 <?php
@@ -187,7 +187,8 @@ You need to have at least the `uuid` *string* to use the update snippet.
 
 ### Update payment source
 
-Once you have a customer in the platform, you can update the source payment:
+You can also update the payment source of a registered customer using the following snippet:
+
 
 ```php
 <?php
@@ -197,7 +198,7 @@ Once you have a customer in the platform, you can update the source payment:
 ?>
 ```
 
-If you need to prefill the fields, you can do it with:
+To prefill the fields:
 
 ```php
 <?php
@@ -220,7 +221,7 @@ You need to have at least the `uuid` *string* to use the source snippet.
 
 ### Get customer
 
-There are some snippets that require a customer information, it's recommended to get this data in a [controller](https://getkirby.com/docs/guide/templates/controllers):
+There are some snippets that require the customer information, It's recommended to get this data in a [controller](https://getkirby.com/docs/guide/templates/controllers):
 
 ```php
 <?php
@@ -239,7 +240,7 @@ return function ($page, $site, $kirby)
 
 ## Oxxo Pay
 
-To use Oxxo Pay you need first to set the `conekta` driver and enables `oxxo_cash` in `payment_types`:
+To use Oxxo Pay you need first to set the `conekta` driver and enable `oxxo_cash` in `payment_types` array in your Kirby configuration file `config.php`:
 
 ```php
 return [
@@ -254,7 +255,7 @@ When a payment has been performed as Oxxo Pay, you can use the snippet for that 
 <?php snippet('kirby-pay.oxxo', ['payment' => $payment]) ?>
 ```
 
-Before you can call the snippet it's important than you get the payment:
+Before you call the Oxxo Pay snippet it's important to get the payment:
 
 ```php
 <?php
@@ -270,7 +271,7 @@ return function ($page, $site, $kirby) {
 };
 ```
 
-The result will be something like this:
+The result will be the Oxxo payment order. It contains the amount to be paid, the reference and the instructions to make the payment. Looks like this:
 
 <img class="oxxo-pay" :src="$withBase('/images/oxxo-pay.png')" alt="Oxxo Pay">
 
@@ -288,7 +289,7 @@ return [
 
 ## Redirections
 
-By default, **Kirby Pay** redirect every snippet to a specific URL, the purpose is to you create some kind of feedback to the end user.
+By default, **Kirby Pay** redirect every snippet to a specific URL. The purpose of this is that you will be able to create feedback for the end user.
 The default values for the redirections are:
 
 ```php
@@ -302,7 +303,7 @@ return [
 ];
 ```  
 
-Of course, you can change this URL's with your own flow:
+Of course, you can change this URLs with your own flow:
 
 ```php
 return [
@@ -329,7 +330,7 @@ For the [customer](#create) snippet, you will receive a customer `id`:
     https://[your-site-url]/customer/id:1ee9aa1b-6510-4105-92b9-7171bb2f3089
 ```
 
-For [customer update](#update) snippet and [source update](#update-payment-source), you will receive an `action`:
+For [customer update](#update) snippet and [payment source update](#update-payment-source), you will receive an `action`:
 
 ```http request
     https://[your-site-url]/profile/action:customer-update
@@ -338,7 +339,7 @@ For [customer update](#update) snippet and [source update](#update-payment-sourc
 
 ## CSRF Token
 
-All the request created by the snippets needs to validate that the request is coming from the same server, all the petitions should have a `csrf-token`. To add the token just include in the header a `meta`: 
+All the request created by the snippets needs to validate that the request is coming from the same server. Therefore, all the petitions should have a `csrf-token`. To add the token just include it in the header `meta`: 
 
 ```html
 <meta name="csrf-token" content="<?= csrf() ?>">

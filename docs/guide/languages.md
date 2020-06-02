@@ -4,12 +4,15 @@
 
 ## Localization
 
-Out of the box are 2 languages (english and spanish), and the only thing you need to use it is to set this in your `config.php` with the proper [language](https://getkirby.com/docs/guide/languages/introduction).
-This can sound a limitation for some other languages, but fortunately is not.
+Out of the box are two languages available (English and Spanish), and the only thing you need to use them is to set the [language](https://getkirby.com/docs/guide/languages/introduction) in your `config.php` as indicated in Kirby's guide.
 
-Here is the full list of localizations:
+This may sound like a limitation for other languages, but fortunately it is not.
+
+Here is the full list keyed strings needed to fully translate the forms and views of **Kirby Pay**:
 
 ```php
+// en.php 
+
 <?php
 
 return [
@@ -168,7 +171,7 @@ This not only applies to new localizations, if you want to change the default va
 
 ## Example
 
-To customize this with your [language](https://getkirby.com/docs/guide/languages/introduction#adding-languages) you can setup the localization:
+To customize **Kirby Pay** with your [language](https://getkirby.com/docs/guide/languages/introduction#adding-languages) you can setup the localization as indicated below:
 
 ```php
 <?php

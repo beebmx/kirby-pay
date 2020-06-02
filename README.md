@@ -9,7 +9,7 @@ See the docs for everything: [https://beebmx.github.io/kirby-pay](https://beebmx
 ### Composer
 
 ```ssh
-composer required beebmx/kirby-pay
+composer require beebmx/kirby-pay
 ```
 
 ## Usage

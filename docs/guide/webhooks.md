@@ -4,7 +4,7 @@
 
 ## Configuration
 
-**Kirby Pay** can listen many webhooks for every service, to set in, you just need to know which URL you need to set, and for that reason is exists the `env` option.
+**Kirby Pay** can listen many webhooks for every service, to set in, you just need to know which URL you will use. For this purpose is available the `env` option.
 Set the `env` to `test` or `local` to enable the development option in the panel:
 
 ````php

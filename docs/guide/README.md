@@ -5,11 +5,11 @@
 ## Introduction
 
 
-**Kirby Pay** offers a painless and easy way to create payments for Kirby, with many things to customize if you want.
+**Kirby Pay** offers an easy way to make payments with Kirby, providing several options to customize  according to your needs.
 
-## Requeriments
+## Requirements
 
-The server needs to run at least:
+In addition to meeting [Kirby's requirements](https://getkirby.com/docs/guide/quickstart#requirements), to use **Kirby Pay** in your project, the server needs to run at least:
 
 - PHP >= 7.3
 
@@ -18,7 +18,7 @@ This package comes by default with some [snippets](/guide/snippets) ready to pro
 - [Alpine.js](https://github.com/alpinejs/alpine) <small>v2.3.5</small>
 - [axios](https://github.com/axios/axios) <small>v0.19.2</small>
 
-If you want to implement **Kirby Pay** in your next project, make sure you are ok with the requirements too.
+Therefore, you must also meet their own requirements.
 
 ## Drivers
 
@@ -30,21 +30,21 @@ If you want to implement **Kirby Pay** in your next project, make sure you are o
 
 ## Payment methods
 
-**Kirby Pay** comes with 2 different type of payment methods: `charge` and `order`, each one process a payment but with 2 differents approches.
+**Kirby Pay** comes with two different type of payment methods: `charge` and `order`, each one process a payment but with two differents approches.
 
 ### Charge
 
-The `charge` payment method, creates a transaction with the driver and only process the payment with the requested information, in other words, create a payment with the buyer, items and if it's enable with the shipping information and doesn't create any other information more than the payment requested.
+The `charge` payment method, creates a transaction with the driver and only process the payment with the requested information. That is, it creates a payment with the customer information (like name, email and phone), purchased items and the shipping information, if this option is enabled; and doesn't create any other information more than the payment requested.
 
 ### Order
 
-The `order` payment method, unlike charge, creates a transaction with the driver and creates a customer objetc in **Kirby Pay** and in the driver, this is created for future payments. In the future the customer does not need to set their information, or the card fields, just set the order with the items to process, and the transaction will be in place.  
+The `order` payment method, unlike charge, creates a transaction with the driver and stores a customer object in **Kirby Pay** and in the driver to facilitate future payments. This way, in the future the customer will not need to fill in their information or the card fields, just set the order with the items to process, and the transaction will be in place.  
 
 ## Pricing
 
 **Kirby Pay** is open source, but you need a [Kirby license](https://getkirby.com/buy) to use it in your production server.
 
-Right now the best way to support us is to star the repository. Hope soon we will be in Github sponsors if you want to support this project. 
+Right now the best way to support us is to star the repository. Hope soon we will be in Github sponsors if you want to further support this project. 
 
 ## Credits
 
@@ -54,7 +54,7 @@ Right now the best way to support us is to star the repository. Hope soon we wil
 
 ## Disclaimer
 
-This package is provided "as is" with no guarantee. Use it at your own risk and always test it yourself before using it in a production environment.
+This package is provided "as is" with no guarantee. Use it at your own risk and always test it for yourself before using it in a production environment.
 
 ## License
 

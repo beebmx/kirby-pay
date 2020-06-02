@@ -1,6 +1,6 @@
 module.exports = {
   title: 'Kirby Pay',
-  description: 'Make payments with Kirby',
+  description: 'Make online payments with Kirby',
   base: '/kirby-pay/',
   themeConfig: {
     logo: '/images/icon.png',
