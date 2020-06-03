@@ -2,9 +2,9 @@
 
 ## Definition
 
-The `Payment` class inside of it, has a connection with the service or `driver` selected in your `config.php` file, and as the name describes, it performs the payments of the package.
+The `Payment` class inside of it, has a connection with the service or `driver` selected in your Kirby configuration file `config.php`, and as the name describes, it performs the payments of the package.
 
-The `Payment` class is part of the [Resource](resource) object, you can use all of these methods to improve the functionallity.
+The `Payment` class is part of the [Resource](resource) object and you can use all these methods to improve functionallity.
 
 ## Methods
 
@@ -85,7 +85,7 @@ Payment::charge(
 - params: `none`
 - returns: `string`
 
-This `static` method returns the URL of the payments in the `driver` service.
+This `static` method returns the URL of a payment in the `driver` service.
 
 ```php
 use Beebmx\KirbyPay\Payment;
@@ -102,7 +102,7 @@ This `static` method returns an array with all the available payment methods in 
 ```php
 use Beebmx\KirbyPay\Payment;
 
-Payment::serviceUrl();
+Payment::getPaymentMethods();
 ```
 
 ### parseAmount

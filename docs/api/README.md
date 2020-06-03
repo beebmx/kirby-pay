@@ -6,15 +6,15 @@ The idea behind the API of **Kirby Pay** is to give you the tools to create your
 
 The main goal is to create a painless experience for the developer in the integration of services like [Stripe](http://stripe.com/) or [Conekta](http://conekta.com/).
 
-For the developer it's just a new instance of an object, but behind the since, there is a connection to service chosen and process the [Customer](customer) or [Payment](payment)
+For the developer it's just a new instance of an object, but behind the scenes, there is a connection to the chosen service to process a [Customer](customer) or a [Payment](payment).
 
 ## Snippet improve
 
-The snippets tries to create an easy way to implement the process of a payment, but sometimes they are not the all than you needs.
+Snippets try to create an easy way to implement the payment process, but sometimes they are not what you need.
 
 The best example of this is to delete or [remove](customer.md#remove) a customer, because there is no [snippet](../guide/snippets) for that action.
 
-But you can create this functionallity with:
+But you can create this functionallity through the API with:
 
 ```php
 use Beebmx\KirbyPay\Customer;

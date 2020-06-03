@@ -31,7 +31,7 @@ $buyer = new Buyer(
 ```
 
 :::tip
-The `$customer_id` attribute is usually required by the driver integration. If you do not initialize, it will be equals to the `$id`. 
+The `$customer_id` attribute is usually required by the driver integration. If you do not initialize it, it will be equals to the `$id`. 
 :::
 
 ### toArray
@@ -134,16 +134,6 @@ Returns the sum of all [Item](#item) amounts.
 
 ```php
 $items->amount();
-```
-
-### count
-- params: `none`
-- returns: `int`
-
-Returns the number of [Item](#item) in the instance.
-
-```php
-$items->count();
 ```
 
 ### count

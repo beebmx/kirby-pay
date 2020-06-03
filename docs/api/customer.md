@@ -2,9 +2,9 @@
 
 ## Definition
 
-The `Customer` class inside of it, has a connection with the service or `driver` selected in your `config.php` file, and as the name describes, it performs the customer management of the package.
+The `Customer` class inside of it, has a connection with the service or `driver` selected in your Kirby's `config.php` file, and as the name describes, it performs the customer management of the package.
 
-The `Customer` class is part of the [Resource](resource) object, you can use all of these methods to improve the functionallity.
+The `Customer` class is part of the [Resource](resource) object and you can use all these methods to improve functionallity.
 
 ## Methods
 
@@ -33,8 +33,8 @@ Customer::create(
 - params: ([Buyer](elements.md#buyer) `$customer`, string `$token`, string `$type`) 
 - returns: `Customer`
 
-This `static` method creates a new `Customer` resource if not exist, and if exists return an instance of it.
-It will search with the email of the `Customer`.
+This `static` method creates a new `Customer` resource if it doesn't exist, and if it exists returns an instance of it.
+It will search by the `Customer`'s email field.
 
 ```php
 use Beebmx\KirbyPay\Customer;
@@ -77,7 +77,7 @@ $customer->update(
 - params: (string `token`) 
 - returns: `Customer`
 
-This method updates the source payment in a `Customer` resource.
+This method updates the payment source in a `Customer` resource.
 
 ```php
 use Beebmx\KirbyPay\Customer;
@@ -90,7 +90,7 @@ $customer->updateSource('new-token');
 - params: `none` 
 - returns: `bool`
 
-This method delete a `Customer` resource.
+This method deletes a `Customer` resource.
 
 ```php
 use Beebmx\KirbyPay\Customer;
@@ -103,7 +103,7 @@ $customer->remove();
 - params: (string `$email`) 
 - returns: `Customer`|`bool`
 
-This `static` method searches a `Customer` resource with the `email`.
+This `static` method searches for a `Customer` resource by the `email` field.
 If not found, returns `false`
 
 ```php
@@ -116,7 +116,7 @@ Customer::email('example@email.com');
 - params: `none`
 - returns: `string`
 
-This `static` method returns the URL of the customers in the `driver` service.
+This `static` method returns the URL of the customer in the `driver` service.
 
 ```php
 use Beebmx\KirbyPay\Customer;

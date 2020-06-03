@@ -2,7 +2,7 @@
 
 ## Definition
 
-[Payment](payment), [Customer](customer) and [Log](log) have an instance of `resource`.
+[Payment](payment), [Customer](customer) and [Log](log) classes have an instance of `resource`.
 That means, you can use the `resource` methods in those classes.
 
 ## Methods
@@ -63,7 +63,7 @@ The order to sort the resources is chronologically inverse, that means, it's the
 - returns: `instance`
 
 Returns an `instance` of the element created.
-If you does not send a `$pay_id` and a `$uuid` it creates a new resource, otherwise it will rewrite the existing one.
+If you don't send a `$pay_id` and a `$uuid` it creates a new resource, otherwise it will rewrite the existing one.
 
 ```php
 use Beebmx\KirbyPay\Customer;
@@ -140,10 +140,10 @@ Customer::skip()->get();
 ```
 
 ### search
-- params: (int `$number` = 10) 
+- params: (string `$query`, array `$params`)
 - returns: `Resource`
 
-Search elements in the resource one or more parameters.
+Search elements in the resource by one or more parameters.
 
 Returns an instance of the resource.
 
@@ -169,7 +169,7 @@ Customer::search('26', 'pay_id|uuid')->get();
 - params: (int `$page` = 1, int `$perPage` = 10) 
 - returns: `Resource`
 
-Paginate elements int the resource.
+Paginate elements in the resource.
 
 Returns an instance of the resource.
 
@@ -197,7 +197,7 @@ Customer::diffForHumans()->get();
 - params: (string `$sort` = 'desc') 
 - returns: `Resource`
 
-Set the direction of the elements sorting of the resource.
+Set the sort direction of the resource's elements.
 
 Returns an instance of the resource.
 
