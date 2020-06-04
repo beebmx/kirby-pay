@@ -17,14 +17,14 @@ composer require beebmx/kirby-pay
 After you install the package just include the snippets and set the items (products or services) to sell:
 
 ```php
-
 <header>
-...
+
+<!-- Begin Kirby Pay styles -->
 <?php snippet('kirby-pay.styles') ?>
-...
+<!-- Ends Kirby Pay styles -->
+
 </header>
 <body>
-...
 
 <!-- Begin Kirby Pay -->
 <?php
@@ -51,6 +51,5 @@ This plugin is provided "as is" with no guarantee. Use it at your own risk and a
 - [All Contributors](../../contributors)
 
 ## License
-
 
 Licensed under the MIT license, see [LICENSE.md](LICENSE.md) for details.
