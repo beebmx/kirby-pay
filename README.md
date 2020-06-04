@@ -1,4 +1,4 @@
-<p align="center"><a href="https://beebmx.github.io/kirby-pay" target="_blank" rel="noopener"><img src="https://beebmx.github.io/kirby-pay/images/logo.svg" width="350"></a></p>
+<p align="center"><a href="https://beebmx.github.io/kirby-pay" target="_blank" rel="noopener"><img src="https://beebmx.github.io/kirby-pay/images/logo.svg" width="300"></a></p>
 
 [![Build Status](https://travis-ci.org/beebmx/kirby-pay.svg?branch=master)](https://travis-ci.org/beebmx/kirby-pay)
 [![Latest Stable Version](https://poser.pugx.org/beebmx/kirby-pay/v)](//packagist.org/packages/beebmx/kirby-pay)
