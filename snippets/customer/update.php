@@ -1,7 +1,7 @@
 <?php if(($uuid ?? null)): ?>
 <div class="kirby-pay">
     <form class="<?= kpStyle('form', 'kp-form') ?>"
-          x-data='{...update(), ...(new KirbyPay("<?= kpUrl('customer.update') ?>","<?= kpMethod('customer.update') ?>", "<?= substr(kirby()->language()->code(), 0, 2) ?>")).update({id:"<?= $uuid ?? null ?>",customer:<?= json_encode($customer ?? []) ?>})}'
+          x-data='{...update(), ...(new KirbyPay("<?= kpUrl('customer.update') ?>","<?= kpMethod('customer.update') ?>", "<?= substr(kirby()->language() ? kirby()->language()->code() : pay('locale_code', 'en'), 0, 2) ?>")).update({id:"<?= $uuid ?? null ?>",customer:<?= json_encode($customer ?? []) ?>})}'
           @submit.prevent="prepare"
     >
         <?php snippet('kirby-pay.form.customer') ?>

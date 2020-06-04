@@ -19,14 +19,11 @@ After you install the package just include the snippets and set the items (produ
 ```php
 <header>
 
-<!-- Begin Kirby Pay styles -->
 <?php snippet('kirby-pay.styles') ?>
-<!-- Ends Kirby Pay styles -->
 
 </header>
 <body>
 
-<!-- Begin Kirby Pay -->
 <?php
     snippet('kirby-pay.payment', [
         'items' => [
@@ -35,7 +32,6 @@ After you install the package just include the snippets and set the items (produ
         ],
     ]);
 ?>
-<!-- Ends Kirby Pay -->
 
 </body>
 ```

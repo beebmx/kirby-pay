@@ -5,7 +5,7 @@
         "kirby", "kirby-3", "kirby3", "kirby-cms", "kirby-plugin", "pay", "payments", "stripe", "conekta"
     ],
     "type": "kirby-plugin",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "license": "MIT",
     "authors": [
         {

@@ -1,6 +1,6 @@
 <div class="kirby-pay">
     <form class="<?= kpStyle('form', 'kp-form') ?>"
-          x-data='{...conekta_source(), ...(new KirbyPay("<?= kpUrl('source.update') ?>","<?= kpMethod('source.update') ?>", "<?= substr(kirby()->language()->code(), 0, 2) ?>")).source({id:"<?= $uuid ?? null ?>", card:<?= json_encode($card ?? []) ?>})}'
+          x-data='{...conekta_source(), ...(new KirbyPay("<?= kpUrl('source.update') ?>","<?= kpMethod('source.update') ?>", "<?= substr(kirby()->language() ? kirby()->language()->code() : pay('locale_code', 'en'), 0, 2) ?>")).source({id:"<?= $uuid ?? null ?>", card:<?= json_encode($card ?? []) ?>})}'
           @submit.prevent="prepare"
     >
         <div>
