@@ -39,5 +39,5 @@ The easiest way to use **Kirby Pay** is with the [snippets](snippets) build-in. 
 And that's it, if you use all the default values, it's the only thing you will need.
 
 ::: tip
-If you need to create your own payment implementation with **Kirby Pay**, you can create it with the [API](/api)
+If you need to create your own payment implementation with **Kirby Pay**, you can create it with the [API](../api)
 :::
