@@ -57,6 +57,13 @@ abstract class Payment implements Elementable
     public $shipping;
 
     /**
+     * Payment shipping
+     *
+     * @var Extras|null
+     */
+    public $extras;
+
+    /**
      * Payment extra values
      *
      * @var array|null
@@ -70,20 +77,25 @@ abstract class Payment implements Elementable
      * @param string $status
      * @param Buyer $customer
      * @param Items $items
+     * @param Extras|null $extra_amounts
      * @param Shipping|null $shipping
      * @param array|null $extra
      */
-    public function __construct($id, string $status, Buyer $customer, Items $items, Shipping $shipping = null, array $extra = null)
+    public function __construct($id, string $status, Buyer $customer, Items $items, Extras $extra_amounts = null, Shipping $shipping = null, array $extra = null)
     {
         $this->id = $id;
         $this->status = $status;
         $this->customer = $customer;
         $this->items = $items;
         $this->shipping = $shipping;
+        $this->extras = $extra_amounts;
         $this->extra = $extra;
 
         $this->currency = Str::upper(pay('currency', 'usd'));
-        $this->amount = $items->amount();
+
+        $this->amount = $extra_amounts
+            ? $items->amount() + $extra_amounts->amount()
+            : $items->amount();
     }
 
     /**

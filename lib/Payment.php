@@ -3,6 +3,7 @@
 namespace Beebmx\KirbyPay;
 
 use Beebmx\KirbyPay\Elements\Buyer;
+use Beebmx\KirbyPay\Elements\Extras;
 use Beebmx\KirbyPay\Elements\Item;
 use Beebmx\KirbyPay\Elements\Items;
 use Beebmx\KirbyPay\Elements\Shipping;
@@ -22,17 +23,19 @@ class Payment extends Model
      *
      * @param Customer $customer
      * @param Items|Collection $items_to_sell
+     * @param Extras|Collection|null $extra_amounts
      * @param string $type
      * @param Shipping|Collection|null $shipping_instructions
      * @return Payment
      */
-    public static function orderWithCustomer(Customer $customer, $items_to_sell, string $type = 'card', $shipping_instructions = null)
+    public static function orderWithCustomer(Customer $customer, $items_to_sell, $extra_amounts = null, string $type = 'card', $shipping_instructions = null)
     {
         $items = static::getItems($items_to_sell);
+        $extras = static::getExtras($extra_amounts);
         $shipping = static::getShipping($shipping_instructions);
 
         return static::write(
-            static::driver()->createOrder($customer, $items, $type, $shipping)->toArray()
+            static::driver()->createOrder($customer, $items, $extras, $type, $shipping)->toArray()
         );
     }
 
@@ -41,19 +44,21 @@ class Payment extends Model
      *
      * @param Buyer|Collection $customer
      * @param Items|Collection $items_to_sell
+     * @param Extras|Collection|null $extra_amounts
      * @param string|null $token
      * @param string $type
      * @param Shipping|Collection|null $shipping_instructions
      * @return Payment
      */
-    public static function order($customer, $items_to_sell, string $token = null, string $type = 'card', $shipping_instructions = null)
+    public static function order($customer, $items_to_sell, $extra_amounts = null, string $token = null, string $type = 'card', $shipping_instructions = null)
     {
         $buyer = static::getBuyer($customer);
         $items = static::getItems($items_to_sell);
+        $extras = static::getExtras($extra_amounts);
         $shipping = static::getShipping($shipping_instructions);
         $customer = Customer::firstOrCreate($buyer, $token, $type);
 
-        return static::orderWithCustomer($customer, $items, $type, $shipping);
+        return static::orderWithCustomer($customer, $items, $extras, $type, $shipping);
     }
 
     /**
@@ -61,19 +66,21 @@ class Payment extends Model
      *
      * @param Buyer|Collection $customer
      * @param Items|Collection $items_to_sell
+     * @param Extras|Collection|null $extra_amounts
      * @param string|null $token
      * @param string $type
      * @param Shipping|Collection|null $shipping_instructions
      * @return Payment
      */
-    public static function charge($customer, $items_to_sell, string $token = null, string $type = 'card', $shipping_instructions = null)
+    public static function charge($customer, $items_to_sell, $extra_amounts = null, string $token = null, string $type = 'card', $shipping_instructions = null)
     {
         $buyer = static::getBuyer($customer);
         $items = static::getItems($items_to_sell);
+        $extras = static::getExtras($extra_amounts);
         $shipping = static::getShipping($shipping_instructions);
 
         return static::write(
-            static::driver()->createCharge($buyer, $items, $token, $type, $shipping)->toArray()
+            static::driver()->createCharge($buyer, $items, $extras, $token, $type, $shipping)->toArray()
         );
     }
 
@@ -148,6 +155,23 @@ class Payment extends Model
         return $items instanceof Items
             ? $items
             : static::setItems($items);
+    }
+
+    /**
+     * Get an instance of Extras
+     *
+     * @param Extras|Collection|null $extras
+     * @return Extras|null
+     */
+    protected static function getExtras($extras)
+    {
+        if (!$extras) {
+            return null;
+        }
+
+        return $extras instanceof Extras
+            ? $extras
+            : new Extras($extras->toArray() ?? null);
     }
 
     /**

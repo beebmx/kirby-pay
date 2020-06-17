@@ -9,7 +9,7 @@ The `Payment` class is part of the [Resource](resource) object and you can use a
 ## Methods
 
 ### order
-- params: ([Buyer](elements.md#buyer) `$customer`, [Items](elements.md#items) `$items`, string `$token`, string `$type` = 'card', [Shipping](elements.md#shipping) `$shipping` = *null*) 
+- params: ([Buyer](elements.md#buyer) `$customer`, [Items](elements.md#items) `$items`, [Extras](elements.md#extras) `$extras`, string `$token`, string `$type` = 'card', [Shipping](elements.md#shipping) `$shipping` = *null*) 
 - returns: `Payment`
 
 This `static` method creates a new `Payment` and [Customer](customer) resource.
@@ -34,7 +34,7 @@ Payment::order(
 ```
 
 ### orderWithCustomer
-- params: ([Customer](customer) `$customer`, [Items](elements.md#items) `$items`, string `$type` = 'card', [Shipping](elements.md#shipping) `$shipping` = *null*)
+- params: ([Customer](customer) `$customer`, [Items](elements.md#items) `$items`, [Extras](elements.md#extras) `$extras`, string `$type` = 'card', [Shipping](elements.md#shipping) `$shipping` = *null*)
 - returns: `Payment`
 
 This `static` method creates a new `Payment` resource from a [Customer](customer) instance.
@@ -57,7 +57,7 @@ Payment::orderWithCustomer(
 ```
 
 ### Charge
-- params: ([Buyer](elements.md#buyer) `$customer`, [Items](elements.md#items) `$items`, string `$token`, string `$type` = 'card', [Shipping](elements.md#shipping) `$shipping` = *null*)
+- params: ([Buyer](elements.md#buyer) `$customer`, [Items](elements.md#items) `$items`, [Extras](elements.md#extras) `$extras`, string `$token`, string `$type` = 'card', [Shipping](elements.md#shipping) `$shipping` = *null*)
 - returns: `Payment`
 
 This `static` method creates a new `Payment` resource.

@@ -448,6 +448,85 @@ class ValidatePaymentTest extends TestCase
     }
 
     /** @test */
+    public function a_request_for_payment_validate_extra_amounts_structure()
+    {
+        $response = Routes::handleCreatePayment(
+            new Request([
+                'query' => ['csrf' => csrf()],
+                'body' => [
+                    'token' => 'sandbox-token',
+                    'type' => 'card',
+                    'customer' => [
+                        'name' => 'John Doe',
+                        'email' => 'example@mail.com',
+                        'phone' => '3311223344',
+                    ],
+                    'items' => [
+                        ['name' => 'Product 001', 'amount' => 300.00, 'quantity' => 1],
+                    ],
+                    'extra_amounts' => [
+                        'shipping' => 'invalid-data'
+                    ]
+                ]
+            ])
+        );
+
+        $this->assertFalse($response['success']);
+        $this->assertTrue($response['error']);
+        $this->assertArrayHasKey('shipping', $response['errors']);
+
+        $response = Routes::handleCreatePayment(
+            new Request([
+                'query' => ['csrf' => csrf()],
+                'body' => [
+                    'token' => 'sandbox-token',
+                    'type' => 'card',
+                    'customer' => [
+                        'name' => 'John Doe',
+                        'email' => 'example@mail.com',
+                        'phone' => '3311223344',
+                    ],
+                    'items' => [
+                        ['name' => 'Product 001', 'amount' => 300.00, 'quantity' => 1],
+                    ],
+                    'extra_amounts' => [
+                        'shipping' => 200,
+                        'others' => 'invalid',
+                    ]
+                ]
+            ])
+        );
+
+        $this->assertFalse($response['success']);
+        $this->assertTrue($response['error']);
+        $this->assertArrayHasKey('others', $response['errors']);
+
+        $response = Routes::handleCreatePayment(
+            new Request([
+                'query' => ['csrf' => csrf()],
+                'body' => [
+                    'token' => 'sandbox-token',
+                    'type' => 'card',
+                    'customer' => [
+                        'name' => 'John Doe',
+                        'email' => 'example@mail.com',
+                        'phone' => '3311223344',
+                    ],
+                    'items' => [
+                        ['name' => 'Product 001', 'amount' => 300.00, 'quantity' => 1],
+                    ],
+                    'extra_amounts' => [
+                        'shipping' => 200,
+                    ],
+                ]
+            ])
+        );
+
+        $this->assertTrue($response['success']);
+        $this->assertFalse($response['error']);
+    }
+
+    /** @test */
     public function a_request_for_payment_validate_and_create_a_payment()
     {
         $response = Routes::handleCreatePayment(
@@ -747,6 +826,75 @@ class ValidatePaymentTest extends TestCase
         $this->assertArrayHasKey('item', $response['errors']);
         $this->assertArrayHasKey('item', $response['errors']);
         $this->assertArrayHasKey('item', $response['errors']);
+    }
+
+    /** @test */
+    public function a_request_for_order_validate_extra_amounts_structure()
+    {
+        $response = Routes::handleCreateOrder(
+            new Request([
+                'query' => ['csrf' => csrf()],
+                'body' => [
+                    'id' => (string) Str::uuid(),
+                    'items' => [
+                        ['name' => 'Product 001', 'amount' => 300.00, 'quantity' => 1],
+                    ],
+                    'extra_amounts' => [
+                        'shipping' => 'invalid-data'
+                    ]
+                ]
+            ])
+        );
+
+        $this->assertFalse($response['success']);
+        $this->assertTrue($response['error']);
+        $this->assertArrayHasKey('shipping', $response['errors']);
+
+        $response = Routes::handleCreateOrder(
+            new Request([
+                'query' => ['csrf' => csrf()],
+                'body' => [
+                    'id' => (string) Str::uuid(),
+                    'items' => [
+                        ['name' => 'Product 001', 'amount' => 300.00, 'quantity' => 1],
+                    ],
+                    'extra_amounts' => [
+                        'shipping' => 200,
+                        'others' => 'invalid',
+                    ]
+                ]
+            ])
+        );
+
+        $this->assertFalse($response['success']);
+        $this->assertTrue($response['error']);
+        $this->assertArrayHasKey('others', $response['errors']);
+
+        $customer = Customer::create(
+            new Buyer(
+                'John Doe',
+                'example@mail.com',
+                '1122334455'
+            ),
+            'test-token'
+        );
+        $response = Routes::handleCreateOrder(
+            new Request([
+                'query' => ['csrf' => csrf()],
+                'body' => [
+                    'id' => $customer->uuid,
+                    'items' => [
+                        ['name' => 'Product 001', 'amount' => 300.00, 'quantity' => 1],
+                    ],
+                    'extra_amounts' => [
+                        'shipping' => 200,
+                    ]
+                ]
+            ])
+        );
+
+        $this->assertTrue($response['success']);
+        $this->assertFalse($response['error']);
     }
 
     /** @test */

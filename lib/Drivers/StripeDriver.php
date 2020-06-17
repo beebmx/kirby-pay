@@ -6,6 +6,7 @@ use Beebmx\KirbyPay\Customer as ResourceCustomer;
 use Beebmx\KirbyPay\Elements\Buyer;
 use Beebmx\KirbyPay\Elements\Charge;
 use Beebmx\KirbyPay\Elements\Customer as ElementCustomer;
+use Beebmx\KirbyPay\Elements\Extras;
 use Beebmx\KirbyPay\Elements\Items;
 use Beebmx\KirbyPay\Elements\Order;
 use Beebmx\KirbyPay\Elements\Shipping;
@@ -187,11 +188,13 @@ class StripeDriver extends Driver
      *
      * @param ResourceCustomer $customer
      * @param Items $items
+     * @param Extras|null $extras
      * @param string|null $type
      * @param Shipping|null $shipping
      * @return Order
+     * @throws \Stripe\Exception\ApiErrorException
      */
-    public function createOrder(ResourceCustomer $customer, Items $items, string $type = null, Shipping $shipping = null): Order
+    public function createOrder(ResourceCustomer $customer, Items $items, Extras $extras = null, string $type = null, Shipping $shipping = null): Order
     {
         $buyer = new Buyer(
             $customer->customer['name'],
@@ -204,7 +207,7 @@ class StripeDriver extends Driver
             'customer' => $customer->id,
         ];
 
-        $order = $this->remotePayment($options, $buyer, $items, $shipping)
+        $order = $this->remotePayment($options, $buyer, $items, $extras, $shipping)
                       ->only(['id', 'status', 'charges'])
                       ->toArray();
 
@@ -213,6 +216,7 @@ class StripeDriver extends Driver
             $order['status'],
             $buyer,
             $items,
+            $extras,
             $shipping,
         );
     }
@@ -222,18 +226,20 @@ class StripeDriver extends Driver
      *
      * @param Buyer $customer
      * @param Items $items
+     * @param Extras|null $extras
      * @param string|null $token
      * @param string|null $type
      * @param Shipping|null $shipping
      * @return Charge
+     * @throws \Stripe\Exception\ApiErrorException
      */
-    public function createCharge(Buyer $customer, Items $items, string $token = null, string $type = null, Shipping $shipping = null): Charge
+    public function createCharge(Buyer $customer, Items $items, Extras $extras = null, string $token = null, string $type = null, Shipping $shipping = null): Charge
     {
         $options = [
             'payment_method' => $this->getPaymentMethod($token),
         ];
 
-        $charge = $this->remotePayment($options, $customer, $items, $shipping)
+        $charge = $this->remotePayment($options, $customer, $items, $extras, $shipping)
                        ->only(['id', 'status', 'charges'])
                        ->toArray();
 
@@ -242,6 +248,7 @@ class StripeDriver extends Driver
             $charge['status'],
             $customer,
             $items,
+            $extras,
             $shipping,
         );
     }
@@ -252,28 +259,34 @@ class StripeDriver extends Driver
      * @param array $options
      * @param Buyer $customer
      * @param Items $items
+     * @param Extras|null $extras
      * @param Shipping|null $shipping
      * @return Collection
      * @throws \Stripe\Exception\ApiErrorException
      */
-    protected function remotePayment(array $options, Buyer $customer, Items $items, Shipping $shipping = null)
+    protected function remotePayment(array $options, Buyer $customer, Items $items, Extras $extras = null, Shipping $shipping = null)
     {
         return new Collection(PaymentIntent::create(
             array_merge([
-                'amount' => $this->preparePrice($items->amount()),
+                'amount' => $this->preparePrice(($extras and $extras->count()) ? $items->amount() + $extras->amount() : $items->amount()),
                 'currency' => strtoupper(pay('currency')),
                 'confirm' => true,
                 'confirmation_method' => 'automatic',
                 'description' => pay('default_item_name'),
                 'metadata' => array_merge(
                     [
-                        'Total amount' => '$' . $items->amount(),
-                        'Items' => $items->count(),
-                        'Total items' => $items->totalQuantity(),
+                        'Total amount' => '$' . (($extras and $extras->count()) ? $items->amount() + $extras->amount() : $items->amount()),
+                        'Items' => ($extras and $extras->count()) ? $items->count() + 1 : $items->count(),
+                        'Total items' => ($extras and $extras->count()) ? $items->totalQuantity() + 1 : $items->totalQuantity(),
                     ],
-                    $items->all()->mapWithKeys(function ($item) {
-                        return ['Item: ' . $item->name => $item->quantity . ' x $' . $item->amount];
-                    })->toArray()
+                    array_merge(
+                        $items->all()->mapWithKeys(function ($item) {
+                            return ['Item: ' . $item->name => $item->quantity . ' x $' . $item->amount];
+                        })->toArray(),
+                        ($extras and $extras->count()) ? [
+                            pay('extra_amounts_item', 'Extra') . ':' => '1 x $' . $extras->amount(),
+                        ] : []
+                    )
                 ),
             ], $options, $shipping ? $this->prepareShipping($shipping, $customer) : [])
         ));

@@ -1,6 +1,6 @@
 <div class="kirby-pay">
     <form class="<?= kpStyle('form', 'kp-form') ?>"
-          x-data='{...payment(), ...(new KirbyPay("<?= kpUrl('payment.create') ?>","<?= kpMethod("payment.create") ?>","<?= substr(kirby()->language() ? kirby()->language()->code() : pay('locale_code', 'en'), 0, 2) ?>")).payment({type:"<?= kpGetFirstPaymentMethod() ?>",items:<?= json_encode($items ?? []) ?>,customer:<?= json_encode($customer ?? []) ?>,<?php if(kpHasShipping()): ?>shipping:<?= json_encode($shipping ?? []) ?>,<?php endif ?>card:<?= json_encode($card ?? []) ?>,country:"<?= pay('default_country') ?>"})}'
+          x-data='{...payment(), ...(new KirbyPay("<?= kpUrl('payment.create') ?>","<?= kpMethod("payment.create") ?>","<?= substr(kirby()->language() ? kirby()->language()->code() : pay('locale_code', 'en'), 0, 2) ?>")).payment({type:"<?= kpGetFirstPaymentMethod() ?>",items:<?= json_encode($items ?? []) ?>,extra_amounts:<?= json_encode($extra_amounts ?? []) ?>,customer:<?= json_encode($customer ?? []) ?>,<?php if(kpHasShipping()): ?>shipping:<?= json_encode($shipping ?? []) ?>,<?php endif ?>card:<?= json_encode($card ?? []) ?>,country:"<?= pay('default_country') ?>"})}'
           x-init="mount"
           @submit.prevent="prepare"
     >

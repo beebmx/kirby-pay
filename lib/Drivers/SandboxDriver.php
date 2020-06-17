@@ -6,6 +6,7 @@ use Beebmx\KirbyPay\Customer as ResourceCustomer;
 use Beebmx\KirbyPay\Elements\Buyer;
 use Beebmx\KirbyPay\Elements\Charge;
 use Beebmx\KirbyPay\Elements\Customer;
+use Beebmx\KirbyPay\Elements\Extras;
 use Beebmx\KirbyPay\Elements\Items;
 use Beebmx\KirbyPay\Elements\Order;
 use Beebmx\KirbyPay\Elements\Shipping;
@@ -186,11 +187,12 @@ class SandboxDriver extends Driver
      *
      * @param ResourceCustomer $customer
      * @param Items $items
+     * @param Extras|null $extras
      * @param string|null $type
      * @param Shipping|null $shipping
      * @return Order
      */
-    public function createOrder(ResourceCustomer $customer, Items $items, string $type = null, Shipping $shipping = null): Order
+    public function createOrder(ResourceCustomer $customer, Items $items, Extras $extras = null, string $type = null, Shipping $shipping = null): Order
     {
         $buyer = new Buyer(
             $customer->customer['name'],
@@ -204,7 +206,7 @@ class SandboxDriver extends Driver
             'payment_source_id' => $customer->source['id']
         ];
 
-        $order = $this->simulateCharge($options, $buyer, $items, $type, $shipping)
+        $order = $this->simulateCharge($options, $buyer, $items, $extras, $type, $shipping)
             ->only(['id', 'payment_status'])
             ->toArray();
 
@@ -213,6 +215,7 @@ class SandboxDriver extends Driver
             $order['payment_status'],
             $buyer,
             $items,
+            $extras,
             $shipping
         );
     }
@@ -222,14 +225,15 @@ class SandboxDriver extends Driver
      *
      * @param Buyer $customer
      * @param Items $items
+     * @param Extras|null $extras
      * @param string|null $token
      * @param string|null $type
      * @param Shipping|null $shipping
      * @return Charge
      */
-    public function createCharge(Buyer $customer, Items $items, string $token = null, string $type = null, Shipping $shipping = null): Charge
+    public function createCharge(Buyer $customer, Items $items, Extras $extras = null, string $token = null, string $type = null, Shipping $shipping = null): Charge
     {
-        $charge = $this->simulateCharge([], $customer, $items, $type, $shipping)
+        $charge = $this->simulateCharge([], $customer, $items, $extras, $type, $shipping)
                         ->only(['id', 'payment_status'])
                         ->toArray();
 
@@ -238,6 +242,7 @@ class SandboxDriver extends Driver
             $charge['payment_status'],
             $customer,
             $items,
+            $extras,
             $shipping
         );
     }
@@ -248,16 +253,17 @@ class SandboxDriver extends Driver
      * @param array $options
      * @param Buyer $customer
      * @param Items $items
+     * @param Extras $extras
      * @param string|null $type
      * @param Shipping|null $shipping
      * @return Collection
      */
-    protected function simulateCharge(array $options, Buyer $customer, Items $items, string $type = null, Shipping $shipping = null)
+    protected function simulateCharge(array $options, Buyer $customer, Items $items, Extras $extras = null, string $type = null, Shipping $shipping = null)
     {
         return new Collection(
             array_merge([
                 'id' => 'ord_' . Str::random(20),
-                'amount' => $this->preparePrice($items->amount()),
+                'amount' => $this->preparePrice(($extras and $extras->count()) ? $items->amount() + $extras->amount() : $items->amount()),
                 'payment_status' => 'paid',
                 'currency' => 'MXN',
                 'customer_info' => [
@@ -265,8 +271,8 @@ class SandboxDriver extends Driver
                     'email' => $customer->email,
                 ],
                 'line_items' => [
-                    'total' => $items->count(),
-                    'data' => $items->all()->map(function ($item) {
+                    'total' => ($extras and $extras->count()) ? $items->count() + 1 : $items->count(),
+                    'data' => array_merge($items->all()->map(function ($item) {
                         return [
                             'id' => $item->id,
                             'name' => $item->name,
@@ -274,6 +280,13 @@ class SandboxDriver extends Driver
                             'quantity' => $item->quantity,
                         ];
                     })->toArray(),
+                        ($extras and $extras->count()) ? [[
+                            'id' => Str::slug(pay('extra_amounts_item', 'Extra')),
+                            'name' => pay('extra_amounts_item', 'Extra'),
+                            'unit_price' => $this->preparePrice($extras->amount()),
+                            'quantity' => 1,
+                        ]] : []
+                    ),
                 ],
             ], $options, $shipping ? ['shipping' => $shipping->toArray()] : [])
         );

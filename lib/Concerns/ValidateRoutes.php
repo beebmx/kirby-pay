@@ -101,6 +101,33 @@ trait ValidateRoutes
     }
 
     /**
+     * Validate extra_amounts from collection
+     *
+     * @param Collection $extra_amounts
+     * @return array|mixed
+     */
+    public static function validateExtraAmounts(Collection $extra_amounts)
+    {
+        return $extra_amounts->map(function ($amount, $key) {
+            return [
+                $key => invalid(
+                    [$key => $amount],
+                    [
+                        $key => ['required', 'num'],
+                    ],
+                    [
+                        $key => kpT('validation.extra_amounts'),
+                    ]
+                )
+            ];
+        })->map(function ($item, $key) {
+            return !empty($item[$key]) ? $item : null;
+        })->first(function ($item) {
+            return is_array($item) && !empty($item);
+        }) ?? [];
+    }
+
+    /**
      * Validate shipping from collection
      *
      * @param Collection $shipping

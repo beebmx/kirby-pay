@@ -15,7 +15,8 @@ The easiest way to use **Kirby Pay** is with the [snippets](snippets) build-in. 
 ```php
 <header>
 
-<!-- Begin Kirby Pay styles -->
+<!-- Begin Kirby Pay styles and csrf token -->
+<meta name="csrf-token" content="<?= csrf() ?>">
 <?php snippet('kirby-pay.styles') ?>
 <!-- Ends Kirby Pay styles -->
 

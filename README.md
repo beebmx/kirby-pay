@@ -26,6 +26,7 @@ After you install the package just include the snippets and set the items (produ
 ```php
 <header>
 
+<meta name="csrf-token" content="<?= csrf() ?>">
 <?php snippet('kirby-pay.styles') ?>
 
 </header>

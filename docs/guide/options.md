@@ -30,6 +30,7 @@
 | redirect_customer_update | profile |(string) | Set the URL to redirect if the customer was updated |
 | redirect_source_update | profile |(string) | Set the URL to redirect if the source payment was updated |
 | storage | /pay | (string) | Set the location where payment files will be stored |
+| extra_amounts_item | Extra | (string) | Extra item label
 | logs | false | (bool) | Enable or disable webhooks logs |
 | styles |  | (array) | Update default [styles](/guide/styles) |
 

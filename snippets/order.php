@@ -1,7 +1,7 @@
 <?php if(($uuid ?? null) && ($items ?? null)): ?>
 <div class="kirby-pay">
     <form class="<?= kpStyle('form', 'kp-form') ?>"
-          x-data='{...order(), ...(new KirbyPay("<?= kpUrl("order.create") ?>","<?= kpMethod("order.create") ?>","<?= substr(kirby()->language() ? kirby()->language()->code() : pay('locale_code', 'en'), 0, 2) ?>")).order({id:"<?= $uuid ?? null ?>",items:<?= json_encode($items ?? []) ?>,<?php if(kpHasShipping()): ?>shipping:<?= json_encode($shipping ?? []) ?>,<?php endif ?>country:"<?= pay('default_country') ?>"})}'
+          x-data='{...order(), ...(new KirbyPay("<?= kpUrl("order.create") ?>","<?= kpMethod("order.create") ?>","<?= substr(kirby()->language() ? kirby()->language()->code() : pay('locale_code', 'en'), 0, 2) ?>")).order({id:"<?= $uuid ?? null ?>",items:<?= json_encode($items ?? []) ?>,extra_amounts:<?= json_encode($extra_amounts ?? []) ?>,<?php if(kpHasShipping()): ?>shipping:<?= json_encode($shipping ?? []) ?>,<?php endif ?>country:"<?= pay('default_country') ?>"})}'
           x-init="mount"
           @submit.prevent="prepare"
     >

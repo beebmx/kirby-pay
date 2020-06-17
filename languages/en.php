@@ -59,6 +59,7 @@ return [
     'beebmx.kirby-pay.validation.items.quantity' => 'Please enter the quantity of the item',
     'beebmx.kirby-pay.error' => 'An error occurred',
     'beebmx.kirby-pay.validation.customer.not-found' => 'Customer not found',
+    'beebmx.kirby-pay.validation.extra_amount' => 'The amount must be numeric',
 
     //Panel view
     'view.payments' => 'Payments',
@@ -84,6 +85,7 @@ return [
     'beebmx.kirby-pay.view.development' => 'Development',
     'beebmx.kirby-pay.view.webhook' => 'Webhook',
     'beebmx.kirby-pay.view.extra' => 'Extra',
+    'beebmx.kirby-pay.view.extras' => 'Extra amounts',
 
     //Panel table
     'beebmx.kirby-pay.table.id' => 'ID',
@@ -115,6 +117,10 @@ return [
     'beebmx.kirby-pay.table.payment_method' => 'Método de pago',
     'beebmx.kirby-pay.table.customer_id' => 'Client ID',
     'beebmx.kirby-pay.table.url' => 'URL',
+    'beebmx.kirby-pay.table.shipping' => 'Shipping',
+    'beebmx.kirby-pay.table.taxes' => 'Taxes',
+    'beebmx.kirby-pay.table.others' => 'Others',
+    'beebmx.kirby-pay.table.extra' => 'Extra',
 
     //Panel status
     'beebmx.kirby-pay.status.pending_payment' => 'Pending payment',

@@ -6,6 +6,7 @@ use Beebmx\KirbyPay\Customer as ResourceCustomer;
 use Beebmx\KirbyPay\Elements\Buyer;
 use Beebmx\KirbyPay\Elements\Charge;
 use Beebmx\KirbyPay\Elements\Customer as ElementCustomer;
+use Beebmx\KirbyPay\Elements\Extras;
 use Beebmx\KirbyPay\Elements\Items;
 use Beebmx\KirbyPay\Elements\Order as ElementOrder;
 use Beebmx\KirbyPay\Elements\Shipping;
@@ -16,6 +17,7 @@ use Conekta\Customer;
 use Conekta\Order;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 class ConektaDriver extends Driver
 {
@@ -167,11 +169,12 @@ class ConektaDriver extends Driver
      *
      * @param ResourceCustomer $customer
      * @param Items $items
+     * @param Extras|null $extras
      * @param string|null $type
      * @param Shipping|null $shipping
      * @return ElementOrder
      */
-    public function createOrder(ResourceCustomer $customer, Items $items, string $type = null, Shipping $shipping = null): ElementOrder
+    public function createOrder(ResourceCustomer $customer, Items $items, Extras $extras = null, string $type = null, Shipping $shipping = null): ElementOrder
     {
         $buyer = new Buyer(
             $customer->customer['name'],
@@ -191,7 +194,7 @@ class ConektaDriver extends Driver
                 'payment_source_id' => $customer->source['id']
             ];
         }
-        $order = $this->remoteOrder($options, $buyer, $items, $shipping)
+        $order = $this->remoteOrder($options, $buyer, $items, $extras, $shipping)
                       ->only(['id', 'payment_status', 'charges'])
                       ->toArray();
 
@@ -200,6 +203,7 @@ class ConektaDriver extends Driver
             $order['payment_status'],
             $buyer,
             $items,
+            $extras,
             $shipping,
             $this->parseCharges(new Collection($order['charges']))
         );
@@ -210,12 +214,13 @@ class ConektaDriver extends Driver
      *
      * @param Buyer $customer
      * @param Items $items
+     * @param Extras|null $extras
      * @param string|null $token
      * @param string|null $type
      * @param Shipping|null $shipping
      * @return Charge
      */
-    public function createCharge(Buyer $customer, Items $items, string $token = null, string $type = null, Shipping $shipping = null): Charge
+    public function createCharge(Buyer $customer, Items $items, Extras $extras = null, string $token = null, string $type = null, Shipping $shipping = null): Charge
     {
         $options = [];
         if ($token) {
@@ -230,7 +235,7 @@ class ConektaDriver extends Driver
             ];
         }
 
-        $charge = $this->remoteOrder($options, $customer, $items, $shipping)
+        $charge = $this->remoteOrder($options, $customer, $items, $extras, $shipping)
                        ->only(['id', 'payment_status', 'charges'])
                        ->toArray();
 
@@ -239,6 +244,7 @@ class ConektaDriver extends Driver
             $charge['payment_status'],
             $customer,
             $items,
+            $extras,
             $shipping,
             $this->parseCharges(new Collection($charge['charges']))
         );
@@ -250,10 +256,11 @@ class ConektaDriver extends Driver
      * @param array $options
      * @param Buyer $customer
      * @param Items $items
+     * @param Extras|null $extras
      * @param Shipping|null $shipping
      * @return Collection
      */
-    protected function remoteOrder(array $options, Buyer $customer, Items $items, Shipping $shipping = null)
+    protected function remoteOrder(array $options, Buyer $customer, Items $items, Extras $extras = null, Shipping $shipping = null)
     {
         return new Collection(Order::create(
             array_merge([
@@ -261,13 +268,19 @@ class ConektaDriver extends Driver
                 'customer_info' => (new Collection($customer))->filter(function ($value) {
                     return !empty($value);
                 })->toArray(),
-                'line_items' => $items->all()->map(function ($item) {
+                'line_items' => array_merge($items->all()->map(function ($item) {
                     return [
                         'name' => $item->name,
                         'unit_price' => $this->preparePrice($item->amount),
                         'quantity' => $item->quantity,
                     ];
                 })->toArray(),
+                    ($extras and $extras->count()) ? [[
+                        'id' => Str::slug(pay('extra_amounts_item', 'Extra')),
+                        'name' => pay('extra_amounts_item', 'Extra'),
+                        'unit_price' => $this->preparePrice($extras->amount()),
+                        'quantity' => 1,
+                    ]] : []),
                 'charges' => [[
                     'payment_method' => $options,
                 ]],

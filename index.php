@@ -26,6 +26,7 @@ Kirby::plugin('beebmx/kirby-pay', [
         'redirect_customer_create' => 'customer',
         'redirect_customer_update' => 'profile',
         'redirect_source_update' => 'profile',
+        'extra_amounts_item' => 'Extra',
         'logs' => false,
         'storage' => function () {
             return kirby()->roots()->index() . '/pay';

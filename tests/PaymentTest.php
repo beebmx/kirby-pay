@@ -4,6 +4,7 @@ namespace Beebmx\KirbyPay\Tests;
 
 use Beebmx\KirbyPay\Customer;
 use Beebmx\KirbyPay\Elements\Buyer;
+use Beebmx\KirbyPay\Elements\Extras;
 use Beebmx\KirbyPay\Elements\Item;
 use Beebmx\KirbyPay\Elements\Items;
 use Beebmx\KirbyPay\Elements\Shipping;
@@ -61,7 +62,7 @@ class PaymentTest extends TestCase
     public function a_payment_can_creates_an_order()
     {
         $this->assertTrue(Payment::isEmpty());
-        Payment::order($this->buyer, $this->items, 'token');
+        Payment::order($this->buyer, $this->items, null, 'token');
 
         $this->assertFalse(Payment::isEmpty());
         $this->assertEquals(1, Payment::count());
@@ -89,6 +90,7 @@ class PaymentTest extends TestCase
                 new Item('Product 01', 100, 1, 'product-01'),
                 new Item('Product 02', 100, 1, 'product-02'),
             ]),
+            null,
             'token'
         );
 
@@ -108,7 +110,7 @@ class PaymentTest extends TestCase
     public function a_payment_with_an_order_also_creates_a_customer()
     {
         $this->assertTrue(Customer::isEmpty());
-        Payment::order($this->buyer, $this->items, 'token');
+        Payment::order($this->buyer, $this->items, null, 'token');
 
         $this->assertFalse(Customer::isEmpty());
         $this->assertEquals(1, Customer::count());
@@ -138,7 +140,7 @@ class PaymentTest extends TestCase
     public function a_payment_can_creates_a_charge()
     {
         $this->assertTrue(Payment::isEmpty());
-        Payment::charge($this->buyer, $this->items, 'token');
+        Payment::charge($this->buyer, $this->items, null, 'token');
 
         $this->assertFalse(Payment::isEmpty());
         $this->assertEquals(1, Payment::count());
@@ -166,6 +168,7 @@ class PaymentTest extends TestCase
                 new Item('Product 01', 100, 1, 'product-01'),
                 new Item('Product 02', 100, 1, 'product-02'),
             ]),
+            null,
             'token'
         );
 
@@ -185,7 +188,7 @@ class PaymentTest extends TestCase
     public function a_payment_with_a_charge_never_creates_a_customer()
     {
         $this->assertTrue(Customer::isEmpty());
-        Payment::charge($this->buyer, $this->items, 'token');
+        Payment::charge($this->buyer, $this->items, null,'token');
 
         $this->assertTrue(Customer::isEmpty());
         $this->assertEquals(0, Customer::count());
@@ -208,7 +211,7 @@ class PaymentTest extends TestCase
     /** @test */
     public function an_order_payment_can_has_shipping()
     {
-        Payment::order($this->buyer, $this->items, 'token', 'card', $this->shipping);
+        Payment::order($this->buyer, $this->items, null, 'token', 'card', $this->shipping);
 
         $this->assertCount(1, Payment::get());
         $this->assertEquals($this->shipping->toArray(), Payment::first()->shipping);
@@ -227,6 +230,7 @@ class PaymentTest extends TestCase
                 new Item('Product 01', 100, 1, 'product-01'),
                 new Item('Product 02', 100, 1, 'product-02'),
             ]),
+            null,
             'token',
             'card',
             new Shipping(
@@ -245,7 +249,7 @@ class PaymentTest extends TestCase
     /** @test */
     public function a_charge_payment_can_has_shipping()
     {
-        Payment::charge($this->buyer, $this->items, 'token', 'card', $this->shipping);
+        Payment::charge($this->buyer, $this->items, null, 'token', 'card', $this->shipping);
 
         $this->assertCount(1, Payment::get());
         $this->assertEquals($this->shipping->toArray(), Payment::first()->shipping);
@@ -264,6 +268,7 @@ class PaymentTest extends TestCase
                 new Item('Product 01', 100, 1, 'product-01'),
                 new Item('Product 02', 100, 1, 'product-02'),
             ]),
+            null,
             'token',
             'card',
             new Shipping(
@@ -292,6 +297,7 @@ class PaymentTest extends TestCase
                 new Item('Product 01', 100, 1, 'product-01'),
                 new Item('Product 02', 100, 1, 'product-02'),
             ]),
+            null,
             'token',
             'card',
             new Shipping(
@@ -320,6 +326,7 @@ class PaymentTest extends TestCase
                 new Item('Product 01', 100, 1, 'product-01'),
                 new Item('Product 02', 100, 1, 'product-02'),
             ]),
+            null,
             'token',
             'card',
             new Shipping(
@@ -333,5 +340,185 @@ class PaymentTest extends TestCase
 
         $this->assertCount(1, Payment::get());
         $this->assertEquals('example@email.com', Payment::first()->email);
+    }
+
+    /** @test */
+    public function an_order_payment_has_a_correct_amount_without_extras()
+    {
+        Payment::order(
+            new Buyer(
+                'John Doe',
+                'example@email.com',
+                '1122334455'
+            ),
+            new Items([
+                new Item('Product 01', 100, 1, 'product-01'),
+                new Item('Product 02', 100, 1, 'product-02'),
+            ]),
+            null,
+            'token',
+            'card',
+            new Shipping(
+                'Know address 123',
+                '12345',
+                'City',
+                'State',
+                'US'
+            )
+        );
+
+        $this->assertCount(1, Payment::get());
+        $this->assertEquals('$200.00', Payment::first()->amount);
+    }
+
+    /** @test */
+    public function an_charge_payment_has_a_correct_amount_without_extras()
+    {
+        Payment::charge(
+            new Buyer(
+                'John Doe',
+                'example@email.com',
+                '1122334455'
+            ),
+            new Items([
+                new Item('Product 01', 100, 1, 'product-01'),
+                new Item('Product 02', 100, 1, 'product-02'),
+            ]),
+            null,
+            'token',
+            'card',
+            new Shipping(
+                'Know address 123',
+                '12345',
+                'City',
+                'State',
+                'US'
+            )
+        );
+
+        $this->assertCount(1, Payment::get());
+        $this->assertEquals('$200.00', Payment::first()->amount);
+    }
+
+    /** @test */
+    public function an_order_payment_has_a_correct_amount_with_extras()
+    {
+        Payment::order(
+            new Buyer(
+                'John Doe',
+                'example@email.com',
+                '1122334455'
+            ),
+            new Items([
+                new Item('Product 01', 100, 1, 'product-01'),
+                new Item('Product 02', 100, 1, 'product-02'),
+            ]),
+            new Extras([
+                'shipping' => 100,
+                'taxes' => 40.20,
+            ]),
+            'token',
+            'card',
+            new Shipping(
+                'Know address 123',
+                '12345',
+                'City',
+                'State',
+                'US'
+            )
+        );
+
+        $this->assertCount(1, Payment::get());
+        $this->assertEquals('$340.20', Payment::first()->amount);
+    }
+
+    /** @test */
+    public function an_charge_payment_has_a_correct_amount_with_extras()
+    {
+        Payment::charge(
+            new Buyer(
+                'John Doe',
+                'example@email.com',
+                '1122334455'
+            ),
+            new Items([
+                new Item('Product 01', 100, 1, 'product-01'),
+                new Item('Product 02', 100, 1, 'product-02'),
+            ]),
+            new Extras([
+                'shipping' => 100,
+                'taxes' => 40.20,
+            ]),
+            'token',
+            'card',
+            new Shipping(
+                'Know address 123',
+                '12345',
+                'City',
+                'State',
+                'US'
+            )
+        );
+
+        $this->assertCount(1, Payment::get());
+        $this->assertEquals('$340.20', Payment::first()->amount);
+    }
+
+    /** @test */
+    public function an_order_payment_has_an_extra_amounts_attribute()
+    {
+        Payment::order(
+            new Buyer(
+                'John Doe',
+                'example@email.com',
+                '1122334455'
+            ),
+            new Items([
+                new Item('Product 01', 100, 1, 'product-01'),
+                new Item('Product 02', 100, 1, 'product-02'),
+            ]),
+            null,
+            'token',
+            'card',
+            new Shipping(
+                'Know address 123',
+                '12345',
+                'City',
+                'State',
+                'US'
+            )
+        );
+
+        $this->assertCount(1, Payment::get());
+        $this->assertArrayHasKey('extra_amounts', Payment::first());
+    }
+
+    /** @test */
+    public function a_charge_payment_has_an_extra_amounts_attribute()
+    {
+        Payment::charge(
+            new Buyer(
+                'John Doe',
+                'example@email.com',
+                '1122334455'
+            ),
+            new Items([
+                new Item('Product 01', 100, 1, 'product-01'),
+                new Item('Product 02', 100, 1, 'product-02'),
+            ]),
+            null,
+            'token',
+            'card',
+            new Shipping(
+                'Know address 123',
+                '12345',
+                'City',
+                'State',
+                'US'
+            )
+        );
+
+        $this->assertCount(1, Payment::get());
+        $this->assertArrayHasKey('extra_amounts', Payment::first());
     }
 }

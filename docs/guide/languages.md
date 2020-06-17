@@ -74,6 +74,8 @@ return [
     'beebmx.kirby-pay.validation.items.quantity' => 'Please enter the quantity of the item',
     'beebmx.kirby-pay.error' => 'An error occurred',
     'beebmx.kirby-pay.validation.customer.not-found' => 'Customer not found',
+    'beebmx.kirby-pay.validation.extra_amounts' => 'The amount must be numeric',
+
 
     //Panel view
     'view.payments' => 'Payments',

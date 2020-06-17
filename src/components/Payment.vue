@@ -40,6 +40,13 @@
                 />
             </k-column>
 
+            <k-column v-if="hasExtras" width="1/1">
+                <kp-table-key-pair
+                        :title="$t('beebmx.kirby-pay.view.extras')"
+                        :data="payment.extra_amounts"
+                />
+            </k-column>
+
             <k-column v-if="hasShipping" width="1/1">
                 <kp-table-key-pair
                         :title="$t('beebmx.kirby-pay.view.shipping')"
@@ -89,6 +96,11 @@
       hasExtra() {
         return this.payment.extra
             ? !!Object.keys(this.payment.extra).length
+            : false
+      },
+      hasExtras() {
+        return this.payment.extra_amounts
+            ? !!Object.keys(this.payment.extra_amounts).length
             : false
       },
       serviceUrl() {

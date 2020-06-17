@@ -186,6 +186,7 @@ class DriverTest extends TestCase
         $order = $this->driver->createOrder(
             $customer,
             $items,
+            null,
             'card',
             $shipping
         );
@@ -219,6 +220,7 @@ class DriverTest extends TestCase
         $charge = $this->driver->createCharge(
             $buyer,
             $items,
+            null,
             'token',
             'card',
             $shipping

@@ -42,6 +42,7 @@ class HookTest extends TestCase
                 ['id' => 'product-01', 'name' => 'Product 01', 'amount' => 100, 'quantity' => 1],
                 ['id' => 'product-02', 'name' => 'Product 02', 'amount' => 100, 'quantity' => 1],
             ]),
+            null,
             'token'
         );
 

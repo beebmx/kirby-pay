@@ -21,6 +21,7 @@ class Order extends Payment
             'customer' => $this->customer->toArray(),
             'items' => $this->items->toArray(),
             'shipping' => $this->shipping ? $this->shipping->toArray() : [],
+            'extra_amounts' => $this->extras ? $this->extras->toArray() : [],
             'extra' => $this->extra ? $this->extra : [],
         ];
     }

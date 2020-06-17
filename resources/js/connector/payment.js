@@ -24,6 +24,7 @@ export default function (kp, elements) {
     },
     items: elements.items,
     type: elements.type,
+    extra_amounts: elements.extra_amounts,
     countries: [],
     process: false,
     errors: {},
@@ -40,6 +41,7 @@ export default function (kp, elements) {
       const data = Object.assign({
         customer: this.customer,
         items: this.items,
+        extra_amounts: this.extra_amounts,
         token: token,
         type: this.type,
       }, this.hasShipping() ? {shipping: this.shipping} : null);

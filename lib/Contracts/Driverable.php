@@ -6,6 +6,7 @@ use Beebmx\KirbyPay\Customer as ResourceCustomer;
 use Beebmx\KirbyPay\Elements\Buyer;
 use Beebmx\KirbyPay\Elements\Charge;
 use Beebmx\KirbyPay\Elements\Customer;
+use Beebmx\KirbyPay\Elements\Extras;
 use Beebmx\KirbyPay\Elements\Items;
 use Beebmx\KirbyPay\Elements\Order;
 use Beebmx\KirbyPay\Elements\Shipping;
@@ -74,23 +75,25 @@ interface Driverable
      *
      * @param ResourceCustomer $customer
      * @param Items $items
+     * @param Extras|null $extras
      * @param string|null $type
      * @param Shipping|null $shipping
      * @return Order
      */
-    public function createOrder(ResourceCustomer $customer, Items $items, string $type = null, Shipping $shipping = null): Order;
+    public function createOrder(ResourceCustomer $customer, Items $items, Extras $extras = null, string $type = null, Shipping $shipping = null): Order;
 
     /**
      * Create Charge service driver
      *
      * @param Buyer $customer
      * @param Items $items
+     * @param Extras $extras
      * @param string|null $token
      * @param string|null $type
      * @param Shipping|null $shipping
      * @return Charge
      */
-    public function createCharge(Buyer $customer, Items $items, string $token = null, string $type = null, Shipping $shipping = null): Charge;
+    public function createCharge(Buyer $customer, Items $items, Extras $extras = null, string $token = null, string $type = null, Shipping $shipping = null): Charge;
 
     /**
      * Prepare amount for service driver

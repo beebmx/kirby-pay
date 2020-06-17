@@ -150,15 +150,17 @@ class Routes implements Routable
         }
 
         $process = pay('payment_process', 'charge');
-        $inputs = static::getInputs($request, ['token', 'type', 'customer', 'items', 'shipping']);
+        $inputs = static::getInputs($request, ['token', 'type', 'customer', 'items', 'extra_amounts', 'shipping']);
 
         $customer = static::only($inputs->get('customer'), ['name', 'email', 'phone']);
         $items = new Collection($inputs->get('items'));
+        $extraAmounts = new Collection($inputs->get('extra_amounts'));
         $token = $inputs->get('token');
         $type = $inputs->get('type');
 
         $customerError = static::validateCustomer($customer);
         $itemsError = static::validateItems($items);
+        $extraAmountsError = static::validateExtraAmounts($extraAmounts);
         $shippingError = [];
 
         if (kpHasShipping()) {
@@ -166,13 +168,14 @@ class Routes implements Routable
             $shippingError = static::validateShipping($shipping);
         }
 
-        if ($customerError || $itemsError || $shippingError) {
-            return static::hasErrors($customerError, $itemsError, $shippingError);
+        if ($customerError || $itemsError || $shippingError || $extraAmountsError) {
+            return static::hasErrors($customerError, $itemsError, $shippingError, $extraAmountsError);
         } else {
             try {
                 $payment = Payment::$process(
                     $customer,
                     $items,
+                    $extraAmounts,
                     $token,
                     $type,
                     $shipping ?? null,
@@ -204,12 +207,14 @@ class Routes implements Routable
             return $requiredError;
         }
 
-        $inputs = static::getInputs($request, ['id', 'items', 'shipping']);
+        $inputs = static::getInputs($request, ['id', 'items', 'extra_amounts', 'shipping']);
 
         $items = new Collection($inputs->get('items'));
+        $extraAmounts = new Collection($inputs->get('extra_amounts'));
         $uuid = $inputs->get('id');
 
         $itemsError = static::validateItems($items);
+        $extraAmountsError = static::validateExtraAmounts($extraAmounts);
         $shippingError = [];
 
         if (kpHasShipping()) {
@@ -217,17 +222,19 @@ class Routes implements Routable
             $shippingError = static::validateShipping($shipping);
         }
 
-        if ($itemsError || $shippingError) {
-            return static::hasErrors($itemsError, $shippingError);
+        if ($itemsError || $shippingError || $extraAmountsError) {
+            return static::hasErrors($itemsError, $shippingError, $extraAmountsError);
         } else {
             if ($resource = Customer::find($uuid)) {
                 try {
                     $payment = Payment::orderWithCustomer(
                         $resource,
                         $items,
+                        $extraAmounts,
                         'card',
                         $shipping ?? null,
                     );
+
                     return [
                         'redirect' => url(pay('redirect', 'thanks'), ['params' => ['id' => $payment->uuid]]),
                         'success' => true,

@@ -69,6 +69,9 @@ Sometimes you already have some customer information captured in other forms. If
       'month' => '12',
       'year' => '23',
       'cvc' => '123',
+    ],
+    'extra_amounts' => [
+      'shipping' => 100.00
     ]
   ]);
 ?>
@@ -109,7 +112,10 @@ As in the payment snippet, you can prefill some fields:
       'state' => 'State',
       'city' => 'City',
       'postal_code' => '12345',
-    ]
+    ],
+     'extra_amounts' => [
+       'shipping' => 100.00
+     ]
   ])
 ?>
 ```

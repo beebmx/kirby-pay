@@ -146,6 +146,52 @@ Returns the number of [Item](#item) in the instance.
 $items->count();
 ```
 
+## Extras
+
+### __constructor
+- params: (array `$extras` = null)
+
+Creates an instance of `Extras` element class.
+
+```php
+use Beebmx\KirbyPay\Elements\Extras;
+
+$extras = new Extras([
+  'shipping' => 100,
+  'taxes' => 200,
+]);
+```
+
+### toArray
+- params: `none`
+- returns: `array`
+
+Convert the `Extras` object into an array.
+
+```php
+$items->toArray();
+```
+
+### amount
+- params: `none`
+- returns: `float`
+
+Returns the sum of all `Extras` amounts.
+
+```php
+$extras
+```
+
+### count
+- params: `none`
+- returns: `int`
+
+Returns the number of `Extras` in the collection.
+
+```php
+$extras->count();
+```
+
 ## Shipping
 
 ### __constructor
