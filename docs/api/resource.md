@@ -193,6 +193,34 @@ use Beebmx\KirbyPay\Customer;
 Customer::diffForHumans()->get();
 ```
 
+### withPayIdFormat
+- params: `none` 
+- returns: `Resource`
+
+Transform all the `pay_id` to fill with zeros defined in the `pay_id_length` [option](../guide/options.md#options-list).
+
+Returns an instance of the resource.
+
+```php
+use Beebmx\KirbyPay\Payment;
+
+Payment::withPayIdFormat()->get();
+```
+
+### withoutMoneyCast
+- params: `none` 
+- returns: `Resource`
+
+This method disabled the amount casting in the resources.
+
+Returns an instance of the resource.
+
+```php
+use Beebmx\KirbyPay\Payment;
+
+Payment::withoutMoneyCast()->get();
+```
+
 ### setSort
 - params: (string `$sort` = 'desc') 
 - returns: `Resource`

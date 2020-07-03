@@ -21,6 +21,7 @@ Kirby::plugin('beebmx/kirby-pay', [
         'payment_types' => ['card'],
         'payment_process' => 'charge',
         'payment_expiration_days' => 30,
+        'pay_id_length' => 6,
         'pagination' => 10,
         'redirect' => 'thanks',
         'redirect_customer_create' => 'customer',

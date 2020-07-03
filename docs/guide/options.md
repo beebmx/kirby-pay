@@ -24,6 +24,7 @@
 | payment_types | ['card'] | (array) | Set the allowed method payments |
 | payment_process | charge |(string) | Set the process of the payment `charge` or `order` |
 | payment_expiration_days | 30 | (int) | Set the expiration days for `oxxo_charge` in `conekta` service |
+| pay_id_length | 6 | (int) | Set the length to display in panel |
 | pagination | 10 | (int) | Set the number of rows to be displayed per page in the `panel` |
 | redirect | thanks |(string) | Set the URL to redirect if the payment was successful |
 | redirect_customer_create | customer |(string) | Set the URL to redirect if the customer was created |

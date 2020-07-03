@@ -1,7 +1,7 @@
 <template>
     <k-view class="k-payment-view">
         <k-header>
-            {{ $t('beebmx.kirby-pay.view.purchase') }}
+            {{ $t('beebmx.kirby-pay.view.customer') }}
             <k-button-group slot="left">
                 <k-button icon="money" link="/plugins/customers">{{ $t('beebmx.kirby-pay.view.customers') }}</k-button>
             </k-button-group>
@@ -73,6 +73,7 @@
           .then(({customer, next, prev}) => {
             this.customer = customer
             this.summary = {
+              pay_id: '#' + String(customer.pay_id).padStart(this.payIdLength, '0'),
               id: customer.id,
               name: customer.customer.name,
               email: customer.email,

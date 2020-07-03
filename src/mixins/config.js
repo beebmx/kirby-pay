@@ -3,6 +3,9 @@ export default {
     service() {
       return this.$store.getters['kpResources/getService'];
     },
+    payIdLength() {
+      return this.$store.getters['kpResources/getPayIdLength'];
+    },
     serviceUrlUnavailable() {
       return !this.serviceUrl
     },

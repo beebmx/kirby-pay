@@ -261,4 +261,13 @@ class ResourceTest extends TestCase
         $this->model::destroy($instance->pay_id, $instance->uuid);
         $this->assertCount(0, $this->model::get());
     }
+
+    /** @test */
+    public function a_resource_can_parse_pay_id_with_format_defined()
+    {
+        $this->model::write(['amount' => 500]);
+
+        $this->assertEquals('$500.00', $this->model::first()->amount);
+        $this->assertEquals('500', $this->model::withoutMoneyCast()->first()->amount);
+    }
 }

@@ -47,6 +47,7 @@ class ApiRoutes implements Routable
                         'customers' => Customer::serviceUrl(),
                         'payments' => Payment::serviceUrl(),
                         'logs' => Log::serviceUrl(),
+                        'pay_id_length' => pay('pay_id_length', 6),
                     ],
                     'resources' => [
                         'payments' => !Payment::isEmpty(),
@@ -71,7 +72,7 @@ class ApiRoutes implements Routable
             'action' => function (int $page) {
                 return [
                     'success' => true,
-                    'payments' => Payment::page($page, pay('pagination', 10))->diffForHumans()->get(),
+                    'payments' => Payment::page($page, pay('pagination', 10))->withPayIdFormat()->diffForHumans()->get(),
                     'resource' => [
                         'total' => Payment::count(),
                         'page' => $page,
@@ -120,7 +121,7 @@ class ApiRoutes implements Routable
             'action' => function (int $page) {
                 return [
                     'success' => true,
-                    'customers' => Customer::page($page, pay('pagination', 10))->diffForHumans()->get(),
+                    'customers' => Customer::page($page, pay('pagination', 10))->withPayIdFormat()->diffForHumans()->get(),
                     'resource' => [
                         'total' => Customer::count(),
                         'page' => $page,

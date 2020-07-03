@@ -121,6 +121,8 @@ return [
     'beebmx.kirby-pay.table.taxes' => 'Taxes',
     'beebmx.kirby-pay.table.others' => 'Others',
     'beebmx.kirby-pay.table.extra' => 'Extra',
+    'beebmx.kirby-pay.table.pay_id' => 'Pay ID',
+    'beebmx.kirby-pay.table.unique_id' => 'Internal ID',
 
     //Panel status
     'beebmx.kirby-pay.status.pending_payment' => 'Pending payment',

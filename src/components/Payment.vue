@@ -122,6 +122,7 @@
             this.next = next
             this.prev = prev
             this.summary = {
+              pay_id: '#' + String(payment.pay_id).padStart(this.payIdLength, '0'),
               id: payment.id,
               payment_id: payment.payment_id,
               status: this.$t(`beebmx.kirby-pay.status.${payment.status}`),

@@ -2,6 +2,8 @@
 
 use Beebmx\KirbyPay\Payment;
 use Beebmx\KirbyPay\Routes\Routes;
+use Brick\Money\Context\CustomContext;
+use Brick\Money\Money;
 use Illuminate\Support\Collection;
 
 if (!function_exists('pay')) {
@@ -85,5 +87,17 @@ if (!function_exists('kpHasShipping')) {
     function kpHasShipping(): bool
     {
         return pay('shipping', false);
+    }
+}
+
+if (!function_exists('kpParseMoney')) {
+    function kpParseMoney($value) {
+        return Money::of(
+            $value,
+            strtoupper(pay('currency', 'usd')),
+            new CustomContext(pay('money_precision', 2))
+        )->formatTo(
+            pay('locale', 'en_US')
+        );
     }
 }

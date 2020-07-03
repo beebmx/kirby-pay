@@ -2,8 +2,6 @@
 
 namespace Beebmx\KirbyPay;
 
-use Brick\Money\Context\CustomContext;
-use Brick\Money\Money;
 use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
@@ -74,6 +72,14 @@ class Resource
         'amount',
         'fee'
     ];
+
+
+    /**
+     * Determine if the money cast should be done
+     *
+     * @var bool
+     */
+    protected $castMoney = true;
 
     /**
      * Sort direction in resoruces
@@ -379,6 +385,35 @@ class Resource
     }
 
     /**
+     * Set the pay_id with a defined length
+     *
+     * @return $this
+     */
+    public function withPayIdFormat()
+    {
+        $this->populate();
+
+        $this->data = $this->data->map(function ($item) {
+            $item['pay_id'] = str_pad($item['pay_id'], pay('pay_id_length', 6), '0', STR_PAD_LEFT);
+            return $item;
+        });
+
+        return $this;
+    }
+
+    /**
+     * Disabled the casting for money fields
+     *
+     * @return $this
+     */
+    public function withoutMoneyCast()
+    {
+        $this->castMoney = false;
+
+        return $this;
+    }
+
+    /**
      * Change the sort direction of the data collection
      *
      * @param string $sort
@@ -615,13 +650,7 @@ class Resource
      */
     protected function parseMoney($value)
     {
-        return Money::of(
-            $value,
-            strtoupper(pay('currency', 'usd')),
-            new CustomContext(pay('money_precision', 2))
-        )->formatTo(
-            pay('locale', 'en_US')
-        );
+        return kpParseMoney($value);
     }
 
     /**
@@ -662,7 +691,7 @@ class Resource
             if (in_array($key, $this->dates)) {
                 return $this->parseDate($value);
             }
-            if (in_array($key, $this->money)) {
+            if (in_array($key, $this->money) && $this->castMoney) {
                 return $this->parseMoney($value);
             }
             return $value;

@@ -69,7 +69,7 @@ export default {
           })
     },
     title(payment) {
-      return `${payment.customer.name} (${payment.amount})`;
+      return `#${payment.pay_id} ${payment.customer.name} (${payment.amount})`;
     },
   }
 };

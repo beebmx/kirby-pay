@@ -23,6 +23,9 @@ const getters = {
   getService(state) {
     return state.service.name
   },
+  getPayIdLength(state) {
+    return state.service.pay_id_length
+  },
   getServiceUrl: (state) => resource => {
     return state.service[resource]
   },
