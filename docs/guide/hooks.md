@@ -21,11 +21,17 @@ You can check the list of the events provided by each service in their own API r
 Here is an example of use with `stripe` and a webhook for the `payment_intent.succeeded` event:
 
 ```php
+use Beebmx\KirbyPay\Payment;
+
 return [
     'hooks' => [
-        'beebmx.kirby-pay.payment_intent.succeeded' => function ($payment) {
+        'beebmx.kirby-pay.payment_intent.succeeded' => function (Payment $payment) {
             //Send your email
         },
     ]
 ];
 ```
+
+::: warning
+The variable `$payment` should be called if you want to use the payment information.
+:::

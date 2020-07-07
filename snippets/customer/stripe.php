@@ -1,7 +1,7 @@
 <div class="kirby-pay">
     <form class="<?= kpStyle('form', 'kp-form') ?>"
           x-data='{...customer(), ...(new KirbyPay("<?= kpUrl('customer.create') ?>","<?= kpMethod('customer.create') ?>","<?= substr(kirby()->language() ? kirby()->language()->code() : pay('locale_code', 'en'), 0, 2) ?>")).customer({customer:<?= json_encode($customer ?? []) ?>,card:<?= json_encode($card ?? []) ?>})}'
-          @submit.prevent="prepare"
+          x-on:submit.prevent="prepare"
     >
         <?php snippet('kirby-pay.form.customer') ?>
         <div>

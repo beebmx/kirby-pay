@@ -1,7 +1,7 @@
 <div class="kirby-pay">
     <form class="<?= kpStyle('form', 'kp-form') ?>"
           x-data='{...source(), ...(new KirbyPay("<?= kpUrl('source.update') ?>","<?= kpMethod('source.update') ?>", "<?= substr(kirby()->language() ? kirby()->language()->code() : pay('locale_code', 'en'), 0, 2) ?>")).source({id:"<?= $uuid ?? null ?>", card:<?= json_encode($card ?? []) ?>})}'
-          @submit.prevent="prepare"
+          x-on:submit.prevent="prepare"
     >
         <div>
             <div class="<?= kpStyle('title', 'kp-title') ?>"><?= kpT('payment-information') ?>:</div>

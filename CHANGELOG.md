@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.2.0] - 2020-07-07
+- Added support to Kirby 3.4.x
+- Fixed issues
+
 ## [1.1.1] - 2020-07-03
 - Added withPayIdFormat() method.
 - Added withoutMoneyCast() method.

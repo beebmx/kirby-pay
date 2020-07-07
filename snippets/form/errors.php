@@ -6,7 +6,7 @@
         <div class="kp-ml-4">
             <div class="kp-alert-title"><?= kpT('error') ?></div>
             <ul class="">
-                <template x-for="(message, index) in showErrors" :key="index">
+                <template x-for="(message, index) in showErrors" x-bind:key="index">
                     <li x-text="message"></li>
                 </template>
             </ul>

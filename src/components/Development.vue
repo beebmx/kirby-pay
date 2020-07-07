@@ -24,7 +24,7 @@
         <k-list>
           <k-list-item
                   v-for="log in logs"
-                  :key="log.id"
+                  :key="log.pay_id"
                   :class="status(log)"
                   :icon="{type: 'lock', back: 'black'}"
                   :text="log.type"
