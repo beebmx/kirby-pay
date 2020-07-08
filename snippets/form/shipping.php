@@ -4,7 +4,7 @@
     <div class="<?= kpStyle('fieldset', 'kp-fieldset') ?> <?= kpStyle('background', 'kp-bg-transparent') ?>">
         <div class="<?= kpStyle('field', 'kp-field') ?>" x-bind:class="{'<?= kpStyle('error', 'kp-text-red') ?>':error('address')}">
             <label for="kp-address" class="<?= kpStyle('label', 'kp-label') ?>"><?= kpT('address') ?></label>
-            <input id="kp-address" name="kp-address"  type="text" class="<?= kpStyle('input', 'kp-input') ?> <?= kpStyle('background', 'kp-bg-transparent') ?>" required placeholder="<?= kpT('address') ?>" aria-label="Name" x-model="shipping.address">
+            <input id="kp-address" name="kp-address" type="text" class="<?= kpStyle('input', 'kp-input') ?> <?= kpStyle('background', 'kp-bg-transparent') ?>" required placeholder="<?= kpT('address') ?>" aria-label="Name" x-model="shipping.address">
         </div>
         <div class="<?= kpStyle('field', 'kp-field') ?>" x-bind:class="{'<?= kpStyle('error', 'kp-text-red') ?>':error('state')}">
             <label for="kp-state" class="<?= kpStyle('label', 'kp-label') ?>"><?= kpT('state') ?></label>

@@ -3,7 +3,7 @@
     <div class="<?= kpStyle('fieldset', 'kp-fieldset') ?> <?= kpStyle('background', 'kp-bg-transparent') ?>">
         <div class="<?= kpStyle('field', 'kp-field') ?>" x-bind:class="{'<?= kpStyle('error', 'kp-text-red') ?>':error('name')}">
             <label for="kp-name" class="<?= kpStyle('label', 'kp-label') ?>"><?= kpT('name') ?></label>
-            <input id="kp-name" name="kp-name"  type="text" class="<?= kpStyle('input', 'kp-input') ?> <?= kpStyle('background', 'kp-bg-transparent') ?>" required placeholder="<?= kpT('name') ?>" aria-label="<?= kpT('name') ?>" x-model="customer.name">
+            <input id="kp-name" name="kp-name" type="text" class="<?= kpStyle('input', 'kp-input') ?> <?= kpStyle('background', 'kp-bg-transparent') ?>" required placeholder="<?= kpT('name') ?>" aria-label="<?= kpT('name') ?>" x-model="customer.name">
         </div>
         <div class="<?= kpStyle('field', 'kp-field') ?>" x-bind:class="{'<?= kpStyle('error', 'kp-text-red') ?>':error('email')}">
             <label for="kp-email" class="<?= kpStyle('label', 'kp-label') ?>"><?= kpT('email') ?></label>
