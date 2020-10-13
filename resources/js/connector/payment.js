@@ -80,6 +80,10 @@ export default function (kp, elements) {
               value: country.alpha2Code,
               label: country.translations[kp.lang] || country.name,
             };
+          }).filter(function(country) {
+            return this.elements.countries.length ? this.elements.countries.includes(country.value) : true;
+          }.bind(this)).sort(function (a, b) {
+            return a.label.localeCompare(b.label);
           })
         })
     },

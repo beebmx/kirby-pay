@@ -3,6 +3,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.3.0] - 2020-10-13
+- Added the ability to specify countries for shipping
+- Fixed sorting countries with shipping mode
+
+## [1.2.1] - 2020-07-08
+- Fixed issue with multiples payment methods
+
 ## [1.2.0] - 2020-07-07
 - Added support to Kirby 3.4.x
 - Fixed issues
