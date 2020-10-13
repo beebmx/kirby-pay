@@ -20,7 +20,8 @@
 | date_format | Y-m-d H<span>:</span>m<span>:</span>s | (string) | Set the date format for the panel display |
 | default_item_name | Item to sell |(string) | Set the default item name for the products or services |
 | shipping | false | (bool) | Hide or show shipping options in the form |
-| default_country | null | (string) | If shipping is enable set the default country selected |
+| default_country | null | (string) | If shipping is enable set the default country selected (ISO 3166-1 2 letters country code) |
+| countries | null | (array) | Define only the countries you need to ship (ISO 3166-1 2 letters country code) |
 | payment_types | ['card'] | (array) | Set the allowed method payments |
 | payment_process | charge |(string) | Set the process of the payment `charge` or `order` |
 | payment_expiration_days | 30 | (int) | Set the expiration days for `oxxo_charge` in `conekta` service |
