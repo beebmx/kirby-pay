@@ -21,6 +21,6 @@
   },
   "dependencies": {
     "alpinejs": "^2.3.5",
-    "axios": "^0.19.2"
+    "axios": "^0.21.1"
   }
 }
